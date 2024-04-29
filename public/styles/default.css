@@ -237,3 +237,35 @@ img.logo_pix
 {
     background-color: #247;
 }
+
+.partners
+{
+    display: grid;
+    gap: 10px;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    margin-top: 10px;
+}
+
+.partners div
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.partners .icon
+{
+    align-self: end;
+}
+
+.partners .icon img
+{
+    height: 22px;
+}
+
+
+.partners img.avatar
+{
+    border-radius: 50%;
+    height: 128px;
+}

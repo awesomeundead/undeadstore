@@ -277,7 +277,6 @@ return function ($app)
         }
     });
 
-    /*
     $app->get('/partners', function ()
     {
         session_start();
@@ -296,7 +295,6 @@ return function ($app)
 
         require VIEW . 'layout.phtml';
     });
-    */
 
     $app->get('/pay', 'pay.php');
 
