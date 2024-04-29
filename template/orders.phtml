@@ -1,0 +1,60 @@
+<div class="flex_column">
+<?php if ($result): ?>
+    <?php foreach ($result as $item): ?>
+        <div class="box">
+            <div class="box flex_column">
+                <div class="flex">
+                    <div>Status do pedido</div>
+                    <div><?= $item['pay_progress'] ?></div>
+                </div>
+                <div class="flex">
+                    <div>Forma de pagamento</div>
+                    <div>
+                        <span><?= $item['pay_method'] ?></span>
+                        <span>(<a href="/pay?purchase_id=<?= $item['id'] ?>">QR Code</a>)</span>
+                    </div>
+                </div>
+                <div class="flex">
+                    <div>Data do pedido</div>
+                    <div><?= date_format(date_create($item['created_date']), 'd/m/Y H:i') ?></div>
+                </div>
+            </div>
+            <div class="box blue">
+            <?php foreach ($item['items'] as $i): ?>
+                <div class="flex">
+                    <div class="weapon_full"><?= $i['item_name'] ?></div>
+                    <div class="price">
+                    <?php if ($i['offer_price'] ?? false): ?>
+                        <div>
+                            <span class="line_through">R$ <?= number_format($i['price'], 2, ',', '.') ?></span>
+                            <span>R$ <?= number_format($i['offer_price'], 2, ',', '.') ?></span>
+                        </div>
+                    <?php else: ?>
+                        <div>R$ <?= number_format($i['price'], 2, ',', '.') ?></div>
+                    <?php endif ?>
+                    </div>
+                </div>
+            <?php endforeach ?>
+            </div>
+            <div class="box">
+                <div class="flex">
+                    <div>Subtotal</div>
+                    <div class="value">R$ <?= number_format($item['subtotal'], 2, ',', '.')  ?></div>
+                </div>
+                <div class="flex">
+                    <div>Desconto</div>
+                    <div class="value">R$ <?= number_format($item['discount'], 2, ',', '.')  ?></div>
+                </div>
+                <div class="flex">
+                    <div>Total</div>
+                    <div class="value">R$ <?= number_format($item['total'], 2, ',', '.')  ?></div>
+                </div>
+            </div>
+        </div>
+    <?php endforeach ?>
+<?php else: ?>
+    <div class="box header">
+        <div>Você ainda não tem pedidos de compra.</div>
+    </div>
+<?php endif ?>
+</div>

@@ -1,0 +1,136 @@
+#expanded
+{
+    background-color: #444;
+    background-image: url('../close.png');
+    background-position: right top;
+    background-repeat: no-repeat;
+    height: 100%;    
+    position: fixed;
+    top: 0;
+    width: 1200px;
+    z-index: 1;
+}
+
+#expanded .image
+{
+    display: flex;
+    align-items: center;
+    height: 100%;
+    justify-content: center;
+}
+
+#expanded img
+{
+    width: 100%;
+}
+
+#container
+{
+    display: grid;
+    gap: 10px;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.item
+{
+    background-image: linear-gradient(to right, #444, #555);
+    border-radius: 5px;
+    color: #FFF;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 5px;    
+    text-align: center;
+}
+
+.item .title
+{
+    font-size: 18px;
+}
+
+.item .title .stattrak
+{
+    color: #F90;
+}
+
+.item .image a
+{
+    display: flex;
+}
+
+.item .image a:hover img
+{
+    opacity: 0.7;
+}
+
+.item img
+{
+    width: 100%;
+}
+
+.item .tag
+{
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.item .market a
+{
+    background-color: #136;
+    border-radius: 5px;
+    color: #F90;
+    display: block;
+    padding: 5px;
+    text-decoration: none;
+}
+
+.item .market a:hover
+{
+    background-color: #247;
+}
+
+.item .exterior
+{
+    background-color: #333;
+}
+
+.item .availability
+{
+    background-color: #333;
+}
+
+.item .button_buy
+{
+    background-color: #294;
+    border-radius: 5px;
+    color: #FFF;
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+}
+
+.item .button_buy:hover
+{
+    background-color: #3A5;
+}
+
+.item .buy
+{
+    align-items: end;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: end;
+}
+
+.item .price
+{
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.item .old_price
+{
+    color: #CCC;
+    text-decoration: line-through;
+}

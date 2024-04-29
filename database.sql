@@ -1,0 +1,75 @@
+CREATE TABLE IF NOT EXISTS users (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    steamid BIGINT UNSIGNED NOT NULL,
+    steam_trade_url VARCHAR(255),
+    name VARCHAR(255),
+    email VARCHAR(255),
+    phone VARCHAR(255),
+    nickname VARCHAR(255),
+    created_date DATE NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS login_log (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNSIGNED NOT NULL,
+    login_date DATETIME NOT NULL,
+    user_ip VARCHAR(255) NOT NUll
+);
+
+CREATE TABLE IF NOT EXISTS purchase (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNSIGNED NOT NULL,
+    pay_method VARCHAR(255) NOT NULL,
+    pay_progress VARCHAR(255) NOT NULL,
+    coupon VARCHAR(255) NOT NULL,
+    subtotal DECIMAL(8,2) NOT NULL,
+    discount DECIMAL(8,2) NOT NULL,
+    total DECIMAL(8,2) NOT NULL,
+    created_date DATETIME NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS purchase_items (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    purchase_id INT UNSIGNED NOT NULL,
+    item_id INT UNSIGNED NOT NULL,
+    item_name TEXT NOT NULL,
+    price DECIMAL(8,2) NOT NULL,
+    offer_price DECIMAL(8,2)
+);
+
+CREATE TABLE IF NOT EXISTS items (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    type_name VARCHAR(15) NOT NULL,
+    type_id INT UNSIGNED NOT NULL,
+    availability TINYINT NOT NULL,
+    price DECIMAL(8,2),
+    offer_price DECIMAL(8,2)
+);
+
+CREATE TABLE IF NOT EXISTS agents (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    agent_name VARCHAR(255) NOT NULL,
+    agent_name_br VARCHAR(255) NOT NULL,
+    agent_category VARCHAR(255) NOT NULL,
+    agent_category_br VARCHAR(255) NOT NULL,
+    agent_image VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS weapons (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    weapon_type VARCHAR(255) NOT NULL,
+    weapon_type_br VARCHAR(255) NOT NULL,
+    weapon_stattrak TINYINT(1) NOT NULL,
+    weapon_name VARCHAR(255) NOT NULL,
+    weapon_name_br VARCHAR(255) NOT NULL,
+    weapon_exterior CHAR(2) NOT NULL,
+    weapon_image VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS coupon (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    percent TINYINT(2) NOT NULL,
+    user_id INT UNSIGNED,
+    expiration_date DATETIME NOT NULL
+);

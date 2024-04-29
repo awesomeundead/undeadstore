@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:image" content="https://undeadstore.com.br/logo.png" />
+<meta property="og:description" content="Skins de Counter-Strike 2 com os melhores preços." />
+<meta property="og:title" content="Undead Store" />
+<link href="/favicon.png" rel="icon" type="image/x-icon" />
+<link href="/styles/layout.css" rel="stylesheet" />
+<link href="/styles/default.css" rel="stylesheet" />
+<link href="/styles/index.css" rel="stylesheet" />
+<link href="/styles/mobile.css" rel="stylesheet" />
+<title><?= isset($settings_title) ? "{$settings_title} | Undead Store" : 'Undead Store' ?></title>
+</head>
+<body>
+
+<div id="grid">
+    <header id="main_header">
+        <div class="left">
+            <a href="/">
+                <img alt="Logotipo" src="/logo128.png" />
+            </a>
+        </div>
+        <nav class="right">
+            <div class="cart_button">
+                <a class="image" href="/cart">
+                    <img alt="Imagem de um carrinho" src="/cart_icon.png" />
+                </a>
+            </div>
+            <?php if ($logged_in): ?>
+                <div id="loggedin">
+                    <div class="steam image">
+                        <img alt="Avatar" src="<?= $steam_avatar ?>" />
+                        <span><?= $steam_name ?></span>
+                    </div>
+                </div>
+            <?php else: ?>
+                <div id="login">
+                    <a class="image" href="/auth">
+                        <span>Entrar</span>
+                        <img alt="Steam logo" src="/logo_steam.svg" />
+                    </a>
+                </div>
+            <?php endif ?>
+            <?php if ($logged_in): ?>
+                <nav>
+                    <a href="/settings">Configurações</a>
+                    <a href="/orders">Pedidos</a>
+                    <a href="/logout">Sair</a>
+                </nav>
+            <?php endif ?>
+        </nav>
+    </header>
+    <section>
+        <?php require $content_view; ?>
+    </section>
+    <footer>
+        <a href="https://discord.gg/YMvX8g5FhU">Discord</a>
+        <a href="https://steamcommunity.com/groups/undeadstore">Steam</a>
+        <div>Undead Store 2024</div>
+        <div>Não somos afiliados a Valve.</div>
+    </footer>
+</div>
+    
+</body>
+</html>

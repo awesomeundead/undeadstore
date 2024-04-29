@@ -1,0 +1,51 @@
+<div class="flex_column">
+    <div class="box white">
+        <div class="flex">
+            <div>Subtotal</div>
+            <div>R$ <?= number_format($subtotal, 2, ',', '.') ?></div>
+        </div>
+        <div class="flex">
+            <div>Desconto</div>
+            <div>R$ <?= number_format($discount, 2, ',', '.') ?></div>
+        </div>
+        <div class="flex">
+            <div>Total</div>
+            <div>R$ <?= number_format($total, 2, ',', '.') ?></div>
+        </div>
+    </div>
+    <div class="box flex">
+        <div>Pagamento disponível somente por PIX</div>
+        <div>
+            <img alt="Logo do Pix" class="logo_pix" src="/logo_pix.png" />
+        </div>
+    </div>
+    <?php if ($message ?? false): ?>
+        <div class="box">
+            <?= $message ?>
+        </div>
+    <?php endif ?>
+    <div class="box flex_column">
+        <form action="/checkout/trade" method="post">
+            <label for="offer_trade">URL de troca (Trade)</label>
+            <div class="flex">
+                <input id="offer_trade" name="steam_trade_url" type="text" value="<?= $steam_trade_url ?>" />
+                <button type="submit">Atualizar</button>
+            </div>
+        </form>
+        <div class="flex_column text">
+            <div>Para obter sua URL de troca, <a href="https://steamcommunity.com/profiles/<?= $steamid ?>/tradeoffers/privacy#trade_offer_access_url" target="_blank">clique aqui</a>.</div>
+            <div>Precisamos dessa URL para que possamos enviar uma proposta de troca.</div>
+        </div>
+    </div>
+    <div class="box flex_column text">
+        <div>Após a confirmação do pagamento, uma das nossas contas enviará uma proposta de troca. Dependendo do dia pode levar algumas horas.</div>
+        <div>Caso não seja identificado o pagamento após 24 horas, o pedido será cancelado.</div>
+        <div>Caso aconteça algum problema com os servidores, inventário ou por manutenção do Steam, reembolsamos o pagamento.</div>
+        <div>Não fazemos devolução após a transferência dos itens.</div>
+        <div>Qualquer dúvida, deixe sua mensagem no nosso <a href="https://discord.gg/YMvX8g5FhU">Discord</a>.</div>
+    </div>
+    <div id="nav_buttons">
+        <a href="/cart">Voltar</a>
+        <a href="/checkout/end">Finalizar pedido</a>
+    </div>
+</div>

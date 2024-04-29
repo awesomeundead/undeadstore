@@ -1,0 +1,72 @@
+<div class="flex_column">
+<?php if ($cart_items): ?>
+    <div class="box header">
+        <div>Carrinho de compras</div>
+    </div>
+    <?php foreach ($cart_items as $item): ?>
+    <div class="box flex cart">
+        <div class="flex">
+            <div><img alt="" src="/images/<?= $item['image'] ?>.png" /></div>
+            <div>
+                <div><?= $item['full_name_br'] ?></div>
+                <div class="en"><?= $item['full_name'] ?></div>
+            </div>
+        </div>
+        <div class="flex">
+            <div class="delete">
+                <a href="/cart/delete?item_id=<?= $item['id'] ?>">
+                    <img alt="" src="/delete_icon.png" />
+                </a>
+            </div>
+            <div class="price">
+            <?php if ($item['offer_price'] ?? false): ?>
+                <div class="line_through">R$ <?= number_format($item['price'], 2, ',', '.') ?></div>    
+                <div>R$ <?= number_format($item['offer_price'], 2, ',', '.') ?></div>
+            <?php else: ?>
+                <div>R$ <?= number_format($item['price'], 2, ',', '.') ?></div>
+            <?php endif ?>
+            </div>
+        </div>
+    </div>
+    <?php endforeach ?>
+    <?php if ($message ?? false): ?>
+        <div class="box">
+            <?= $message ?>
+        </div>
+    <?php endif ?>
+    <div class="box flex_column">
+        <form action="/cart/coupon" method="post">
+            <label for="cupom">Cupom</label>
+            <div class="flex">
+                <input id="cupom" name="coupon" type="text" value="<?= $coupon_name ?? '' ?>" />
+                <button type="submit">Adicionar</button>
+            </div>
+        </form>
+    </div>
+    <div class="box white">
+        <div class="flex">
+            <div>Subtotal</div>
+            <div>R$ <?= number_format($subtotal, 2, ',', '.') ?></div>
+        </div>
+        <div class="flex">
+            <div>Desconto</div>
+            <div>(<?= $percent ?>%) R$ <?= number_format($discount, 2, ',', '.') ?></div>
+        </div>
+        <div class="flex">
+            <div>Total</div>
+            <div>R$ <?= number_format($total, 2, ',', '.') ?></div>
+        </div>
+    </div>
+    <div id="nav_buttons">
+        <a href="/">Continuar comprando</a>
+        <a href="/checkout">Continuar para o pagamento</a>
+    </div>
+<?php else: ?>
+    <div class="box header">
+        <div>O seu carrinho está vazio.</div>
+    </div>
+    <div id="nav_buttons">
+        <a href="/">Continuar comprando</a>
+    </div>
+<?php endif ?>
+</div>
