@@ -1,23 +1,18 @@
 <?php
 
-session_start();
+require ROOT . '/include/session.php';
 
-$logged_in = $_SESSION['logged_in'] ?? false;
-$cart_items = $_SESSION['cart']['items'] ?? false;
+$session = Session::create();
 
-if ($logged_in && $cart_items)
-{
-    $steamid = $_SESSION['user']['steamid'];
-    $steam_name = $_SESSION['user']['personaname'];
-    $steam_avatar = $_SESSION['user']['avatar'];
-}
-else
+$logged_in = $session->get('logged_in');
+$cart_items = $session->get('cart_items');
+
+if (!$logged_in || !$cart_items)
 {
     redirect('/auth?redirect=pay');
 }
 
-
-$coupon = $_SESSION['cart']['coupon'] ?? false;
+$coupon = $session->get('cart_coupon');
 
 if ($coupon)
 {
@@ -26,8 +21,10 @@ if ($coupon)
 
     if ($timestamp > $expiration_date)
     {
-        $_SESSION['cart']['coupon'] = false;
-        redirect('/cart?err=Cupom expirado.');
+        $session->remove('cart_coupon');
+        $session->flash('coupon', 'Cupom expirado.');
+
+        redirect('/cart');
     }
 }
 
@@ -35,26 +32,26 @@ require ROOT . '/include/pdo.php';
 
 $query = 'SELECT steam_trade_url FROM users WHERE id = :id';
 $stmt = $pdo->prepare($query);
-$stmt->execute(['id' => $_SESSION['user']['id']]);
+$stmt->execute(['id' => $session->get('user_id')]);
 $steam_trade_url = $stmt->fetchColumn();
 
 if (!$steam_trade_url)
 {
     // Mensagem de url de troca vazia
-    $_SESSION['__flash'] = 'Não deixe o campo URL vazio.';
+    $session->flash('trade', 'Não deixe o campo URL vazio.');
     redirect('/checkout');
 }
 
 $coupon = $coupon['name'] ?? '';
-$subtotal = $_SESSION['cart']['subtotal'];
-$discount = $_SESSION['cart']['discount'];
-$total = $_SESSION['cart']['total'];
+$subtotal = $session->get('cart_subtotal');
+$discount = $session->get('cart_discount');
+$total = $session->get('cart_total');
 
 $query = 'INSERT INTO purchase (user_id, pay_method, pay_progress, coupon, subtotal, discount, total, created_date)
             VALUES (:user_id, :pay_method, :pay_progress, :coupon, :subtotal, :discount, :total, :created_date)';
 $stmt = $pdo->prepare($query);
 $params = [
-    'user_id' => $_SESSION['user']['id'],
+    'user_id' => $session->get('user_id'),
     'pay_method' => 'PIX',
     'pay_progress' => 'Em andamento',
     'coupon' => $coupon,
@@ -67,7 +64,8 @@ $result = $stmt->execute($params);
 
 if (!$result)
 {
-    redirect('/checkout?error');
+    $session->flash('trade', 'Ocorreu um erro.');
+    redirect('/checkout');
 }
 
 $purchase_id = $pdo->lastInsertId();
@@ -96,6 +94,10 @@ foreach ($cart_items as $item)
     $stmt->execute($params);
 }
 
-unset($_SESSION['cart']);
+$session->remove('cart_items');
+$session->remove('cart_subtotal');
+$session->remove('cart_discount');
+$session->remove('cart_total');
+$session->remove('cart_coupon');
 
 redirect("/pay?purchase_id={$purchase_id}");

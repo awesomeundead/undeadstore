@@ -1,19 +1,6 @@
 <?php
 
-session_start();
-
-$logged_in = $_SESSION['logged_in'] ?? false;
-
-if ($logged_in)
-{
-    $steamid = $_SESSION['user']['steamid'];
-    $steam_name = $_SESSION['user']['personaname'];
-    $steam_avatar = $_SESSION['user']['avatar'];
-}
-else
-{
-    redirect('/auth');
-}
+require ROOT . '/include/check_login.php';
 
 $purchase_id = $_GET['purchase_id'];
 
@@ -23,7 +10,7 @@ $query = 'SELECT * FROM purchase WHERE id = :id AND user_id = :user_id';
 $stmt = $pdo->prepare($query);
 $params = [
     'id' => $_GET['purchase_id'],
-    'user_id' => $_SESSION['user']['id']
+    'user_id' => $session->get('user_id')
 ];
 $stmt->execute($params);
 $purchase = $stmt->fetch(PDO::FETCH_ASSOC);

@@ -28,7 +28,7 @@
         <form action="/checkout/trade" method="post">
             <label for="offer_trade">URL de troca (Trade)</label>
             <div class="flex">
-                <input id="offer_trade" name="steam_trade_url" type="text" value="<?= $steam_trade_url ?>" />
+                <input id="offer_trade" name="steam_trade_url" required="required" type="text" value="<?= $steam_trade_url ?>" />
                 <button type="submit">Atualizar</button>
             </div>
         </form>

@@ -4,6 +4,7 @@ require ROOT . '/include/session.php';
 
 $session = Session::create();
 
-$content_view = 'index.phtml';
-
-require VIEW . 'layout.phtml';
+if (!$session->get('logged_in'))
+{
+    redirect('/auth');
+}

@@ -6,6 +6,8 @@ return function ($app)
 
     $app->get('/auth', 'auth.php');
 
+    $app->get('/auth/login', 'auth_login.php');
+
     $app->get('/cs2', function ()
     {
         redirect('/');
@@ -28,21 +30,25 @@ return function ($app)
 
     $app->get('/cart', function ()
     {
-        session_start();
+        require ROOT . '/include/session.php';
+
+        $session = Session::create();
 
         require SRC . '/cart.php';
     });
 
     $app->get('/cart/add', function ()
     {
-        session_start();
+        require ROOT . '/include/session.php';
 
-        require ROOT . '/include/pdo.php';
+        $session = Session::create();
 
         $item_id = $_GET['item_id'] ?? false;
 
         if ($item_id)
         {
+            require ROOT . '/include/pdo.php';
+
             $query = 'SELECT * FROM items WHERE id = :id AND availability = 1';
             $stmt = $pdo->prepare($query);
             $stmt->execute(['id' => $item_id]);
@@ -90,7 +96,9 @@ return function ($app)
                     $result['image'] = "{$item['image']}_{$item['weapon_exterior']}";
                 }
 
-                $_SESSION['cart']['items'][$result['id']] = $result;
+                $cart_items = $session->get('cart_items');
+                $cart_items[$result['id']] = $result;
+                $session->set('cart_items', $cart_items);
             }
         }
 
@@ -99,13 +107,17 @@ return function ($app)
 
     $app->get('/cart/delete', function ()
     {
-        session_start();
+        require ROOT . '/include/session.php';
+
+        $session = Session::create();
 
         $item_id = $_GET['item_id'] ?? false;
 
         if ($item_id)
         {
-            unset($_SESSION['cart']['items'][$item_id]);
+            $cart_items = $session->get('cart_items');
+            unset($cart_items[$item_id]);
+            $session->set('cart_items', $cart_items);
         }
 
         require SRC . '/cart.php';
@@ -113,7 +125,9 @@ return function ($app)
 
     $app->post('/cart/coupon', function ()
     {
-        session_start();
+        require ROOT . '/include/session.php';
+
+        $session = Session::create();
 
         $coupon = $_POST['coupon'] ?? false;
 
@@ -130,24 +144,26 @@ return function ($app)
 
             if ($result)
             {
-                $user_id = $_SESSION['user']['id'] ?? false;
+                $user_id = $session->get('user_id');
 
                 if (is_null($result['user_id']))
                 {
-                    $_SESSION['cart']['coupon'] = $result;
+                    $session->set('cart_coupon', $result);
+                    $session->flash('coupon', 'Cupom adicionado.');
                     redirect('/cart');
                 }
 
                 if ($result['user_id'] == $user_id)
                 {
-                    $_SESSION['cart']['coupon'] = $result;
+                    $session->set('cart_coupon', $result);
+                    $session->flash('coupon', 'Cupom adicionado.');
                     redirect('/cart');
                 }
             }
         }
 
-        $_SESSION['cart']['coupon'] = false;
-        $_SESSION['__flash'] = 'Cupom inválido.';
+        $session->remove('cart_coupon');
+        $session->flash('coupon', 'Cupom inválido.');
         redirect('/cart');
     });
 
@@ -157,14 +173,7 @@ return function ($app)
 
     $app->post('/checkout/trade', function ()
     {
-        session_start();
-
-        $logged_in = $_SESSION['logged_in'] ?? false;
-
-        if (!$logged_in)
-        {
-            redirect('/auth');
-        }
+        require ROOT . '/include/check_login.php';
 
         $steam_trade_url = $_POST['steam_trade_url'] ?? false;
         $steam_trade_url = trim($steam_trade_url);
@@ -176,16 +185,15 @@ return function ($app)
             $query = 'UPDATE users SET steam_trade_url = :steam_trade_url WHERE id = :id';
             $stmt = $pdo->prepare($query);
             $params = [
-                'id' => $_SESSION['user']['id'],
+                'id' => $session->get('user_id'),
                 'steam_trade_url' => $_POST['steam_trade_url']
             ];
             $stmt->execute($params);
-
-            $_SESSION['__flash'] = 'Atualizado';
+            $session->flash('trade', 'Atualizado');
         }
         else
         {
-            $_SESSION['__flash'] = 'URL inválida';
+            $session->flash('trade', 'URL inválida');
         }
         
         redirect('/checkout');
@@ -245,50 +253,9 @@ return function ($app)
 
     $app->get('/orders', 'orders.php');
 
-    $app->get('/settings', 'settings.php');
-
-    $app->post('/settings', function ()
-    {
-        session_start();
-
-        $logged_in = $_SESSION['logged_in'] ?? false;
-
-        if (!$logged_in)
-        {
-            redirect('/auth');
-        }
-
-        require ROOT . '/include/pdo.php';
-
-        $query = 'UPDATE users SET steam_trade_url = :steam_trade_url, name = :name, email = :email, phone = :phone WHERE id = :id';
-        $stmt = $pdo->prepare($query);
-        $params = [
-            'id' => $_SESSION['user']['id'],
-            'steam_trade_url' => $_POST['steam_trade_url'],
-            'name' => $_POST['name'],
-            'email' => $_POST['email'],
-            'phone' => $_POST['phone']
-        ];
-        $result = $stmt->execute($params);
-
-        if ($result)
-        {
-            redirect('/settings');
-        }
-    });
-
     $app->get('/partners', function ()
     {
-        session_start();
-
-        $logged_in = $_SESSION['logged_in'] ?? false;
-
-        if ($logged_in)
-        {
-            $steamid = $_SESSION['user']['steamid'];
-            $steam_name = $_SESSION['user']['personaname'];
-            $steam_avatar = $_SESSION['user']['avatar'];
-        }
+        require ROOT . '/include/check_login.php';
 
         $content_view = 'partners.phtml';
         $settings_title = 'Parceiros';
@@ -312,5 +279,44 @@ return function ($app)
             imagepng($image);
             imagedestroy($image);
         }
+    });
+
+    $app->get('/settings', 'settings.php');
+
+    $app->post('/settings', function ()
+    {
+        require ROOT . '/include/check_login.php';
+        require ROOT . '/include/pdo.php';
+
+        $steam_trade_url = $_POST['steam_trade_url'] ?? false;
+        $steam_trade_url = trim($steam_trade_url);
+
+        if (!preg_match('#^https://steamcommunity.com/tradeoffer/new/\?partner=(\d+)&token=(\w+)$#', $steam_trade_url, $matches))
+        {
+            $session->flash('settings', 'URL inválida.');
+            redirect('/settings');
+        }
+
+        $query = 'UPDATE users SET steam_trade_url = :steam_trade_url, name = :name, email = :email, phone = :phone WHERE id = :id';
+        $stmt = $pdo->prepare($query);
+        $params = [
+            'id' => $session->get('user_id'),
+            'steam_trade_url' => $steam_trade_url,
+            'name' => $_POST['name'],
+            'email' => $_POST['email'],
+            'phone' => $_POST['phone']
+        ];
+        $result = $stmt->execute($params);
+
+        if ($result)
+        {
+            $session->flash('settings', 'Atualizado com sucesso.');
+        }
+        else
+        {
+            $session->flash('settings', 'Ocorreu um erro ao atualizar.');
+        }
+
+        redirect('/settings');
     });
 };

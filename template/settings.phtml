@@ -1,26 +1,33 @@
-<div class="box">
-    <form action="/settings" method="post">
-        <div class="flex_column gap20">
-            <div>
-                <label for="name">Nome</label>
-                <input id="name" name="name" placeholder="Seu nome" type="text" value="<?= $name ?? '' ?>" />
+<div class="flex_column">
+    <div class="box">
+        <form action="/settings" method="post">
+            <div class="flex_column gap20">
+                <div>
+                    <label for="name">Nome</label>
+                    <input id="name" name="name" placeholder="Seu nome" type="text" value="<?= $name ?? '' ?>" />
+                </div>
+                <div>
+                    <label for="email">E-mail</label>
+                    <input id="email" name="email" placeholder="Seu endereço de e-mail" type="email" value="<?= $email ?? '' ?>" />
+                </div>
+                <div>
+                    <label for="phone">Telefone</label>
+                    <input id="phone" name="phone" placeholder="Seu número de telefone com DDD" type="tel" value="<?= $phone ?? '' ?>" />
+                </div>
+                <div>
+                    <label for="offer_trade">URL de troca (Trade)</label>
+                    <input id="offer_trade" name="steam_trade_url" required="required" type="text" value="<?= $steam_trade_url ?? '' ?>" />
+                </div>            
+                <div>Para obter sua URL de troca (Trade), <a href="https://steamcommunity.com/profiles/<?= $steamid ?>/tradeoffers/privacy#trade_offer_access_url" target="_blank">clique aqui</a>.</div>
+                <div>
+                    <button type="submit">Salvar</button>
+                </div>
             </div>
-            <div>
-                <label for="email">E-mail</label>
-                <input id="email" name="email" placeholder="Seu endereço de e-mail" type="email" value="<?= $email ?? '' ?>" />
-            </div>
-            <div>
-                <label for="phone">Telefone</label>
-                <input id="phone" name="phone" placeholder="Seu número de telefone com DDD" type="tel" value="<?= $phone ?? '' ?>" />
-            </div>
-            <div>
-                <label for="offer_trade">URL de troca (Trade)</label>
-                <input id="offer_trade" name="steam_trade_url" type="text" value="<?= $steam_trade_url ?? '' ?>" />
-            </div>            
-            <div>Para obter sua URL de troca (Trade), <a href="https://steamcommunity.com/profiles/<?= $steamid ?>/tradeoffers/privacy#trade_offer_access_url" target="_blank">clique aqui</a>.</div>
-            <div>
-                <button type="submit">Salvar</button>
-            </div>
+        </form>
+    </div>
+    <?php if ($message ?? false): ?>
+        <div class="box">
+            <?= $message ?>
         </div>
-    </form>
+    <?php endif ?>
 </div>
