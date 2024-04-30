@@ -28,11 +28,11 @@
                     <img alt="Imagem de um carrinho" src="/cart_icon.png" />
                 </a>
             </div>
-            <?php if ($logged_in): ?>
+            <?php if ($session->get('logged_in')): ?>
                 <div id="loggedin">
                     <div class="steam image">
-                        <img alt="Avatar" src="<?= $steam_avatar ?>" />
-                        <span><?= $steam_name ?></span>
+                        <img alt="Avatar" src="<?= $session->get('steam_avatar') ?>" />
+                        <span><?= $session->get('steam_name') ?></span>
                     </div>
                 </div>
             <?php else: ?>
@@ -43,7 +43,7 @@
                     </a>
                 </div>
             <?php endif ?>
-            <?php if ($logged_in): ?>
+            <?php if ($session->get('logged_in')): ?>
                 <nav>
                     <a href="/settings">Configurações</a>
                     <a href="/orders">Pedidos</a>

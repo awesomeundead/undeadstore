@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS agents (
     agent_name_br VARCHAR(255) NOT NULL,
     agent_category VARCHAR(255) NOT NULL,
     agent_category_br VARCHAR(255) NOT NULL,
-    agent_image VARCHAR(255) NOT NULL
+    image VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS weapons (
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS weapons (
     weapon_name VARCHAR(255) NOT NULL,
     weapon_name_br VARCHAR(255) NOT NULL,
     weapon_exterior CHAR(2) NOT NULL,
-    weapon_image VARCHAR(255) NOT NULL
+    image VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS coupon (

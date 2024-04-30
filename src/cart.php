@@ -1,15 +1,6 @@
 <?php
 
-$logged_in = $_SESSION['logged_in'] ?? false;
-
-if ($logged_in)
-{
-    $steamid = $_SESSION['user']['steamid'];
-    $steam_name = $_SESSION['user']['personaname'];
-    $steam_avatar = $_SESSION['user']['avatar'];
-}
-
-$cart_items = $_SESSION['cart']['items'] ?? false;
+$cart_items = $session->get('cart_items');
 
 if ($cart_items)
 {
@@ -23,15 +14,14 @@ if ($cart_items)
     $subtotal = array_sum($prices);
     $discount = 0;
     $percent = 0;
-
-    $coupon = $_SESSION['cart']['coupon'] ?? false;
+    $coupon = $session->get('cart_coupon');
+    $message = $session->flash('coupon');
 
     if ($coupon)
     {
         $expiration_date = strtotime($coupon['expiration_date']);
-        $timestamp = time();
 
-        if ($timestamp < $expiration_date)
+        if (time() < $expiration_date)
         {
             $coupon_name = $coupon['name'];
             $discount = $subtotal / 100 * $coupon['percent'];
@@ -39,7 +29,8 @@ if ($cart_items)
         }
         else
         {
-            $_SESSION['cart']['coupon'] = $coupon = false;
+            $coupon = false;
+            $session->set('cart_coupon', $coupon);
             $message = 'Cupom expirado.';
         }
     }
@@ -59,16 +50,9 @@ if ($cart_items)
     }
 
     $total = $subtotal - $discount;
-
-    $_SESSION['cart']['subtotal'] = $subtotal;
-    $_SESSION['cart']['discount'] = $discount;
-    $_SESSION['cart']['total'] = $total;
-}
-
-if (isset($_SESSION['__flash']))
-{
-    $message = $_SESSION['__flash'];
-    unset($_SESSION['__flash']);
+    $session->set('cart_subtotal', $subtotal);
+    $session->set('cart_discount', $discount);
+    $session->set('cart_total', $total);
 }
 
 $content_view = 'cart.phtml';
