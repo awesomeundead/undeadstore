@@ -1,5 +1,7 @@
 <?php
 
+namespace Awesomeundead\Undeadstore;
+
 class Session
 {
     private static $session;

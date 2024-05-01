@@ -1,6 +1,15 @@
 <?php
 
-require ROOT . '/include/check_login.php';
+use Awesomeundead\Undeadstore\Session;
+
+$session = Session::create();
+
+// Verifica se o usuário está logado
+if (!$session->get('logged_in'))
+{
+    redirect('/auth');
+}
+
 require ROOT . '/include/pdo.php';
 
 $query = 'SELECT * FROM users WHERE id = :id';

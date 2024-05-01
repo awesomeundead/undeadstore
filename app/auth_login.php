@@ -1,6 +1,6 @@
 <?php
 
-require ROOT . '/include/session.php';
+use Awesomeundead\Undeadstore\Session;
 
 $session = Session::create();
 

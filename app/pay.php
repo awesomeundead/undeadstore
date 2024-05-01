@@ -1,6 +1,14 @@
 <?php
 
-require ROOT . '/include/check_login.php';
+use Awesomeundead\Undeadstore\Session;
+
+$session = Session::create();
+
+// Verifica se o usuário está logado
+if (!$session->get('logged_in'))
+{
+    redirect('/auth');
+}
 
 $purchase_id = $_GET['purchase_id'];
 
