@@ -294,6 +294,47 @@ return function ($app)
     {
         require ROOT . '/app/pay.php';
     });
+    
+    /*
+    $app->get('/pay/success', function ()
+    {
+        $collection_id = $_GET['collection_id'];
+        $access_token = 'TEST-7407069493848525-043015-b6eef5c68c01daf9e227f8ef3727ae45-234415597';
+
+        $context = stream_context_create(
+        [
+            'http' =>
+            [
+                'method' => 'GET',
+                'header' => 'Authorization: Bearer ' . $access_token
+            ],
+        ]);
+        
+        $response = file_get_contents('https://api.mercadopago.com/v1/payments/' . $collection_id, false, $context);
+        $data = json_decode($response, true);
+
+        print_r($data);
+    });
+    */
+
+    $app->get('/payment/success', function ()
+    {
+        $session = Session::create();
+        $session->flash('payment', 'Pagamento concluído com sucesso.');
+
+        redirect('/orders');
+    });
+
+    $app->get('/payment/failure', function ()
+    {
+        $purchase_id = $_GET['purchase_id'] ?? false;
+
+        $session = Session::create();
+        $session->flash('payment', 'Falha no pagamento, tente novamente.');
+
+        redirect("/pay?purchase_id={$purchase_id}");
+    });
+
 
     $app->get('/qrcode', function ()
     {

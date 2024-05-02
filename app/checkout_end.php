@@ -47,52 +47,14 @@ $subtotal = $session->get('cart_subtotal');
 $discount = $session->get('cart_discount');
 $total = $session->get('cart_total');
 
-$query = 'INSERT INTO purchase (user_id, pay_method, pay_progress, coupon, subtotal, discount, total, created_date)
-            VALUES (:user_id, :pay_method, :pay_progress, :coupon, :subtotal, :discount, :total, :created_date)';
-$stmt = $pdo->prepare($query);
-$params = [
-    'user_id' => $session->get('user_id'),
-    'pay_method' => 'PIX',
-    'pay_progress' => 'Em andamento',
-    'coupon' => $coupon,
-    'subtotal' => $subtotal,
-    'discount' => $discount,
-    'total' => $total,
-    'created_date' => date('Y-m-d H:i:s')
-];
-$result = $stmt->execute($params);
+$pay_method = $_GET['pay_method'] ?? false;
 
-if (!$result)
+if ($pay_method != 'pix' && $pay_method != 'mercadopago')
 {
-    $session->flash('trade', 'Ocorreu um erro.');
-    redirect('/checkout');
+    redirect('/');
 }
 
-$purchase_id = $pdo->lastInsertId();
-print_r($cart_items);
-// $item [id, item_id, item_name, availability, price, offer_price, image]
-foreach ($cart_items as $item)
-{
-    $query = 'INSERT INTO purchase_items (purchase_id, item_id, item_name, price, offer_price) VALUES (:purchase_id, :item_id, :item_name, :price, :offer_price)';
-    $stmt = $pdo->prepare($query);
-    $params = [
-        'purchase_id' => $purchase_id,
-        'item_id' => $item['id'],
-        'item_name' => $item['full_name'],
-        'price' => $item['price'],
-        'offer_price' => $item['offer_price']
-    ];
-    $stmt->execute($params);
-
-    $query = 'UPDATE items SET availability = :availability, price = :price WHERE id = :id';
-    $stmt = $pdo->prepare($query);
-    $params = [
-        'id' => $item['id'],
-        'availability' => 2,
-        'price' => null
-    ];
-    $stmt->execute($params);
-}
+require ROOT . '/app/checkout_save.php';
 
 $session->remove('cart_items');
 $session->remove('cart_subtotal');

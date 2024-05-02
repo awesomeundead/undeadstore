@@ -1,18 +1,18 @@
-<div class="flex_column">
+<div class="flex column">
 <?php if ($cart_items): ?>
     <div class="box header">
         <div>Carrinho de compras</div>
     </div>
     <?php foreach ($cart_items as $item): ?>
-    <div class="box flex cart">
-        <div class="flex">
+    <div class="box flex align-center space-between cart">
+        <div class="flex align-center space-between">
             <div><img alt="" src="/images/<?= $item['image'] ?>.png" /></div>
             <div>
                 <div><?= $item['full_name_br'] ?></div>
                 <div class="en"><?= $item['full_name'] ?></div>
             </div>
         </div>
-        <div class="flex">
+        <div class="flex align-center space-between">
             <div class="delete">
                 <a href="/cart/delete?item_id=<?= $item['id'] ?>">
                     <img alt="" src="/styles/delete_icon.png" />
@@ -34,25 +34,25 @@
             <?= $message ?>
         </div>
     <?php endif ?>
-    <div class="box flex_column">
+    <div class="box flex column">
         <form action="/cart/coupon" method="post">
             <label for="cupom">Cupom</label>
-            <div class="flex">
+            <div class="flex align-center space-between">
                 <input id="cupom" name="coupon" type="text" value="<?= $coupon_name ?? '' ?>" />
                 <button type="submit">Adicionar</button>
             </div>
         </form>
     </div>
     <div class="box white">
-        <div class="flex">
+        <div class="flex align-center space-between">
             <div>Subtotal</div>
             <div>R$ <?= number_format($subtotal, 2, ',', '.') ?></div>
         </div>
-        <div class="flex">
+        <div class="flex align-center space-between">
             <div>Desconto</div>
             <div>(<?= $percent ?>%) R$ <?= number_format($discount, 2, ',', '.') ?></div>
         </div>
-        <div class="flex">
+        <div class="flex align-center space-between">
             <div>Total</div>
             <div>R$ <?= number_format($total, 2, ',', '.') ?></div>
         </div>

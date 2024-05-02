@@ -12,5 +12,7 @@
             "email": "daniel.ximenes@outlook.com"
         }
     ],
-    "require": {}
+    "require": {
+        "mercadopago/dx-php": "^3.0"
+    }
 }

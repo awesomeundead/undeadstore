@@ -1,0 +1,30 @@
+<div class="flex column">
+    <?php if ($message ?? false): ?>
+        <div class="box">
+            <?= $message ?>
+        </div>
+    <?php endif ?>
+    <div class="pay box flex column align-center">
+        <div class="box flex white">
+            <img alt="Logo do Mercado Pago" src="/styles/mercadopago_icon.png" />
+        </div>
+        <div id="wallet_container"></div>
+    </div>
+</div>
+<script src="https://sdk.mercadopago.com/js/v2"></script>
+<script>
+
+const mp = new MercadoPago('TEST-3d68cfb9-9d53-419c-96f5-95f2e560e05d',
+{
+    locale: 'pt-BR'
+});
+
+mp.bricks().create('wallet', 'wallet_container',
+{
+    initialization:
+    {
+        preferenceId: '<?= $preference->id ?>',
+    }
+});
+
+</script>

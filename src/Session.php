@@ -40,7 +40,7 @@ class Session
 
             if ($_SESSION['user_agent'] != $user_agent || $_SESSION['address'] != $address)
             {
-                unset($_SESSION);
+                session_destroy();
             }
         }
         else

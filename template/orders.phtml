@@ -1,27 +1,41 @@
-<div class="flex_column">
+<div class="flex column">
+<?php if ($message ?? false): ?>
+    <div class="box">
+        <?= $message ?>
+    </div>
+<?php endif ?>
 <?php if ($result): ?>
     <?php foreach ($result as $item): ?>
         <div class="box">
-            <div class="box flex_column">
-                <div class="flex">
+            <div class="box flex column">
+                <div class="flex align-center space-between">
                     <div>Status do pedido</div>
-                    <div><?= $item['pay_progress'] ?></div>
+                    <div><?= $item['status'] ?></div>
                 </div>
-                <div class="flex">
+                <div class="flex align-center space-between">
                     <div>Forma de pagamento</div>
                     <div>
-                        <span><?= $item['pay_method'] ?></span>
-                        <span>(<a href="/pay?purchase_id=<?= $item['id'] ?>">QR Code</a>)</span>
+                        <?php if ($item['pay_method'] == 'pix'): ?>
+                            <span>PIX</span>
+                            <?php if ($item['status'] == 'Em andamento'): ?>
+                                <span>(<a href="/pay?purchase_id=<?= $item['id'] ?>">Gerar QR Code</a>)</span>
+                            <?php endif ?>
+                        <?php elseif ($item['pay_method'] == 'mercadopago'): ?>
+                            <span>Mercado Pago</span>
+                            <?php if ($item['status'] == 'Em andamento'): ?>
+                                <span>(<a href="/pay?purchase_id=<?= $item['id'] ?>">Link para pagamento</a>)</span>
+                            <?php endif ?>
+                        <?php endif ?>
                     </div>
                 </div>
-                <div class="flex">
+                <div class="flex align-center space-between">
                     <div>Data do pedido</div>
                     <div><?= date_format(date_create($item['created_date']), 'd/m/Y H:i') ?></div>
                 </div>
             </div>
             <div class="box blue">
             <?php foreach ($item['items'] as $i): ?>
-                <div class="flex">
+                <div class="flex align-center space-between">
                     <div class="weapon_full"><?= $i['item_name'] ?></div>
                     <div class="price">
                     <?php if ($i['offer_price'] ?? false): ?>
@@ -37,15 +51,15 @@
             <?php endforeach ?>
             </div>
             <div class="box">
-                <div class="flex">
+                <div class="flex align-center space-between">
                     <div>Subtotal</div>
                     <div class="value">R$ <?= number_format($item['subtotal'], 2, ',', '.')  ?></div>
                 </div>
-                <div class="flex">
+                <div class="flex align-center space-between">
                     <div>Desconto</div>
                     <div class="value">R$ <?= number_format($item['discount'], 2, ',', '.')  ?></div>
                 </div>
-                <div class="flex">
+                <div class="flex align-center space-between">
                     <div>Total</div>
                     <div class="value">R$ <?= number_format($item['total'], 2, ',', '.')  ?></div>
                 </div>
