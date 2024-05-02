@@ -1,12 +1,26 @@
 <?php
 
+use Awesomeundead\Undeadstore\Session;
+
 return function ($app)
 {
-    $app->get('/', 'index.php');
+    $app->get('/', function ()
+    {
+        $session = Session::create();
+        $content_view = 'index.phtml';
 
-    $app->get('/auth', 'auth.php');
+        require VIEW . 'layout.phtml';
+    });
+    
+    $app->get('/auth', function ()
+    {
+        require ROOT . '/app/auth.php';
+    });
 
-    $app->get('/auth/login', 'auth_login.php');
+    $app->get('/auth/login', function ()
+    {
+        require ROOT . '/app/auth_login.php';
+    });
 
     $app->get('/cs2', function ()
     {
@@ -30,17 +44,13 @@ return function ($app)
 
     $app->get('/cart', function ()
     {
-        require ROOT . '/include/session.php';
-
         $session = Session::create();
 
-        require SRC . '/cart.php';
+        require ROOT . '/app/cart.php';
     });
 
     $app->get('/cart/add', function ()
     {
-        require ROOT . '/include/session.php';
-
         $session = Session::create();
 
         $item_id = $_GET['item_id'] ?? false;
@@ -102,13 +112,11 @@ return function ($app)
             }
         }
 
-        require SRC . '/cart.php';
+        require ROOT . '/app/cart.php';
     });
 
     $app->get('/cart/delete', function ()
     {
-        require ROOT . '/include/session.php';
-
         $session = Session::create();
 
         $item_id = $_GET['item_id'] ?? false;
@@ -120,13 +128,11 @@ return function ($app)
             $session->set('cart_items', $cart_items);
         }
 
-        require SRC . '/cart.php';
+        require ROOT . '/app/cart.php';
     });
 
     $app->post('/cart/coupon', function ()
     {
-        require ROOT . '/include/session.php';
-
         $session = Session::create();
 
         $coupon = $_POST['coupon'] ?? false;
@@ -167,13 +173,25 @@ return function ($app)
         redirect('/cart');
     });
 
-    $app->get('/checkout/end', 'checkout_end.php');
+    $app->get('/checkout', function ()
+    {
+        require ROOT . '/app/checkout.php';
+    });
 
-    $app->get('/checkout', 'checkout.php');
+    $app->get('/checkout/end', function ()
+    {
+        require ROOT . '/app/checkout_end.php';
+    });
 
     $app->post('/checkout/trade', function ()
     {
-        require ROOT . '/include/check_login.php';
+        $session = Session::create();
+
+        // Verifica se o usuário está logado
+        if (!$session->get('logged_in'))
+        {
+            redirect('/auth');
+        }
 
         $steam_trade_url = $_POST['steam_trade_url'] ?? false;
         $steam_trade_url = trim($steam_trade_url);
@@ -251,11 +269,20 @@ return function ($app)
         redirect();
     });
 
-    $app->get('/orders', 'orders.php');
+    $app->get('/orders', function ()
+    {
+        require ROOT . '/app/orders.php';
+    });
 
     $app->get('/partners', function ()
     {
-        require ROOT . '/include/check_login.php';
+        $session = Session::create();
+
+        // Verifica se o usuário está logado
+        if (!$session->get('logged_in'))
+        {
+            redirect('/auth');
+        }
 
         $content_view = 'partners.phtml';
         $settings_title = 'Parceiros';
@@ -263,7 +290,10 @@ return function ($app)
         require VIEW . 'layout.phtml';
     });
 
-    $app->get('/pay', 'pay.php');
+    $app->get('/pay', function ()
+    {
+        require ROOT . '/app/pay.php';
+    });
 
     $app->get('/qrcode', function ()
     {
@@ -281,11 +311,21 @@ return function ($app)
         }
     });
 
-    $app->get('/settings', 'settings.php');
+    $app->get('/settings', function ()
+    {
+        require ROOT . '/app/settings.php';
+    });
 
     $app->post('/settings', function ()
     {
-        require ROOT . '/include/check_login.php';
+        $session = Session::create();
+
+        // Verifica se o usuário está logado
+        if (!$session->get('logged_in'))
+        {
+            redirect('/auth');
+        }
+
         require ROOT . '/include/pdo.php';
 
         $steam_trade_url = $_POST['steam_trade_url'] ?? false;

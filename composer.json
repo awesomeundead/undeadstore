@@ -1,0 +1,16 @@
+{
+    "name": "awesomeundead/undeadstore",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Awesomeundead\\Undeadstore\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Daniel",
+            "email": "daniel.ximenes@outlook.com"
+        }
+    ],
+    "require": {}
+}

@@ -1,6 +1,15 @@
 <?php
 
-require ROOT . '/include/check_login.php';
+use Awesomeundead\Undeadstore\Session;
+
+$session = Session::create();
+
+// Verifica se o usuário está logado
+if (!$session->get('logged_in'))
+{
+    redirect('/auth');
+}
+
 require ROOT . '/include/pdo.php';
 
 $query = 'SELECT * FROM purchase WHERE user_id = :user_id ORDER BY id DESC';
