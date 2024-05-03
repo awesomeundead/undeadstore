@@ -262,7 +262,7 @@ return function (App $app)
         echo json_encode($list);
     });
 
-    $app->get('/input/mercadopago', function ()
+    $post->get('/input/mercadopago', function ()
     {
         $data_id = $_REQUEST['data_id'] ?? false;
         $xSignature = $_SERVER['HTTP_X_SIGNATURE'] ?? '';
