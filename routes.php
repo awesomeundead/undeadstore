@@ -262,13 +262,11 @@ return function (App $app)
         echo json_encode($list);
     });
 
-    $post->get('/input/mercadopago', function ()
+    $app->post('/input/mercadopago', function ()
     {
         $data_id = $_REQUEST['data_id'] ?? false;
         $xSignature = $_SERVER['HTTP_X_SIGNATURE'] ?? '';
         $xRequestId = $_SERVER['HTTP_X_REQUEST_ID'] ?? '';
-        $xSignature = 'ts=1714658739,v1=67e18b55523255ce607513adceebde8f632d0838310c35732da251a0cddb5c5d';
-        $xRequestId = '6e741d4f-69a7-4072-b8f3-b411845cf208';
         
         if (preg_match('/^ts=(?P<ts>\d+),v1=(?P<hash>\w{64})$/', $xSignature, $matches))
         {
