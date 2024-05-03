@@ -63,7 +63,7 @@ $access_token = $config['access_token'];
 $public_key = $config['public_key'];
 
 MercadoPagoConfig::setAccessToken($access_token);
-MercadoPagoConfig::setRuntimeEnviroment(MercadoPagoConfig::LOCAL);
+//MercadoPagoConfig::setRuntimeEnviroment(MercadoPagoConfig::LOCAL);
 
 $request_options = new RequestOptions();
 $request_options->setCustomHeaders(["X-Idempotency-Key: {$purchase_identifier}"]);
