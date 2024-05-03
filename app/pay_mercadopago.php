@@ -3,19 +3,28 @@
 use MercadoPago\Client\Common\RequestOptions;
 use MercadoPago\Client\Preference\PreferenceClient;
 use MercadoPago\MercadoPagoConfig;
-use MercadoPago\Exceptions\MPApiException;
 
-$fees = $purchase_total / 100 * 4.98;
+$config = (require ROOT . '/config.php')['mercadopago'];
+
+$fee = round($purchase_total / 100 * $config['fee'], 2);
+
+$query = 'SELECT * FROM purchase_items WHERE purchase_id = :purchase_id';
+$stmt = $pdo->prepare($query);
+$stmt->execute(['purchase_id' => $purchase_id]);
+$list = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+foreach ($list as $item)
+{
+    $description[] = "1x {$item['item_name']}";
+}
 
 $items = [
     [
         'title' => 'Undead Store Item Digital',
-        'description' => '',
-        'picture_url' => '',
-        'category_id' => '',
+        'description' => implode(', ', $description),
         'quantity' => 1,
         'currency_id' => 'BRL',
-        'unit_price' =>  $purchase_total + $fees
+        'unit_price' =>  $purchase_total + $fee
     ]
 ];
 
@@ -43,28 +52,24 @@ $request =
 [
     'items' => $items,
     'payer' => $payer,
+    'auto_return' => 'approved',
     'payment_methods' => $payment_methods,
     'back_urls' => $back_urls,
     'statement_descriptor' => 'Undead Store',
     'external_reference' => $purchase_identifier
-    //'coupon_amount' => ''
 ];
 
-try
-{
-    MercadoPagoConfig::setAccessToken('TEST-7407069493848525-043015-b6eef5c68c01daf9e227f8ef3727ae45-234415597');
-    MercadoPagoConfig::setRuntimeEnviroment(MercadoPagoConfig::LOCAL);
+$access_token = $config['access_token'];
+$public_key = $config['public_key'];
 
-    $request_options = new RequestOptions();
-    $request_options->setCustomHeaders(["X-Idempotency-Key: {$purchase_identifier}"]);
+MercadoPagoConfig::setAccessToken($access_token);
+MercadoPagoConfig::setRuntimeEnviroment(MercadoPagoConfig::LOCAL);
 
-    $client = new PreferenceClient();
-    $preference = $client->create($request, $request_options);
-    
-    $message = $session->flash('payment');
-    $content_view = 'pay_mercadopago.phtml';
-}
-catch (MPApiException $error)
-{
-    $error->getMessage();
-}
+$request_options = new RequestOptions();
+$request_options->setCustomHeaders(["X-Idempotency-Key: {$purchase_identifier}"]);
+
+$client = new PreferenceClient();
+$preference = $client->create($request, $request_options);
+
+$message = $session->flash('payment');
+$content_view = 'pay_mercadopago.phtml';

@@ -139,12 +139,25 @@ a:hover
 
 footer
 {
-    align-items: center;
     color: #555;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 5px;
     justify-content: center;
+}
+
+footer .flex_space_between
+{
+    display: flex;
+    justify-content: space-between;
+}
+
+footer .icons img
+{
+    background-color: #FFF;
+    border-radius: 5px;
+    height: 36px;
+    padding: 5px 10px;
 }
 
 footer .social

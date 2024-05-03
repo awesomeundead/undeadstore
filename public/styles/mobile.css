@@ -45,6 +45,13 @@
         padding: 10px 5px;
     }
 
+    footer .flex_space_between
+    {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    } 
+
     #expanded
     {
         left: 0;

@@ -73,3 +73,23 @@ CREATE TABLE IF NOT EXISTS coupon (
     user_id INT UNSIGNED,
     expiration_date DATETIME NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS mercadopago (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    data_id INT UNSIGNED NOT NULL,
+    ts INT UNSIGNED NOT NULL,
+    hash VARCHAR(64) NOT NULL
+);
+
+/*
+CREATE TABLE IF NOT EXISTS coupon (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    code VARCHAR(255) NOT NULL,
+    type ENUM('percentage', 'money') NOT NULL,
+    value DECIMAL(2,2),
+    user_id INT UNSIGNED,
+    limited INT UNSIGNED,
+    count INT UNSIGNED NOT NULL,
+    expiration_date DATETIME NOT NULL
+);
+*/

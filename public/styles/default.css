@@ -138,14 +138,29 @@ button:hover
     align-items: center;
 }
 
+.flex.center
+{
+    justify-content: center;
+}
+
 .flex.column
 {
     flex-direction: column;
 }
 
+.flex.gap-10
+{
+    gap: 20px;
+}
+
 .flex.gap-20
 {
     gap: 20px;
+}
+
+.flex.gap-50
+{
+    gap: 50px;
 }
 
 .flex.space-between
@@ -253,3 +268,4 @@ label.icon img
 {
     font-size: 22px;
 }
+

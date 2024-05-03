@@ -28,6 +28,7 @@ if (empty($purchase))
     redirect();
 }
 
+$purchase_discount = (float) $purchase['discount'];
 $purchase_total = (float) $purchase['total'];
 $purchase_identifier = 'US' . str_pad(strtoupper(base_convert($purchase_id, 10, 36)), 7, 0, STR_PAD_LEFT);
 
