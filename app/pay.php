@@ -28,21 +28,31 @@ if (empty($purchase))
     redirect();
 }
 
-require ROOT . '/include/pix.php';
+$purchase_discount = (float) $purchase['discount'];
+$purchase_total = (float) $purchase['total'];
+$purchase_identifier = 'US' . str_pad(strtoupper(base_convert($purchase_id, 10, 36)), 7, 0, STR_PAD_LEFT);
 
-$params = [
-    'key'         => 'f05b1356-f4e4-4d10-8abb-5a1cb3ed5729',
-    'description' => '',
-    'value'       => $purchase['total'],
-    'name'        => 'Undead Store',
-    'city'        => 'SAO PAULO',
-    'identifier'  => 'US' . str_pad(strtoupper(base_convert($purchase_id, 10, 36)), 7, 0, STR_PAD_LEFT)
-];
+if ($purchase['pay_method'] == 'pix')
+{
+    require ROOT . '/include/pix.php';
 
-$code = pix($params);
-$total = $purchase['total'];
+    $params = [
+        'key'         => 'f05b1356-f4e4-4d10-8abb-5a1cb3ed5729',
+        'description' => '',
+        'value'       => $purchase_total,
+        'name'        => 'Undead Store',
+        'city'        => 'SAO PAULO',
+        'identifier'  => $purchase_identifier
+    ];
 
-$content_view = 'pay.phtml';
+    $code = pix($params);
+    $content_view = 'pay_pix.phtml';
+}
+elseif ($purchase['pay_method'] == 'mercadopago')
+{
+    require ROOT . '/app/pay_mercadopago.php';
+}
+
 $settings_title = 'Pagamento';
 
 require VIEW . 'layout.phtml';

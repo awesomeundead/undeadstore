@@ -25,6 +25,7 @@ foreach ($result as $index => $item)
     $result[$index]['items'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+$message = $session->flash('payment');
 $content_view = 'orders.phtml';
 $settings_title = 'Pedidos';
 

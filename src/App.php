@@ -2,7 +2,9 @@
 
 namespace Awesomeundead\Undeadstore;
 
-class AppFactory
+use Awesomeundead\Undeadstore\HttpException;
+
+class App
 {
     private static $app;
 
@@ -14,7 +16,7 @@ class AppFactory
     {
         if(!isset(self::$app))
         {
-            self::$app = new AppFactory();
+            self::$app = new App();
         }
 
         return self::$app;
@@ -48,7 +50,8 @@ class AppFactory
             exit;
         }
         
-        echo '404';
+        throw new HttpException('NOT FOUND', 404);
+        //throw new HttpException('METHOD NOT ALLOWED', 405);
     }
 
     private function __construct(){}

@@ -1,0 +1,50 @@
+<div class="pay flex column">
+    <?php if ($message ?? false): ?>
+        <div class="box">
+            <?= $message ?>
+        </div>
+    <?php endif ?>
+    
+    <div class="box flex column gap-20">
+        <div class="">Resumo do pedido</div>
+        <div>
+            <?php foreach ($description as $item): ?>
+                <div><?= $item ?></div>
+            <?php endforeach ?>
+        </div>
+        
+        <div>Forma de pagamento</div>
+        <div class="flex">
+            <div class="box flex white">
+                <img alt="Logo do Mercado Pago" src="/styles/mercadopago_icon.png" />
+            </div>
+        </div>
+        
+        <div>
+            <div>Taxa: R$ <?= number_format($fee, 2, ',', '.') ?></div>
+            <div>Total a pagar: R$ <?= number_format($purchase_total + $fee, 2, ',', '.') ?></div>
+        </div>
+    </div>
+
+    <div class="box flex column align-center white">
+        <div id="wallet_container"></div>
+    </div>
+</div>
+
+<script src="https://sdk.mercadopago.com/js/v2"></script>
+<script>
+
+const mp = new MercadoPago('<?= $public_key ?>',
+{
+    locale: 'pt-BR'
+});
+
+mp.bricks().create('wallet', 'wallet_container',
+{
+    initialization:
+    {
+        preferenceId: '<?= $preference->id ?>',
+    }
+});
+
+</script>

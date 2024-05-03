@@ -1,8 +1,9 @@
 <?php
 
+use Awesomeundead\Undeadstore\App;
 use Awesomeundead\Undeadstore\Session;
 
-return function ($app)
+return function (App $app)
 {
     $app->get('/', function ()
     {
@@ -261,9 +262,68 @@ return function ($app)
         echo json_encode($list);
     });
 
+    $post->get('/input/mercadopago', function ()
+    {
+        $data_id = $_REQUEST['data_id'] ?? false;
+        $xSignature = $_SERVER['HTTP_X_SIGNATURE'] ?? '';
+        $xRequestId = $_SERVER['HTTP_X_REQUEST_ID'] ?? '';
+        $xSignature = 'ts=1714658739,v1=67e18b55523255ce607513adceebde8f632d0838310c35732da251a0cddb5c5d';
+        $xRequestId = '6e741d4f-69a7-4072-b8f3-b411845cf208';
+        
+        if (preg_match('/^ts=(?P<ts>\d+),v1=(?P<hash>\w{64})$/', $xSignature, $matches))
+        {
+            require ROOT . '/include/pdo.php';
+
+            $query = 'INSERT INTO mercadopago (data_id, ts, hash) VALUES (:data_id, :ts, :hash)';
+            $stmt = $pdo->prepare($query);
+            $params = [
+                'data_id' => $data_id,
+                'ts' => $matches['ts'],
+                'hash' => $matches['hash']
+            ];
+            $stmt->execute($params);
+
+            $config = (require ROOT . '/config.php')['mercadopago'];
+            $access_token = $config['access_token'];
+            $secret = $config['secret_signature'];
+
+            $manifest = "id:{$data_id};request-id:{$xRequestId};ts:{$matches['ts']};";
+            $sha = hash_hmac('sha256', $manifest, $secret);
+
+            if ($sha === $matches['hash'])
+            {
+                $context = stream_context_create([
+                    'http' => [
+                        'header' => 'Authorization: Bearer ' . $access_token
+                    ],
+                ]);
+                
+                $response = file_get_contents('https://api.mercadopago.com/v1/payments/' . $data_id, false, $context);
+                $data = json_decode($response, true);
+
+                if ($data['status'] != 'approved')
+                {
+                    exit;
+                }
+
+                preg_match('/^US(?P<id>\w{7})$/', $data['external_reference'], $matches);
+                $purchase_id = base_convert(strtolower($matches['id']), 36, 10);
+
+                $query = 'UPDATE purchase SET status = :status WHERE id = :id';
+                $stmt = $pdo->prepare($query);
+                $params = [
+                    'id' => $purchase_id,
+                    'status' => 'Pagamento aprovado'
+                ];
+                $stmt->execute($params);
+            }
+        }
+    });
+
     $app->get('/logout', function ()
     {
         session_start();
+        session_unset();
         session_destroy();
         
         redirect();
@@ -278,12 +338,6 @@ return function ($app)
     {
         $session = Session::create();
 
-        // Verifica se o usuário está logado
-        if (!$session->get('logged_in'))
-        {
-            redirect('/auth');
-        }
-
         $content_view = 'partners.phtml';
         $settings_title = 'Parceiros';
 
@@ -294,6 +348,47 @@ return function ($app)
     {
         require ROOT . '/app/pay.php';
     });
+    
+    /*
+    $app->get('/pay/success', function ()
+    {
+        $collection_id = $_GET['collection_id'];
+        $access_token = 'TEST-7407069493848525-043015-b6eef5c68c01daf9e227f8ef3727ae45-234415597';
+
+        $context = stream_context_create(
+        [
+            'http' =>
+            [
+                'method' => 'GET',
+                'header' => 'Authorization: Bearer ' . $access_token
+            ],
+        ]);
+        
+        $response = file_get_contents('https://api.mercadopago.com/v1/payments/' . $collection_id, false, $context);
+        $data = json_decode($response, true);
+
+        print_r($data);
+    });
+    */
+
+    $app->get('/payment/success', function ()
+    {
+        $session = Session::create();
+        $session->flash('payment', 'Pagamento concluído com sucesso.');
+
+        redirect('/orders');
+    });
+
+    $app->get('/payment/failure', function ()
+    {
+        $purchase_id = $_GET['purchase_id'] ?? false;
+
+        $session = Session::create();
+        $session->flash('payment', 'Falha no pagamento, tente novamente.');
+
+        redirect("/pay?purchase_id={$purchase_id}");
+    });
+
 
     $app->get('/qrcode', function ()
     {

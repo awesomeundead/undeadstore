@@ -44,8 +44,8 @@ function steam_openid_process($steam_api_key)
             'header' => "Accept-language: en\r\n" .
                         "Content-type: application/x-www-form-urlencoded\r\n" .
                         'Content-Length: ' . strlen($data) . "\r\n",
-            'content' => $data,
-        ],
+            'content' => $data
+        ]
     ]);
     
     $result = file_get_contents('https://steamcommunity.com/openid/login', false, $context);
