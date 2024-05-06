@@ -17,7 +17,7 @@ $result = $stmt->execute($params);
 
 if (!$result)
 {
-    $session->flash('trade', 'Ocorreu um erro.');
+    $session->flash('trade_failure', 'Ocorreu um erro.');
     redirect('/checkout');
 }
 

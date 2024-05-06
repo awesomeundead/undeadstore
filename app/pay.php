@@ -1,5 +1,6 @@
 <?php
 
+use Awesomeundead\Undeadstore\Database;
 use Awesomeundead\Undeadstore\Session;
 
 $session = Session::create();
@@ -12,7 +13,7 @@ if (!$session->get('logged_in'))
 
 $purchase_id = $_GET['purchase_id'];
 
-require ROOT . '/include/pdo.php';
+$pdo = Database::connect();
 
 $query = 'SELECT * FROM purchase WHERE id = :id AND user_id = :user_id';
 $stmt = $pdo->prepare($query);

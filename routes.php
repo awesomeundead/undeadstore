@@ -1,6 +1,7 @@
 <?php
 
 use Awesomeundead\Undeadstore\App;
+use Awesomeundead\Undeadstore\Database;
 use Awesomeundead\Undeadstore\Session;
 
 return function (App $app)
@@ -58,7 +59,7 @@ return function (App $app)
 
         if ($item_id)
         {
-            require ROOT . '/include/pdo.php';
+            $pdo = Database::connect();
 
             $query = 'SELECT * FROM items WHERE id = :id AND availability = 1';
             $stmt = $pdo->prepare($query);
@@ -136,13 +137,13 @@ return function (App $app)
     {
         $session = Session::create();
 
-        $coupon = $_POST['coupon'] ?? false;
+        $coupon = trim($_POST['coupon'] ?? '');
 
-        if ($coupon)
+        if (!empty($coupon))
         {
-            require ROOT . '/include/pdo.php';
+            $pdo = Database::connect();
 
-            $coupon = strtoupper(trim($coupon));
+            $coupon = strtoupper($coupon);
 
             $query = 'SELECT * FROM coupon WHERE name = :name';
             $stmt = $pdo->prepare($query);
@@ -152,6 +153,15 @@ return function (App $app)
             if ($result)
             {
                 $user_id = $session->get('user_id');
+
+                $expiration_date = strtotime($result['expiration_date']);
+
+                if (time() > $expiration_date)
+                {
+                    $session->remove('cart_coupon');                    
+                    $session->flash('coupon_failure', 'Cupom expirado.');
+                    redirect('/cart');
+                }
 
                 if (is_null($result['user_id']))
                 {
@@ -170,7 +180,7 @@ return function (App $app)
         }
 
         $session->remove('cart_coupon');
-        $session->flash('coupon', 'Cupom inválido.');
+        $session->flash('coupon_failure', 'Cupom inválido.');
         redirect('/cart');
     });
 
@@ -194,25 +204,24 @@ return function (App $app)
             redirect('/auth');
         }
 
-        $steam_trade_url = $_POST['steam_trade_url'] ?? false;
-        $steam_trade_url = trim($steam_trade_url);
+        $steam_trade_url = trim($_POST['steam_trade_url'] ?? '');
 
         if (preg_match('#^https://steamcommunity.com/tradeoffer/new/\?partner=(\d+)&token=(\w+)$#', $steam_trade_url, $matches))
         {
-            require ROOT . '/include/pdo.php';
+            $pdo = Database::connect();
 
             $query = 'UPDATE users SET steam_trade_url = :steam_trade_url WHERE id = :id';
             $stmt = $pdo->prepare($query);
             $params = [
                 'id' => $session->get('user_id'),
-                'steam_trade_url' => $_POST['steam_trade_url']
+                'steam_trade_url' => $steam_trade_url
             ];
             $stmt->execute($params);
             $session->flash('trade', 'Atualizado');
         }
         else
         {
-            $session->flash('trade', 'URL inválida');
+            $session->flash('trade_failure', 'URL inválida');
         }
         
         redirect('/checkout');
@@ -220,7 +229,7 @@ return function (App $app)
 
     $app->get('/data', function ()
     {
-        require ROOT . '/include/pdo.php';
+        $pdo = Database::connect();
 
         $query = 'SELECT *, items.id,
         (CASE 
@@ -270,7 +279,7 @@ return function (App $app)
         
         if (preg_match('/^ts=(?P<ts>\d+),v1=(?P<hash>\w{64})$/', $xSignature, $matches))
         {
-            require ROOT . '/include/pdo.php';
+            $pdo = Database::connect();
 
             $query = 'INSERT INTO mercadopago (data_id, ts, hash) VALUES (:data_id, :ts, :hash)';
             $stmt = $pdo->prepare($query);
@@ -382,7 +391,7 @@ return function (App $app)
         $purchase_id = $_GET['purchase_id'] ?? false;
 
         $session = Session::create();
-        $session->flash('payment', 'Falha no pagamento, tente novamente.');
+        $session->flash('payment_failure', 'Falha no pagamento, tente novamente.');
 
         redirect("/pay?purchase_id={$purchase_id}");
     });
@@ -419,25 +428,28 @@ return function (App $app)
             redirect('/auth');
         }
 
-        require ROOT . '/include/pdo.php';
+        $pdo = Database::connect();
 
-        $steam_trade_url = $_POST['steam_trade_url'] ?? false;
-        $steam_trade_url = trim($steam_trade_url);
+        $steam_trade_url = trim($_POST['steam_trade_url'] ?? '');
 
         if (!preg_match('#^https://steamcommunity.com/tradeoffer/new/\?partner=(\d+)&token=(\w+)$#', $steam_trade_url, $matches))
         {
-            $session->flash('settings', 'URL inválida.');
+            $session->flash('settings_failure', 'URL inválida.');
             redirect('/settings');
         }
+
+        $name = trim($_POST['name']);
+        $email = trim($_POST['email']);
+        $phone = trim($_POST['phone']);
 
         $query = 'UPDATE users SET steam_trade_url = :steam_trade_url, name = :name, email = :email, phone = :phone WHERE id = :id';
         $stmt = $pdo->prepare($query);
         $params = [
             'id' => $session->get('user_id'),
             'steam_trade_url' => $steam_trade_url,
-            'name' => $_POST['name'],
-            'email' => $_POST['email'],
-            'phone' => $_POST['phone']
+            'name' => $name,
+            'email' => $email,
+            'phone' => $phone
         ];
         $result = $stmt->execute($params);
 
@@ -447,9 +459,189 @@ return function (App $app)
         }
         else
         {
-            $session->flash('settings', 'Ocorreu um erro ao atualizar.');
+            $session->flash('settings_failure', 'Ocorreu um erro ao atualizar.');
         }
 
         redirect('/settings');
+    });
+
+    $app->get('/support', function ()
+    {
+        $session = Session::create();
+
+        // Verifica se o usuário está logado
+        if (!$session->get('logged_in'))
+        {
+            redirect('/auth?redirect=support');
+        }
+
+        $pdo = Database::connect();
+        $query = 'SELECT * FROM ticket WHERE user_id = :user_id';
+        $stmt = $pdo->prepare($query);
+        $params = [
+            'user_id' => $session->get('user_id')
+        ];
+        $stmt->execute($params);
+        $list = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        $message = $session->flash('support');
+        $message_failure = $session->flash('support_failure');
+        $content_view = 'support.phtml';
+
+        require VIEW . 'layout.phtml';
+    });
+
+    $app->post('/support', function ()
+    {
+        $session = Session::create();
+
+        // Verifica se o usuário está logado
+        if (!$session->get('logged_in'))
+        {
+            redirect('/auth?redirect=support');
+        }
+
+        $subject = trim($_POST['subject'] ?? '');
+        $message = trim($_POST['message'] ?? '');
+
+        if (empty($subject) || empty($message))
+        {
+            redirect();
+        }
+
+        $ticket = strtoupper(dechex(time()) . '-' . dechex($session->get('user_id')));
+
+        $pdo = Database::connect();
+        $query = 'INSERT INTO ticket (user_id, ticket, subject) VALUES (:user_id, :ticket, :subject)';
+        $stmt = $pdo->prepare($query);
+        $params = [
+            'user_id' => $session->get('user_id'),
+            'ticket' => $ticket,
+            'subject' => $subject
+        ];
+        $result = $stmt->execute($params);
+
+        if ($result)
+        {
+            $ticket_id = $pdo->lastInsertId();
+
+            $query = 'INSERT INTO ticket_items (ticket_id, admin, message, created_date) VALUES (:ticket_id, :admin, :message, :created_date)';
+            $stmt = $pdo->prepare($query);
+            $params = [
+                'ticket_id' => $ticket_id,
+                'admin' => 0,
+                'message' => $message,
+                'created_date' => date('Y-m-d H:i:s')
+            ];
+            $result = $stmt->execute($params);
+
+            $session->flash('support', 'Mensagem enviada, responderemos assim que possível.');
+
+            redirect("/support/ticket?id={$ticket}");
+        }
+
+        $session->flash('support_failure', 'Não foi possível enviar sua mensagem, tente novamente.');
+
+        redirect('/support');
+    });
+
+    $app->get('/support/ticket', function ()
+    {
+        $session = Session::create();
+
+        // Verifica se o usuário está logado
+        if (!$session->get('logged_in'))
+        {
+            redirect('/auth?redirect=support');
+        }
+
+        $ticket = $_GET['id'] ?? false;
+
+        $pdo = Database::connect();
+
+        $query = 'SELECT * FROM ticket WHERE user_id = :user_id AND ticket = :ticket';
+        $stmt = $pdo->prepare($query);
+        $params = [
+            'user_id' => $session->get('user_id'),
+            'ticket' => $ticket
+        ];
+        $stmt->execute($params);
+        $item = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$item)
+        {
+            redirect();
+        }
+
+        $query = 'SELECT * FROM ticket_items WHERE ticket_id = :ticket_id ORDER BY id DESC';
+        $stmt = $pdo->prepare($query);
+        $params = [
+            'ticket_id' => $item['id']
+        ];
+        $stmt->execute($params);
+        $list = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        $message = $session->flash('support');
+        $message_failure = $session->flash('support_failure');
+        $content_view = 'support_ticket.phtml';
+
+        require VIEW . 'layout.phtml';
+    });
+
+    $app->post('/support/ticket', function ()
+    {
+        $session = Session::create();
+
+        // Verifica se o usuário está logado
+        if (!$session->get('logged_in'))
+        {
+            redirect('/auth?redirect=support');
+        }
+
+        $ticket = trim($_POST['ticket'] ?? '');
+        $message = trim($_POST['message'] ?? '');
+
+        if (empty($ticket) || empty($message))
+        {
+            redirect();
+        }
+
+        $pdo = Database::connect();
+
+        $query = 'SELECT * FROM ticket WHERE user_id = :user_id AND ticket = :ticket';
+        $stmt = $pdo->prepare($query);
+        $params = [
+            'user_id' => $session->get('user_id'),
+            'ticket' => $ticket
+        ];
+        $stmt->execute($params);
+        $item = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$item)
+        {
+            redirect();
+        }
+
+        $query = 'INSERT INTO ticket_items (ticket_id, admin, message, created_date) VALUES (:ticket_id, :admin, :message, :created_date)';
+        $stmt = $pdo->prepare($query);
+        $params = [
+            'ticket_id' => $item['id'],
+            'admin' => 0,
+            'message' => $message,
+            'created_date' => date('Y-m-d H:i:s')
+        ];
+        $result = $stmt->execute($params);
+
+        if ($result)
+        {
+            $session->flash('support', 'Mensagem enviada, responderemos assim que possível.');
+        }
+        else
+        {
+            $session->flash('support_failure', 'Não foi possível enviar sua mensagem, tente novamente.');
+        }
+        
+
+        redirect("/support/ticket?id={$ticket}");
     });
 };

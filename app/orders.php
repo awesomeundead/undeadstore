@@ -1,5 +1,6 @@
 <?php
 
+use Awesomeundead\Undeadstore\Database;
 use Awesomeundead\Undeadstore\Session;
 
 $session = Session::create();
@@ -10,7 +11,7 @@ if (!$session->get('logged_in'))
     redirect('/auth');
 }
 
-require ROOT . '/include/pdo.php';
+$pdo = Database::connect();
 
 $query = 'SELECT * FROM purchase WHERE user_id = :user_id ORDER BY id DESC';
 $stmt = $pdo->prepare($query);
@@ -26,6 +27,8 @@ foreach ($result as $index => $item)
 }
 
 $message = $session->flash('payment');
+$message_failure = $session->flash('payment_failure');
+
 $content_view = 'orders.phtml';
 $settings_title = 'Pedidos';
 

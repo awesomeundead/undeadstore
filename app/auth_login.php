@@ -1,5 +1,6 @@
 <?php
 
+use Awesomeundead\Undeadstore\Database;
 use Awesomeundead\Undeadstore\Session;
 
 $session = Session::create();
@@ -25,7 +26,7 @@ if (!$session->get('logged_in'))
     $session->set('steam_name', $userData['personaname']);
     $session->set('steam_avatar', $userData['avatar']);
 
-    require ROOT . '/include/pdo.php';
+    $pdo = Database::connect();
 
     // VERIFICA SE ESSE USUÁRIO JÁ É REGISTRADO
     $query = 'SELECT id FROM users WHERE steamid = :steamid';

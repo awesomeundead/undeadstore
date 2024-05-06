@@ -1,5 +1,6 @@
 <?php
 
+use Awesomeundead\Undeadstore\Database;
 use Awesomeundead\Undeadstore\Session;
 
 $session = Session::create();
@@ -16,7 +17,7 @@ $subtotal = $session->get('cart_subtotal');
 $discount = $session->get('cart_discount');
 $total = $session->get('cart_total');
 
-require ROOT . '/include/pdo.php';
+$pdo = Database::connect();
 
 $query = 'SELECT steam_trade_url FROM users WHERE id = :id';
 $stmt = $pdo->prepare($query);
@@ -25,6 +26,8 @@ $steam_trade_url = $stmt->fetchColumn();
 $steamid = $session->get('steamid');
 
 $message = $session->flash('trade');
+$message_failure = $session->flash('trade_failure');
+
 $content_view = 'checkout.phtml';
 $settings_title = 'Fechar Pedido';
 

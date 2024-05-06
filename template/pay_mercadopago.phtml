@@ -1,7 +1,11 @@
 <div class="pay flex column">
     <?php if ($message ?? false): ?>
-        <div class="box">
+        <div class="box notification">
             <?= $message ?>
+        </div>
+    <?php elseif ($message_failure ?? false): ?>
+        <div class="box notification failure">
+            <?= $message_failure ?>
         </div>
     <?php endif ?>
     
@@ -21,8 +25,8 @@
         </div>
         
         <div>
-            <div>Taxa: R$ <?= number_format($fee, 2, ',', '.') ?></div>
-            <div>Total a pagar: R$ <?= number_format($purchase_total + $fee, 2, ',', '.') ?></div>
+            <div>Taxa: <?= html_money($fee) ?></div>
+            <div>Total a pagar: <?= html_money($purchase_total + $fee) ?></div>
         </div>
     </div>
 

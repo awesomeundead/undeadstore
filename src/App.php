@@ -12,6 +12,8 @@ class App
 
     private static $routes;
 
+    private function __construct(){}
+    
     public static function create()
     {
         if(!isset(self::$app))
@@ -53,6 +55,4 @@ class App
         throw new HttpException('NOT FOUND', 404);
         //throw new HttpException('METHOD NOT ALLOWED', 405);
     }
-
-    private function __construct(){}
 }
