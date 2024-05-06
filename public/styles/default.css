@@ -118,6 +118,15 @@ button:hover
     padding: 5px 0;
 }
 
+.box textarea
+{
+    background-color: #222;
+    border: 1px solid #777;
+    color: #CCC;
+    padding: 10px;
+    width: 100%;
+}
+
 .white
 {
     background-color: #FFF;

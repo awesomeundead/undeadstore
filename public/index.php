@@ -8,5 +8,19 @@ if (php_sapi_name() == 'cli-server')
     }
 }
 
+date_default_timezone_set('America/Sao_Paulo');
+
+$protocol = !empty($_SERVER['HTTPS']) ? 'https' : 'http';
+define('HOST', "{$protocol}://{$_SERVER['HTTP_HOST']}");
+define('BASE_PATH', '');
+define('ROOT', dirname(__DIR__));
+define('VIEW', ROOT . '/template/');
+
+function redirect($path = '/')
+{
+    header('Location: ' . HOST . BASE_PATH . $path);
+    exit;
+}
+
 require __DIR__ . '/../vendor/autoload.php';
 require __DIR__ . '/../index.php';

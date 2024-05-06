@@ -452,4 +452,24 @@ return function (App $app)
 
         redirect('/settings');
     });
+
+    $app->get('/support', function ()
+    {
+        $session = Session::create();
+
+        // Verifica se o usuário está logado
+        if (!$session->get('logged_in'))
+        {
+            redirect('/auth');
+        }
+
+        $content_view = 'support.phtml';
+
+        require VIEW . 'layout.phtml';
+    });
+
+    $app->post('/support', function ()
+    {
+
+    });
 };
