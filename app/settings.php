@@ -1,5 +1,6 @@
 <?php
 
+use Awesomeundead\Undeadstore\Database;
 use Awesomeundead\Undeadstore\Session;
 
 $session = Session::create();
@@ -10,7 +11,7 @@ if (!$session->get('logged_in'))
     redirect('/auth');
 }
 
-require ROOT . '/include/pdo.php';
+$pdo = Database::connect();
 
 $query = 'SELECT * FROM users WHERE id = :id';
 $stmt = $pdo->prepare($query);
@@ -23,6 +24,8 @@ $email = $result['email'];
 $phone = $result['phone'];
 
 $message = $session->flash('settings');
+$message_failure = $session->flash('settings_failure');
+
 $content_view = 'settings.phtml';
 $settings_title = 'Configurações';
 

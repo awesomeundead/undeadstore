@@ -72,4 +72,6 @@ $client = new PreferenceClient();
 $preference = $client->create($request, $request_options);
 
 $message = $session->flash('payment');
+$message_failure = $session->flash('payment_failure');
+
 $content_view = 'pay_mercadopago.phtml';

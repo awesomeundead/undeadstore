@@ -4,15 +4,15 @@
             <div class="flex column gap-20">
                 <div>
                     <label for="name">Nome</label>
-                    <input id="name" name="name" placeholder="Seu nome" type="text" value="<?= $name ?? '' ?>" />
+                    <input id="name" name="name" placeholder="Seu nome" type="text" value="<?= html_escape($name ?? '') ?>" />
                 </div>
                 <div>
                     <label for="email">E-mail</label>
-                    <input id="email" name="email" placeholder="Seu endereço de e-mail" type="email" value="<?= $email ?? '' ?>" />
+                    <input id="email" name="email" placeholder="Seu endereço de e-mail" type="email" value="<?= html_escape($email ?? '') ?>" />
                 </div>
                 <div>
                     <label for="phone">Telefone</label>
-                    <input id="phone" name="phone" placeholder="Seu número de telefone com DDD" type="tel" value="<?= $phone ?? '' ?>" />
+                    <input id="phone" name="phone" placeholder="Seu número de telefone com DDD" type="tel" value="<?= html_escape($phone ?? '') ?>" />
                 </div>
                 <div>
                     <label for="offer_trade">URL de troca (Trade)</label>
@@ -26,8 +26,12 @@
         </form>
     </div>
     <?php if ($message ?? false): ?>
-        <div class="box">
+        <div class="box notification">
             <?= $message ?>
+        </div>
+    <?php elseif ($message_failure ?? false): ?>
+        <div class="box notification failure">
+            <?= $message_failure ?>
         </div>
     <?php endif ?>
 </div>

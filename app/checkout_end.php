@@ -1,5 +1,6 @@
 <?php
 
+use Awesomeundead\Undeadstore\Database;
 use Awesomeundead\Undeadstore\Session;
 
 $session = Session::create();
@@ -22,13 +23,13 @@ if ($coupon)
     if ($timestamp > $expiration_date)
     {
         $session->remove('cart_coupon');
-        $session->flash('coupon', 'Cupom expirado.');
+        $session->flash('coupon_failure', 'Cupom expirado.');
 
         redirect('/cart');
     }
 }
 
-require ROOT . '/include/pdo.php';
+$pdo = Database::connect();
 
 $query = 'SELECT steam_trade_url FROM users WHERE id = :id';
 $stmt = $pdo->prepare($query);
@@ -38,7 +39,7 @@ $steam_trade_url = $stmt->fetchColumn();
 if (!$steam_trade_url)
 {
     // Mensagem de url de troca vazia
-    $session->flash('trade', 'Não deixe o campo URL vazio.');
+    $session->flash('trade_failure', 'Não deixe o campo URL vazio.');
     redirect('/checkout');
 }
 

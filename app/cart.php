@@ -15,26 +15,15 @@ if ($cart_items)
     $discount = 0;
     $percent = 0;
     $coupon = $session->get('cart_coupon');
-    $message = $session->flash('coupon');
-
+    
     if ($coupon)
     {
-        $expiration_date = strtotime($coupon['expiration_date']);
-
-        if (time() < $expiration_date)
-        {
-            $coupon_name = $coupon['name'];
-            $discount = $subtotal / 100 * $coupon['percent'];
-            $percent = $coupon['percent'];
-        }
-        else
-        {
-            $coupon = false;
-            $session->set('cart_coupon', $coupon);
-            $message = 'Cupom expirado.';
-        }
+        $coupon_name = $coupon['name'];
+        $discount = $subtotal / 100 * $coupon['percent'];
+        $percent = $coupon['percent'];
     }
 
+    /*
     if (!$coupon)
     {
         if ($count > 2)
@@ -48,12 +37,16 @@ if ($cart_items)
             $percent = 5;
         }
     }
+    */
 
     $total = $subtotal - $discount;
     $session->set('cart_subtotal', $subtotal);
     $session->set('cart_discount', $discount);
     $session->set('cart_total', $total);
 }
+
+$message = $session->flash('coupon');
+$message_failure = $session->flash('coupon_failure');
 
 $content_view = 'cart.phtml';
 $settings_title = 'Carrinho';

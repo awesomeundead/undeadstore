@@ -1,7 +1,11 @@
 <div class="flex column">
     <?php if ($message ?? false): ?>
-        <div class="box">
+        <div class="box notification">
             <?= $message ?>
+        </div>
+    <?php elseif ($message_failure ?? false): ?>
+        <div class="box notification failure">
+            <?= $message_failure ?>
         </div>
     <?php endif ?>
     <div class="box flex column">
@@ -27,15 +31,15 @@
     <div class="box white">
         <div class="flex align-center space-between">
             <div>Subtotal</div>
-            <div>R$ <?= number_format($subtotal, 2, ',', '.') ?></div>
+            <div><?= html_money($subtotal) ?></div>
         </div>
         <div class="flex align-center space-between">
             <div>Desconto</div>
-            <div>R$ <?= number_format($discount, 2, ',', '.') ?></div>
+            <div><?= html_money($discount) ?></div>
         </div>
         <div class="flex align-center space-between">
             <div>Total</div>
-            <div>R$ <?= number_format($total, 2, ',', '.') ?></div>
+            <div><?= html_money($total) ?></div>
         </div>
     </div>
     <form action="/checkout/end">

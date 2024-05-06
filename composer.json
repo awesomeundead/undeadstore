@@ -4,7 +4,10 @@
     "autoload": {
         "psr-4": {
             "Awesomeundead\\Undeadstore\\": "src/"
-        }
+        },
+        "files": [
+            "src/helpers.php"
+        ]
     },
     "authors": [
         {

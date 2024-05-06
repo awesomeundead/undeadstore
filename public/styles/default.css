@@ -127,6 +127,18 @@ button:hover
     width: 100%;
 }
 
+.box.notification
+{
+    background-color: #394;
+    color: #FFF;
+}
+
+.box.notification.failure
+{
+    background-color: #934;
+    color: #FFF;
+}
+
 .white
 {
     background-color: #FFF;

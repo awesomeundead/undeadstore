@@ -1,13 +1,14 @@
 <div class="flex column">
     <div class="box white">
-        <div>Suporte</div>
+        <div>Ticket #<?= $item['ticket'] ?></div>
     </div>
     <div class="box">
-        <form action="/support" method="post">
+        <form action="/support/ticket" method="post">
+            <input name="ticket" type="hidden" value="<?= $item['ticket'] ?>" />
             <div class="flex column gap-20">
                 <div>
                     <label for="subject">Assunto</label>
-                    <input id="subject" name="subject" required="required" type="text" />
+                    <input disabled="disabled" id="subject" type="text" value="<?= html_escape($item['subject']) ?>" />
                 </div>
                 <div>
                     <label for="message">Mensagem</label>
@@ -29,11 +30,16 @@
         </div>
     <?php endif ?>
     <?php foreach ($list as $item): ?>
-    <div class="box">
-        <div>
-            <a href="/support/ticket?id=<?= $item['ticket'] ?>">Ticket #<?= $item['ticket'] ?></a>
+        <?php if ($item['admin']): ?>
+        <div class="box white">        
+            <div><?= html_date($item['created_date']) ?></div>
+            <div><?= html_escape($item['message']) ?></div>
         </div>
-        <div>Assunto: <?= $item['subject'] ?></div>
-    </div>
+        <?php else: ?>
+        <div class="box">        
+            <div><?= html_date($item['created_date']) ?></div>
+            <div><?= html_escape($item['message']) ?></div>
+        </div>
+        <?php endif ?>
     <?php endforeach ?>
 </div>

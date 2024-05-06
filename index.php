@@ -28,6 +28,10 @@ catch (Throwable $e)
 
     if ($errors)
     {
-        echo $e->getMessage();
+        $message =  $e->getMessage();
+        $file = $e->getFile();
+        $line = $e->getLine();
+
+        echo "{$message} file: {$file} line: {$line}";
     }
 }

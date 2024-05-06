@@ -20,18 +20,22 @@
             </div>
             <div class="price">
             <?php if ($item['offer_price'] ?? false): ?>
-                <div class="line_through">R$ <?= number_format($item['price'], 2, ',', '.') ?></div>    
-                <div>R$ <?= number_format($item['offer_price'], 2, ',', '.') ?></div>
+                <div class="line_through"><?= html_money($item['price']) ?></div>    
+                <div><?= html_money($item['offer_price']) ?></div>
             <?php else: ?>
-                <div>R$ <?= number_format($item['price'], 2, ',', '.') ?></div>
+                <div><?= html_money($item['price']) ?></div>
             <?php endif ?>
             </div>
         </div>
     </div>
     <?php endforeach ?>
     <?php if ($message ?? false): ?>
-        <div class="box">
+        <div class="box notification">
             <?= $message ?>
+        </div>
+    <?php elseif ($message_failure ?? false): ?>
+        <div class="box notification failure">
+            <?= $message_failure ?>
         </div>
     <?php endif ?>
     <div class="box flex column">
@@ -46,15 +50,15 @@
     <div class="box white">
         <div class="flex align-center space-between">
             <div>Subtotal</div>
-            <div>R$ <?= number_format($subtotal, 2, ',', '.') ?></div>
+            <div><?= html_money($subtotal) ?></div>
         </div>
         <div class="flex align-center space-between">
             <div>Desconto</div>
-            <div>(<?= $percent ?>%) R$ <?= number_format($discount, 2, ',', '.') ?></div>
+            <div>(<?= $percent ?>%) <?= html_money($discount) ?></div>
         </div>
         <div class="flex align-center space-between">
             <div>Total</div>
-            <div>R$ <?= number_format($total, 2, ',', '.') ?></div>
+            <div><?= html_money($total) ?></div>
         </div>
     </div>
     <div id="nav_buttons">

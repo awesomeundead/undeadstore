@@ -32,7 +32,7 @@ a:hover
 {
     background-color: #222;
     display: grid;
-    grid-template-rows: 140px auto 200px;
+    grid-template-rows: 150px auto 200px;
     min-height: 100%;
     margin: 0 auto;
     width: 1200px;
@@ -135,6 +135,11 @@ a:hover
 #login a:hover
 {
     background-color: #247;
+}
+
+section
+{
+    margin-bottom: 50px;
 }
 
 footer
