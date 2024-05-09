@@ -3,7 +3,8 @@
     "type": "project",
     "autoload": {
         "psr-4": {
-            "Awesomeundead\\Undeadstore\\": "src/"
+            "Awesomeundead\\Undeadstore\\": "src/",
+            "App\\Controllers\\": "app/controllers"
         },
         "files": [
             "src/helpers.php"
@@ -16,6 +17,7 @@
         }
     ],
     "require": {
-        "mercadopago/dx-php": "^3.0"
+        "mercadopago/dx-php": "^3.0",
+        "nikic/fast-route": "^1.3"
     }
 }

@@ -139,6 +139,12 @@ button:hover
     color: #FFF;
 }
 
+.box.notification.pending
+{
+    background-color: #F93;
+    color: #FFF;
+}
+
 .white
 {
     background-color: #FFF;
