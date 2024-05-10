@@ -24,6 +24,11 @@
     width: 100%;
 }
 
+.banner img
+{
+    width: 100%;
+}
+
 #container
 {
     display: grid;
@@ -97,6 +102,13 @@
 .item .availability
 {
     background-color: #333;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.item .availability.soon
+{
+    background-color: #F93;
+    color: rgba(0, 0, 0, 0.8);
 }
 
 .item .button_buy

@@ -2,6 +2,11 @@
 
 function html_date(string $string)
 {
+    return date_format(date_create($string), 'd/m/Y');
+}
+
+function html_datetime(string $string)
+{
     return date_format(date_create($string), 'd/m/Y H:i');
 }
 

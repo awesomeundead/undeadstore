@@ -7,10 +7,10 @@
 <meta property="og:description" content="Skins de Counter-Strike 2 com os melhores preços." />
 <meta property="og:title" content="Undead Store" />
 <link href="/favicon.png" rel="icon" type="image/x-icon" />
-<link href="/styles/layout.css" rel="stylesheet" />
-<link href="/styles/default.css" rel="stylesheet" />
-<link href="/styles/index.css" rel="stylesheet" />
-<link href="/styles/mobile.css" rel="stylesheet" />
+<link href="/styles/layout.css?release=4" rel="stylesheet" />
+<link href="/styles/default.css?release=4" rel="stylesheet" />
+<link href="/styles/index.css?release=4" rel="stylesheet" />
+<link href="/styles/mobile.css?release=4" rel="stylesheet" />
 <title><?= isset($settings_title) ? "{$settings_title} | Undead Store" : 'Undead Store' ?></title>
 </head>
 <body>
@@ -46,17 +46,17 @@
             <?php if ($session->get('logged_in')): ?>
                 <nav>
                     <a href="/settings">Configurações</a>
-                    <a href="/orders">Pedidos</a>
+                    <a href="/order-history">Pedidos</a>
                     <a href="/support">Suporte</a>
                     <a href="/logout">Sair</a>
                 </nav>
             <?php endif ?>
         </nav>
     </header>
-    <section>
+    <section id="main_section">
         <?php require $content_view; ?>
     </section>
-    <footer>
+    <footer id="main_footer">
         <div class="flex_space_between">
             <div class="flex column">
                 <div>Links</div>

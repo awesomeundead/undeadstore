@@ -1,11 +1,7 @@
 <div class="pay flex column">
-    <?php if ($message ?? false): ?>
-        <div class="box notification">
-            <?= $message ?>
-        </div>
-    <?php elseif ($message_failure ?? false): ?>
-        <div class="box notification failure">
-            <?= $message_failure ?>
+    <?php if ($notification ?? false): ?>
+        <div class="box notification <?= $notification['type'] ?>">
+            <?= $notification['message'] ?>
         </div>
     <?php endif ?>
     
