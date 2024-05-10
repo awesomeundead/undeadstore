@@ -25,6 +25,7 @@ class Settings
         $result = $stmt->fetch(\PDO::FETCH_ASSOC);
 
         $steam_trade_url = $result['steam_trade_url'];
+        $steamid = $session->get('steamid');
         $name = $result['name'];
         $email = $result['email'];
         $phone = $result['phone'];
