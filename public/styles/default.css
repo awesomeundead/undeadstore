@@ -81,7 +81,22 @@
 
 .box.blue
 {
-    color: #0088ff;
+    color: #08F;
+}
+
+a.button
+{
+    background: #394;
+    border-radius: 5px;
+    color: #FFF;
+    font-size: 14px;
+    padding: 5px;
+}
+
+a.button:hover
+{
+    background-color: #3A5;
+    color: #FFF;
 }
 
 button
@@ -296,3 +311,34 @@ label.icon img
     font-size: 22px;
 }
 
+.order-history header
+{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.order-history header .column:last-child
+{
+    text-align: right;
+}
+
+.order-history .label
+{
+    color: #F93;
+    font-weight: bold;
+}
+
+.order-history summary
+{
+    color: #222;
+    font-weight: bold;
+    padding: 5px 0;
+}
+
+.order-history section
+{
+    border-top: 2px solid #222;
+    border-bottom: 2px solid #222;
+    font-size: 14px;
+    padding: 5px 0;
+}

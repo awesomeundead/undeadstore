@@ -29,9 +29,7 @@ class Settings
         $email = $result['email'];
         $phone = $result['phone'];
 
-        $message = $session->flash('settings');
-        $message_failure = $session->flash('settings_failure');
-
+        $notification = $session->flash('settings');
         $content_view = 'settings.phtml';
         $settings_title = 'Configurações';
 
@@ -54,7 +52,7 @@ class Settings
 
         if (!preg_match('#^https://steamcommunity.com/tradeoffer/new/\?partner=(\d+)&token=(\w+)$#', $steam_trade_url, $matches))
         {
-            $session->flash('settings_failure', 'URL inválida.');
+            $session->flash('settings', ['message' => 'URL inválida.', 'type' => 'failure']);
             redirect('/settings');
         }
 
@@ -75,11 +73,11 @@ class Settings
 
         if ($result)
         {
-            $session->flash('settings', 'Atualizado com sucesso.');
+            $session->flash('settings', ['message' => 'Atualizado com sucesso.', 'type' => 'success']);
         }
         else
         {
-            $session->flash('settings_failure', 'Ocorreu um erro ao atualizar.');
+            $session->flash('settings', ['message' => 'Ocorreu um erro ao atualizar.', 'type' => 'failure']);
         }
 
         redirect('/settings');

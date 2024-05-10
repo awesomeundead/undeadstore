@@ -1,10 +1,3 @@
-var language = 'br';
-var item_type;
-var order;
-var data;
-
-const QUERY_STRING = new URLSearchParams(window.location.search);
-
 window.addEventListener('popstate', async () =>
 {
     item_type = new URLSearchParams(window.location.search).get('item');
@@ -141,37 +134,48 @@ function template(item, node)
         return;
     }
 
-    const clone = document.importNode(node.content, true);
-
-    if (item.price == null)
-    {
-        clone.querySelector('.price').remove();
-        clone.querySelector('.button_buy').remove();
-    }
-    else
-    {
-        clone.querySelector('.button_buy').href = '/cart/add?item_id=' + item.id;
-
-        let price = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.price);
-
-        if (item.offer_price == null)
-        {
-            clone.querySelector('.old_price').remove();
-            clone.querySelector('.price').innerHTML = price;
-        }
-        else
-        {
-            let offer_price = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.offer_price);
-
-            clone.querySelector('.old_price').innerHTML = price;
-            clone.querySelector('.price').innerHTML = offer_price;
-        }        
-    }
+    const clone = document.importNode(node.content, true);   
+    
+    clone.querySelector('.availability').innerHTML = available[item.availability];
 
     if (item.availability == 1)
     {
-        clone.querySelector('.availability').innerHTML = 'Disponível';
-    }   
+        if (item.price == null)
+        {
+            clone.querySelector('.price').remove();
+            clone.querySelector('.button_buy').remove();
+        }
+        else
+        {
+            clone.querySelector('.button_buy').href = '/cart/add?item_id=' + item.id;
+    
+            let price = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.price);
+    
+            if (item.offer_price == null)
+            {
+                clone.querySelector('.old_price').remove();
+                clone.querySelector('.price').innerHTML = price;
+            }
+            else
+            {
+                let offer_price = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.offer_price);
+    
+                clone.querySelector('.old_price').innerHTML = price;
+                clone.querySelector('.price').innerHTML = offer_price;
+            }        
+        }
+    }
+    else
+    {
+        if (item.availability == 3)
+        {
+            clone.querySelector('.availability').classList.add('soon');
+        }
+
+        clone.querySelector('.price').remove();
+        clone.querySelector('.button_buy').remove();
+    }
+    
 
     if (item.type_name == 'agent')
     {
@@ -221,15 +225,6 @@ function item_agent(item, clone)
 
 function item_weapon(item, clone)
 {
-    const exterior = 
-    {
-        'fn': {'en': 'Factory New', 'br': 'Nova de Fábrica'},
-        'mw': {'en': 'Minimal Wear', 'br': 'Pouca Usada'},
-        'ft': {'en': 'Field-Tested', 'br': 'Testada em Campo'},
-        'ww': {'en': 'Well Worm', 'br': 'Bem Desgastada'},
-        'bs': {'en': 'Battle-Scarred', 'br': 'Veterana de Guerra'}
-    };
-
     const type =
     {
         'en': item.weapon_type,
@@ -242,18 +237,18 @@ function item_weapon(item, clone)
         'br': item.weapon_name_br
     }
 
-    url = 'https://steamcommunity.com/market/listings/730/';
+    url = `${item.weapon_type} | ${item.weapon_name} (${exterior[item.weapon_exterior]['en']})`;
 
     if (item.weapon_stattrak)
     {
         clone.querySelector('.stattrak').innerHTML = '(StatTrak)';
-        url += 'StatTrak™ ';
+        url = 'StatTrak™ ' + url;
     }
 
     clone.querySelector('.weapon').innerHTML = type[language];
     clone.querySelector('.name').innerHTML = name[language];
     clone.querySelector('.exterior').innerHTML = exterior[item.weapon_exterior][language];
-    clone.querySelector('.market a').href = url + `${item.weapon_type} | ${item.weapon_name} (${exterior[item.weapon_exterior]['en']})`;
+    clone.querySelector('.market a').href = 'https://steamcommunity.com/market/listings/730/' + url;
     clone.querySelector('.image').dataset.name = `/images/${item.image}.png`;
 
     const image = clone.querySelector('img');
@@ -267,3 +262,25 @@ function item_weapon(item, clone)
 
     new_image.src = `/images/${item.image}_${item.weapon_exterior}.png`;
 }
+
+const exterior = 
+{
+    'fn': {'en': 'Factory New', 'br': 'Nova de Fábrica'},
+    'mw': {'en': 'Minimal Wear', 'br': 'Pouca Usada'},
+    'ft': {'en': 'Field-Tested', 'br': 'Testada em Campo'},
+    'ww': {'en': 'Well Worm', 'br': 'Bem Desgastada'},
+    'bs': {'en': 'Battle-Scarred', 'br': 'Veterana de Guerra'}
+};
+
+const available = {
+    1: 'Disponível',
+    2: 'Sob encomenda',
+    3: 'Disponível em breve'
+};
+
+var language = 'br';
+var item_type;
+var order;
+var data;
+
+const QUERY_STRING = new URLSearchParams(window.location.search);

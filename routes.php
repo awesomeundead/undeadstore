@@ -5,7 +5,7 @@ use Awesomeundead\Undeadstore\Database;
 use Awesomeundead\Undeadstore\Session;
 use App\Controllers\
 {
-    Auth, Cart, Checkout, Home, Orders, Pay, Settings, Support
+    Auth, Cart, Checkout, Home, OrderHistory, Pay, Settings, Support
 };
 
 return function (App $app)
@@ -57,7 +57,7 @@ return function (App $app)
         redirect();
     });
 
-    $app->get('/orders', [Orders::class, 'index']);
+    $app->get('/order-history', [OrderHistory::class, 'index']);
 
     $app->get('/partners', function ()
     {
@@ -77,14 +77,10 @@ return function (App $app)
     $app->get('/qrcode', [Pay::class, 'qrcode']);
 
     $app->get('/settings', [Settings::class, 'index']);
-
     $app->post('/settings', [Settings::class, 'save']);
 
     $app->get('/support', [Support::class, 'index']);
-
     $app->post('/support', [Support::class, 'create']);
-
     $app->get('/support/ticket', [Support::class, 'ticket']);
-
     $app->post('/support/ticket', [Support::class, 'add']);
 };

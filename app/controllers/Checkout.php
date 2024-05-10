@@ -31,8 +31,7 @@ class Checkout
         $steam_trade_url = $stmt->fetchColumn();
         $steamid = $session->get('steamid');
 
-        $message = $session->flash('trade');
-        $message_failure = $session->flash('trade_failure');
+        $notification = $session->flash('trade');
 
         $content_view = 'checkout.phtml';
         $settings_title = 'Fechar Pedido';
@@ -62,7 +61,7 @@ class Checkout
             if ($timestamp > $expiration_date)
             {
                 $session->remove('cart_coupon');
-                $session->flash('coupon_failure', 'Cupom expirado.');
+                $session->flash('coupon', ['message' => 'Cupom expirado.', 'type' => 'failure']);
 
                 redirect('/cart');
             }
@@ -78,7 +77,7 @@ class Checkout
         if (!$steam_trade_url)
         {
             // Mensagem de url de troca vazia
-            $session->flash('trade_failure', 'Não deixe o campo URL vazio.');
+            $session->flash('trade', ['message' => 'Não deixe o campo URL vazio.', 'type' => 'failure']);
             redirect('/checkout');
         }
 
@@ -111,7 +110,7 @@ class Checkout
 
         if (!$result)
         {
-            $session->flash('trade_failure', 'Ocorreu um erro.');
+            $session->flash('trade', ['message' => 'Ocorreu um erro.', 'type' => 'failure']);
             redirect('/checkout');
         }
 
@@ -131,12 +130,11 @@ class Checkout
             ];
             $stmt->execute($params);
 
-            $query = 'UPDATE items SET availability = :availability, price = :price WHERE id = :id';
+            $query = 'UPDATE items SET availability = :availability WHERE id = :id';
             $stmt = $pdo->prepare($query);
             $params = [
                 'id' => $item['id'],
-                'availability' => 2,
-                'price' => null
+                'availability' => 2
             ];
             $stmt->execute($params);
         }
@@ -173,11 +171,11 @@ class Checkout
                 'steam_trade_url' => $steam_trade_url
             ];
             $stmt->execute($params);
-            $session->flash('trade', 'Atualizado');
+            $session->flash('trade', ['message' => 'Atualizado', 'type' => 'success']);
         }
         else
         {
-            $session->flash('trade_failure', 'URL inválida');
+            $session->flash('trade', ['message' => 'URL inválida.', 'type' => 'failure']);
         }
         
         redirect('/checkout');

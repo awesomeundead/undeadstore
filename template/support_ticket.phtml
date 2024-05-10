@@ -12,7 +12,7 @@
                 </div>
                 <div>
                     <label for="message">Mensagem</label>
-                    <textarea id="message" name="message" required="required" rows="6"></textarea>
+                    <textarea id="message" name="message" placeholder="Mensagem" required="required" rows="6"></textarea>
                 </div>
                 <div>
                     <button type="submit">Enviar</button>
@@ -20,13 +20,9 @@
             </div>
         </form>
     </div>
-    <?php if ($message ?? false): ?>
-        <div class="box notification">
-            <?= $message ?>
-        </div>
-    <?php elseif ($message_failure ?? false): ?>
-        <div class="box notification failure">
-            <?= $message_failure ?>
+    <?php if ($notification ?? false): ?>
+        <div class="box notification <?= $notification['type'] ?>">
+            <?= $notification['message'] ?>
         </div>
     <?php endif ?>
     <?php foreach ($list as $item): ?>

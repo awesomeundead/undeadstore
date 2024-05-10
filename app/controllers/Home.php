@@ -26,7 +26,7 @@ class Home
         FROM items
         LEFT JOIN agents ON items.type_id = agents.id AND items.type_name = "agent"
         LEFT JOIN weapons ON items.type_id = weapons.id AND items.type_name = "weapon"
-        WHERE availability = :availability';
+        WHERE availability = :availability ORDER BY RAND()';
         $params = ['availability' => 1];
 
         $item = $_GET['item'] ?? false;

@@ -5,7 +5,7 @@ namespace App\Controllers;
 use Awesomeundead\Undeadstore\Database;
 use Awesomeundead\Undeadstore\Session;
 
-class Orders
+class OrderHistory
 {
     public function index()
     {
@@ -32,8 +32,7 @@ class Orders
             $result[$index]['items'] = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         }
 
-        $message = $session->flash('payment');
-
+        $notification = $session->flash('payment');
         $content_view = 'orders.phtml';
         $settings_title = 'Pedidos';
 

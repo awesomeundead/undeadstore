@@ -26,8 +26,7 @@ class Support
         $stmt->execute($params);
         $list = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         
-        $message = $session->flash('support');
-        $message_failure = $session->flash('support_failure');
+        $notification = $session->flash('support');
         $content_view = 'support.phtml';
 
         require VIEW . 'layout.phtml';
@@ -77,12 +76,12 @@ class Support
             ];
             $result = $stmt->execute($params);
 
-            $session->flash('support', 'Mensagem enviada, responderemos assim que possível.');
+            $session->flash('support', ['message' => 'Mensagem enviada, responderemos assim que possível.', 'type' => 'success']);
 
             redirect("/support/ticket?id={$ticket}");
         }
 
-        $session->flash('support_failure', 'Não foi possível enviar sua mensagem, tente novamente.');
+        $session->flash('support', ['message' => 'Não foi possível enviar sua mensagem, tente novamente.', 'type' => 'failure']);
 
         redirect('/support');
     }
@@ -123,8 +122,7 @@ class Support
         $stmt->execute($params);
         $list = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         
-        $message = $session->flash('support');
-        $message_failure = $session->flash('support_failure');
+        $notification = $session->flash('support');
         $content_view = 'support_ticket.phtml';
 
         require VIEW . 'layout.phtml';
@@ -176,11 +174,11 @@ class Support
 
         if ($result)
         {
-            $session->flash('support', 'Mensagem enviada, responderemos assim que possível.');
+            $session->flash('support', ['message' => 'Mensagem enviada, responderemos assim que possível.', 'type' => 'success']);
         }
         else
         {
-            $session->flash('support_failure', 'Não foi possível enviar sua mensagem, tente novamente.');
+            $session->flash('support', ['message' => 'Não foi possível enviar sua mensagem, tente novamente.', 'type' => 'failure']);
         }
         
 

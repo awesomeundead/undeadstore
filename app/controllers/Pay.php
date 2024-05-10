@@ -120,7 +120,7 @@ class Pay
             $public_key = $config['public_key'];
 
             MercadoPagoConfig::setAccessToken($access_token);
-            MercadoPagoConfig::setRuntimeEnviroment(MercadoPagoConfig::LOCAL);
+            //MercadoPagoConfig::setRuntimeEnviroment(MercadoPagoConfig::LOCAL);
 
             $request_options = new RequestOptions();
             $request_options->setCustomHeaders(["X-Idempotency-Key: {$purchase_identifier}"]);
@@ -128,8 +128,7 @@ class Pay
             $client = new PreferenceClient();
             $preference = $client->create($request, $request_options);
 
-            $message = $session->flash('payment');
-
+            $notification = $session->flash('payment');
             $content_view = 'pay_mercadopago.phtml';
         }
         
@@ -143,7 +142,7 @@ class Pay
         $purchase_id = $_GET['purchase_id'] ?? false;
 
         $session = Session::create();
-        $session->flash('payment', ['failure' => 'Falha no pagamento, tente novamente.']);
+        $session->flash('payment', ['message' => 'Falha no pagamento, tente novamente.', 'type' => 'failure']);
 
         redirect("/pay?purchase_id={$purchase_id}");
     }
@@ -151,17 +150,17 @@ class Pay
     public function pending()
     {
         $session = Session::create();
-        $session->flash('payment', ['pending' => 'Pagamento pendente.']);
+        $session->flash('payment', ['message' => 'Pagamento pendente.', 'type' => 'pending']);
 
-        redirect('/orders');
+        redirect('/order-history');
     }
 
     public function success()
     {
         $session = Session::create();
-        $session->flash('payment', ['success' => 'Pagamento concluído com sucesso.']);
+        $session->flash('payment', ['message' => 'Pagamento concluído com sucesso.', 'type' => 'success']);
 
-        redirect('/orders');
+        redirect('/order-history');
     }
 
     public function qrcode()

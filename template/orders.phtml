@@ -1,77 +1,73 @@
 <div class="flex column">
-<?php if ($message['success'] ?? false): ?>
-    <div class="box notification">
-        <?= $message['success'] ?>
-    </div>
-<?php elseif ($message['pending'] ?? false): ?>
-    <div class="box notification pending">
-        <?= $message['pending'] ?>
-    </div>
-<?php elseif ($message['failure'] ?? false): ?>
-    <div class="box notification failure">
-        <?= $message['failure'] ?>
+<?php if ($notification ?? false): ?>
+    <div class="box notification <?= $notification['type'] ?>">
+        <?= $notification['message'] ?>
     </div>
 <?php endif ?>
+
 <?php if ($result): ?>
     <?php foreach ($result as $item): ?>
-        <div class="box">
-            <div class="box flex column">
-                <div class="flex align-center space-between">
-                    <div>Status do pedido</div>
-                    <div><?= $item['status'] ?></div>
-                </div>
-                <div class="flex align-center space-between">
-                    <div>Forma de pagamento</div>
-                    <div>
-                        <?php if ($item['pay_method'] == 'pix'): ?>
-                            <span>PIX</span>
-                            <?php if ($item['status'] == 'Em andamento'): ?>
-                                <span>(<a href="/pay?purchase_id=<?= $item['id'] ?>">Gerar QR Code</a>)</span>
-                            <?php endif ?>
-                        <?php elseif ($item['pay_method'] == 'mercadopago'): ?>
-                            <span>Mercado Pago</span>
-                            <?php if ($item['status'] == 'Em andamento'): ?>
-                                <span>(<a href="/pay?purchase_id=<?= $item['id'] ?>">Link para pagamento</a>)</span>
-                            <?php endif ?>
-                        <?php endif ?>
-                    </div>
-                </div>
-                <div class="flex align-center space-between">
-                    <div>Data do pedido</div>
+        <div class="order-history box">
+            <header>
+                <div class="column">
+                    <div class="label">Data</div>
                     <div><?= html_date($item['created_date']) ?></div>
                 </div>
-            </div>
-            <div class="box blue">
-            <?php foreach ($item['items'] as $i): ?>
-                <div class="flex align-center space-between">
-                    <div class="weapon_full"><?= $i['item_name'] ?></div>
-                    <div class="price">
-                    <?php if ($i['offer_price'] ?? false): ?>
+                <div class="column">
+                    <div class="label">Total</div>
+                    <div><?= html_money($item['total']) ?></div>
+                </div>
+                <div class="column">
+                    <div class="label">Status</div>
+                    <div><?= $item['status'] ?></div>
+                </div>
+                <div class="flex column">
+                    <div class="label">Pagamento</div>
+                    <div><?= ['pix' => 'PIX', 'mercadopago' => 'Mercado Pago'][$item['pay_method']] ?></div>
+                    <?php if ($item['status'] == 'Em andamento'): ?>
                         <div>
-                            <span class="line_through"><?= html_money($i['price']) ?></span>
-                            <span><?= html_money($i['offer_price']) ?></span>
+                            <a class="button" href="/pay?purchase_id=<?= $item['id'] ?>">Tentar Novamente</a>
                         </div>
-                    <?php else: ?>
-                        <div><?= html_money($i['price']) ?></div>
                     <?php endif ?>
-                    </div>
                 </div>
-            <?php endforeach ?>
-            </div>
-            <div class="box">
-                <div class="flex align-center space-between">
-                    <div>Subtotal</div>
-                    <div class="value"><?= html_money($item['subtotal'])  ?></div>
+            </header>
+            
+            <details>
+                <summary>Exibir detalhes</summary>
+                <div class="flex column">
+                    <section>
+                        <?php foreach ($item['items'] as $i): ?>
+                            <div class="flex align-center space-between">
+                                <div class="weapon_full"><?= $i['item_name'] ?></div>
+                                <div class="price">
+                                <?php if ($i['offer_price'] ?? false): ?>
+                                    <div>
+                                        <span class="line_through"><?= html_money($i['price']) ?></span>
+                                        <span><?= html_money($i['offer_price']) ?></span>
+                                    </div>
+                                <?php else: ?>
+                                    <div><?= html_money($i['price']) ?></div>
+                                <?php endif ?>
+                                </div>
+                            </div>
+                        <?php endforeach ?>
+                    </section>
+                    
+                        <div class="flex align-center space-between">
+                            <div class="label">Subtotal</div>
+                            <div class="value"><?= html_money($item['subtotal'])  ?></div>
+                        </div>
+                        <div class="flex align-center space-between">
+                            <div class="label">Desconto</div>
+                            <div class="value"><?= html_money($item['discount'])  ?></div>
+                        </div>
+                        <div class="flex align-center space-between">
+                            <div class="label">Total</div>
+                            <div class="value"><?= html_money($item['total'])  ?></div>
+                        </div>
+                    
                 </div>
-                <div class="flex align-center space-between">
-                    <div>Desconto</div>
-                    <div class="value"><?= html_money($item['discount'])  ?></div>
-                </div>
-                <div class="flex align-center space-between">
-                    <div>Total</div>
-                    <div class="value"><?= html_money($item['total'])  ?></div>
-                </div>
-            </div>
+            </details>
         </div>
     <?php endforeach ?>
 <?php else: ?>

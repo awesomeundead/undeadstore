@@ -40,9 +40,7 @@ class Cart
             $session->set('cart_total', $total);
         }
 
-        $message = $session->flash('coupon');
-        $message_failure = $session->flash('coupon_failure');
-
+        $notification = $session->flash('coupon');
         $content_view = 'cart.phtml';
         $settings_title = 'Carrinho';
 
@@ -157,28 +155,28 @@ class Cart
                 if (time() > $expiration_date)
                 {
                     $session->remove('cart_coupon');                    
-                    $session->flash('coupon_failure', 'Cupom expirado.');
+                    $session->flash('coupon', ['message' => 'Cupom expirado.', 'type' => 'failure']);
                     redirect('/cart');
                 }
 
                 if (is_null($result['user_id']))
                 {
                     $session->set('cart_coupon', $result);
-                    $session->flash('coupon', 'Cupom adicionado.');
+                    $session->flash('coupon', ['message' => 'Cupom adicionado.', 'type' => 'success']);
                     redirect('/cart');
                 }
 
                 if ($result['user_id'] == $user_id)
                 {
                     $session->set('cart_coupon', $result);
-                    $session->flash('coupon', 'Cupom adicionado.');
+                    $session->flash('coupon', ['message' => 'Cupom adicionado.', 'type' => 'success']);
                     redirect('/cart');
                 }
             }
         }
 
         $session->remove('cart_coupon');
-        $session->flash('coupon_failure', 'Cupom inválido.');
+        $session->flash('coupon', ['message' => 'Cupom inválido.', 'type' => 'failure']);
         redirect('/cart');
     }
 }
