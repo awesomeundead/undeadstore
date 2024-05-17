@@ -2,10 +2,11 @@
 
 namespace App\Controllers;
 
+use Awesomeundead\Undeadstore\Controller;
 use Awesomeundead\Undeadstore\Database;
 use Awesomeundead\Undeadstore\Session;
 
-class Settings
+class Settings extends Controller
 {
     public function index()
     {
@@ -24,16 +25,19 @@ class Settings
         $stmt->execute(['id' => $session->get('user_id')]);
         $result = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-        $steam_trade_url = $result['steam_trade_url'];
-        $name = $result['name'];
-        $email = $result['email'];
-        $phone = $result['phone'];
-
-        $notification = $session->flash('settings');
-        $content_view = 'settings.phtml';
-        $settings_title = 'Configurações';
-
-        require VIEW . 'layout.phtml';
+        echo $this->templates->render('settings/index', [
+            'session' => [
+                'loggedin' => $session->get('logged_in'),
+                'steam_avatar' => $session->get('steam_avatar'),
+                'steam_name' => $session->get('steam_name')
+            ],
+            'steam_trade_url' => $result['steam_trade_url'],
+            'steamid' => $session->get('steamid'),
+            'name' => $result['name'],
+            'email' => $result['email'],
+            'phone' => $result['phone'],
+            'notification' => $session->flash('settings')
+        ]);
     }
 
     public function save()

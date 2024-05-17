@@ -1,3 +1,4 @@
+<?php $this->layout('layout', ['title' => 'Fechar Pedido | Undead Store', 'session' => $session]) ?>
 <div class="flex column">
     <?php if ($notification ?? false): ?>
         <div class="box notification <?= $notification['type'] ?>">

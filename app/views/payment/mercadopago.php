@@ -1,3 +1,4 @@
+<?php $this->layout('layout', ['title' => 'Pagamento | Undead Store', 'session' => $session]) ?>
 <div class="pay flex column">
     <?php if ($notification ?? false): ?>
         <div class="box notification <?= $notification['type'] ?>">
@@ -21,8 +22,8 @@
         </div>
         
         <div>
-            <div>Taxa: <?= html_money($fee) ?></div>
-            <div>Total a pagar: <?= html_money($purchase_total + $fee) ?></div>
+            <div>Taxa: <?= html_money($purchase['fee']) ?></div>
+            <div>Total a pagar: <?= html_money($purchase['total'] + $purchase['fee']) ?></div>
         </div>
     </div>
 

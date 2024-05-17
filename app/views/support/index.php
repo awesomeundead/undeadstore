@@ -1,3 +1,4 @@
+<?php $this->layout('layout', ['title' => 'Suporte | Undead Store', 'session' => $session]) ?>
 <div class="flex column">
     <div class="box white">
         <div>Suporte</div>

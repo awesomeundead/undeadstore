@@ -1,3 +1,4 @@
+<?php $this->layout('layout', ['title' => 'Configurações | Undead Store', 'session' => $session]) ?>
 <div class="flex column">
     <div class="box">
         <form action="/settings" method="post">

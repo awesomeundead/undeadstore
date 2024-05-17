@@ -1,9 +1,10 @@
+<?php $this->layout('layout', ['title' => 'Carrinho | Undead Store', 'session' => $session]) ?>
 <div class="flex column">
-<?php if ($cart_items): ?>
+<?php if ($cart['items'] ?? false): ?>
     <div class="box header">
         <div>Carrinho de compras</div>
     </div>
-    <?php foreach ($cart_items as $item): ?>
+    <?php foreach ($cart['items'] as $item): ?>
     <div class="box flex align-center space-between cart">
         <div class="flex align-center space-between">
             <div><img alt="" src="/images/<?= $item['image'] ?>.png" /></div>
@@ -38,7 +39,7 @@
         <form action="/cart/coupon" method="post">
             <label for="cupom">Cupom</label>
             <div class="flex align-center space-between">
-                <input id="cupom" name="coupon" type="text" value="<?= $coupon_name ?? '' ?>" />
+                <input id="cupom" name="coupon" type="text" value="<?= $cart['coupon']['name'] ?? '' ?>" />
                 <button type="submit">Adicionar</button>
             </div>
         </form>
@@ -46,15 +47,15 @@
     <div class="box white">
         <div class="flex align-center space-between">
             <div>Subtotal</div>
-            <div><?= html_money($subtotal) ?></div>
+            <div><?= html_money($cart['subtotal']) ?></div>
         </div>
         <div class="flex align-center space-between">
             <div>Desconto</div>
-            <div>(<?= $percent ?>%) <?= html_money($discount) ?></div>
+            <div>(<?= $cart['percent'] ?>%) <?= html_money($cart['discount']) ?></div>
         </div>
         <div class="flex align-center space-between">
             <div>Total</div>
-            <div><?= html_money($total) ?></div>
+            <div><?= html_money($cart['total']) ?></div>
         </div>
     </div>
     <div id="nav_buttons">

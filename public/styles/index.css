@@ -29,6 +29,70 @@
     width: 100%;
 }
 
+#carousel
+{
+    margin-bottom: 10px;
+    position: relative;
+}
+
+#carousel .side
+{
+    align-items: center;
+    display: flex;
+    height: 100%;
+    width: 48px;
+    position: absolute;
+    top: 0;
+}
+
+#carousel .side button
+{
+    border-radius: 50%;
+    display: block;
+    height: 48px;
+    width: 48px;
+}
+
+#carousel .side button:hover
+{
+    box-shadow: 0 0 5px #FFF;
+}
+
+#carousel .side.left
+{
+    left: -24px;
+}
+
+#carousel .side.left button
+{
+    background: #F93 url('icon_arrow_left_white.png') center/auto 32px no-repeat;
+}
+
+#carousel .side.right
+{
+    right: -24px;
+}
+
+#carousel .side.right button
+{
+    background: #F93 url('icon_arrow_right_white.png') center/auto 32px no-repeat;
+}
+
+#carousel .container
+{
+    display: flex;
+    gap: 10px;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    width: 1200px;
+}
+
+#carousel .item
+{
+    flex-shrink: 0;
+    width: 292.5px;
+}
+
 #container
 {
     display: grid;
@@ -65,7 +129,7 @@
 
 .item .image a:hover img
 {
-    opacity: 0.7;
+    --opacity: 0.7;
 }
 
 .item img
@@ -73,10 +137,72 @@
     width: 100%;
 }
 
-.item .tag
+.item .attribute-1,
+.item .attribute-2,
+.item .availability
 {
     border-radius: 5px;
     padding: 5px;
+}
+
+.item .attribute-1
+{
+    background-color: #333;
+}
+
+.item .attribute-2
+{
+    background-color: #333;
+}
+
+.item .attribute-2.consumer-grade
+{
+    color: #b0c3d9;
+}
+
+.item .attribute-2.industrial-grade
+{
+    color: #5e98d9;
+}
+
+.item .attribute-2.mil-spec
+{
+    color: #4b69ff;
+}
+
+.item .attribute-2.restricted
+{
+    color: #8847ff;
+}
+
+.item .attribute-2.classified
+{
+    color: #d32ce6;
+}
+
+.item .attribute-2.covert
+{
+    color: #eb4b4b;
+}
+
+.item .attribute-2.distinguished
+{
+    color: #4b69ff;
+}
+
+.item .attribute-2.exceptional
+{
+    color: #8847ff;
+}
+
+.item .attribute-2.superior
+{
+    color: #d32ee6;
+}
+
+.item .attribute-2.master
+{
+    color: #eb4b4b;
 }
 
 .item .market a
@@ -92,11 +218,6 @@
 .item .market a:hover
 {
     background-color: #247;
-}
-
-.item .exterior
-{
-    background-color: #333;
 }
 
 .item .availability

@@ -2,10 +2,11 @@
 
 namespace App\Controllers;
 
+use Awesomeundead\Undeadstore\Controller;
 use Awesomeundead\Undeadstore\Database;
 use Awesomeundead\Undeadstore\Session;
 
-class Support
+class Support extends Controller
 {
     public function index()
     {
@@ -26,10 +27,15 @@ class Support
         $stmt->execute($params);
         $list = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         
-        $notification = $session->flash('support');
-        $content_view = 'support.phtml';
-
-        require VIEW . 'layout.phtml';
+        echo $this->templates->render('support/index', [
+            'session' => [
+                'loggedin' => $session->get('logged_in'),
+                'steam_avatar' => $session->get('steam_avatar'),
+                'steam_name' => $session->get('steam_name')
+            ],
+            'list' => $list,
+            'notification' => $session->flash('support')
+        ]);
     }
 
     public function create()
@@ -107,9 +113,9 @@ class Support
             'ticket' => $ticket
         ];
         $stmt->execute($params);
-        $item = $stmt->fetch(\PDO::FETCH_ASSOC);
+        $ticket = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-        if (!$item)
+        if (!$ticket)
         {
             redirect();
         }
@@ -117,15 +123,21 @@ class Support
         $query = 'SELECT * FROM ticket_items WHERE ticket_id = :ticket_id ORDER BY id DESC';
         $stmt = $pdo->prepare($query);
         $params = [
-            'ticket_id' => $item['id']
+            'ticket_id' => $ticket['id']
         ];
         $stmt->execute($params);
         $list = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         
-        $notification = $session->flash('support');
-        $content_view = 'support_ticket.phtml';
-
-        require VIEW . 'layout.phtml';
+        echo $this->templates->render('support/ticket', [
+            'session' => [
+                'loggedin' => $session->get('logged_in'),
+                'steam_avatar' => $session->get('steam_avatar'),
+                'steam_name' => $session->get('steam_name')
+            ],
+            'ticket' => $ticket,
+            'list' => $list,
+            'notification' => $session->flash('support')
+        ]);
     }
 
     public function add()

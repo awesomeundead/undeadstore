@@ -5,12 +5,13 @@ use Awesomeundead\Undeadstore\Database;
 use Awesomeundead\Undeadstore\Session;
 use App\Controllers\
 {
-    Auth, Cart, Checkout, Home, OrderHistory, Pay, Settings, Support
+    Auth, Cart, Checkout, Home, Listings, OrderHistory, Partners, Pay, Settings, Support
 };
 
 return function (App $app)
 {
     $app->get('/', [Home::class, 'index']);
+    $app->get('/listings', [Home::class, 'listings']);
     
     $app->get('/auth', [Auth::class, 'index']);
     $app->get('/auth/login', [Auth::class, 'login']);
@@ -47,6 +48,10 @@ return function (App $app)
     $app->get('/data', [Home::class, 'data']);
 
     $app->post('/input/mercadopago', [Pay::class, 'input']);
+    
+    $app->get('/listings/available', [Listings::class, 'available']);
+    $app->get('/listings/coming', [Listings::class, 'coming']);
+    $app->get('/listings/family', [Listings::class, 'family']);
 
     $app->get('/logout', function ()
     {
@@ -59,15 +64,7 @@ return function (App $app)
 
     $app->get('/order-history', [OrderHistory::class, 'index']);
 
-    $app->get('/partners', function ()
-    {
-        $session = Session::create();
-
-        $content_view = 'partners.phtml';
-        $settings_title = 'Parceiros';
-
-        require VIEW . 'layout.phtml';
-    });
+    $app->get('/partners', [Partners::class, 'index']);
 
     $app->get('/pay', [Pay::class, 'index']);    
     $app->get('/payment/failure', [Pay::class, 'failure']);

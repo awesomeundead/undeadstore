@@ -1,14 +1,15 @@
+<?php $this->layout('layout', ['title' => 'Suporte | Undead Store', 'session' => $session]) ?>
 <div class="flex column">
     <div class="box white">
-        <div>Ticket #<?= $item['ticket'] ?></div>
+        <div>Ticket #<?= $ticket['ticket'] ?></div>
     </div>
     <div class="box">
         <form action="/support/ticket" method="post">
-            <input name="ticket" type="hidden" value="<?= $item['ticket'] ?>" />
+            <input name="ticket" type="hidden" value="<?= $ticket['ticket'] ?>" />
             <div class="flex column gap-20">
                 <div>
                     <label for="subject">Assunto</label>
-                    <input disabled="disabled" id="subject" type="text" value="<?= html_escape($item['subject']) ?>" />
+                    <input disabled="disabled" id="subject" type="text" value="<?= html_escape($ticket['subject']) ?>" />
                 </div>
                 <div>
                     <label for="message">Mensagem</label>

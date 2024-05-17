@@ -2,49 +2,52 @@
 
 namespace App\Controllers;
 
+use Awesomeundead\Undeadstore\Controller;
 use Awesomeundead\Undeadstore\Database;
 use Awesomeundead\Undeadstore\Session;
 
-class Cart
+class Cart extends Controller
 {
     public function index()
     {
         $session = Session::create();
         
-        $cart_items = $session->get('cart_items');
+        $cart = $session->get('cart');
 
-        if ($cart_items)
+        if ($cart['items'] ?? false)
         {
-            $count = count($cart_items);
+            $count = count($cart['items']);
 
-            foreach ($cart_items as $index => $item)
+            foreach ($cart['items'] as $index => $item)
             {
                 $prices[] = $item['offer_price'] ?? $item['price'];
             }
             
-            $subtotal = array_sum($prices);
-            $discount = 0;
-            $percent = 0;
-            $coupon = $session->get('cart_coupon');
+            $cart['subtotal'] = array_sum($prices);
+            $cart['discount'] = 0;
+            $cart['percent'] = 0;
             
-            if ($coupon)
+            if ($cart['coupon'] ?? false)
             {
-                $coupon_name = $coupon['name'];
-                $discount = $subtotal / 100 * $coupon['percent'];
-                $percent = $coupon['percent'];
+                $coupon_name = $cart['coupon']['name'];
+                $cart['discount'] = $cart['subtotal'] / 100 * $cart['coupon']['percent'];
+                $cart['percent'] = $cart['coupon']['percent'];
             }
 
-            $total = $subtotal - $discount;
-            $session->set('cart_subtotal', $subtotal);
-            $session->set('cart_discount', $discount);
-            $session->set('cart_total', $total);
+            $cart['total'] = $cart['subtotal'] - $cart['discount'];
+
+            $session->set('cart', $cart);
         }
 
-        $notification = $session->flash('coupon');
-        $content_view = 'cart.phtml';
-        $settings_title = 'Carrinho';
-
-        require VIEW . 'layout.phtml';
+        echo $this->templates->render('cart/index', [
+            'session' => [
+                'loggedin' => $session->get('logged_in'),
+                'steam_avatar' => $session->get('steam_avatar'),
+                'steam_name' => $session->get('steam_name')
+            ],
+            'cart' => $cart,
+            'notification' => $session->flash('coupon')
+        ]);
     }
 
     public function add()
@@ -71,42 +74,36 @@ class Cart
                     $stmt->execute(['id' => $result['type_id']]);
                     $item = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-                    $result['full_name'] = "{$item['agent_name']} | {$item['agent_category']}";
-                    $result['full_name_br'] = "{$item['agent_name_br']} | {$item['agent_category_br']}";
+                    $result['full_name'] = "{$item['agent_name']} | {$item['agent_family']}";
+                    $result['full_name_br'] = "{$item['agent_name_br']} | {$item['agent_family_br']}";
                     $result['image'] = $item['image'];
                 }
                 elseif ($result['type_name'] == 'weapon')
                 {
-                    $query = 'SELECT * FROM weapons WHERE id = :id';
+                    $query = 'SELECT *, weapons_atrributes.id FROM weapons_atrributes
+                    LEFT JOIN weapons ON weapons_atrributes.weapon_id = weapons.id
+                    WHERE weapons_atrributes.id = :id';
                     $stmt = $pdo->prepare($query);
                     $stmt->execute(['id' => $result['type_id']]);
                     $item = $stmt->fetch(\PDO::FETCH_ASSOC);
 
                     $exterior = [
-                        'fn' => 'Factory New',
-                        'mw' => 'Minimal Wear',
-                        'ft' => 'Field-Tested',
-                        'ww' => 'Well Worm',
-                        'bs' => 'Battle-Scarred'
-                    ];
-                    
-                    $exterior_br = [
-                        'fn' => 'Nova de Fábrica',
-                        'mw' => 'Pouca Usada',
-                        'ft' => 'Testada em Campo',
-                        'ww' => 'Bem Desgastada',
-                        'bs' => 'Veterana de Guerra'
+                        'fn' => ['en' => 'Factory New', 'br' => 'Nova de Fábrica'],
+                        'mw' => ['en' => 'Minimal Wear', 'br' => 'Pouca Usada'],
+                        'ft' => ['en' => 'Field-Tested', 'br' => 'Testada em Campo'],
+                        'ww' => ['en' => 'Well Worm', 'br' => 'Bem Desgastada'],
+                        'bs' => ['en' => 'Battle-Scarred', 'br' => 'Veterana de Guerra']
                     ];
 
-                    $stattrak = $item['weapon_stattrak'] ? 'StatTrak' : '';
-                    $result['full_name'] = implode(' ', [$item['weapon_type'], $stattrak, $item['weapon_name'], $exterior[$item['weapon_exterior']]]);
-                    $result['full_name_br'] = implode(' ', [$item['weapon_type_br'], $stattrak, $item['weapon_name_br'], $exterior_br[$item['weapon_exterior']]]);
+                    $stattrak = $item['weapon_stattrak'] ? ' (StatTrak™)' : '';
+                    $result['full_name'] = "{$item['weapon_name']}{$stattrak} | {$item['weapon_family']} ({$exterior[$item['weapon_exterior']]['en']})";
+                    $result['full_name_br'] = "{$item['weapon_name_br']}{$stattrak} | {$item['weapon_family_br']} ({$exterior[$item['weapon_exterior']]['br']})";
                     $result['image'] = "{$item['image']}_{$item['weapon_exterior']}";
                 }
 
-                $cart_items = $session->get('cart_items');
-                $cart_items[$result['id']] = $result;
-                $session->set('cart_items', $cart_items);
+                $cart = $session->get('cart');
+                $cart['items'][$result['id']] = $result;
+                $session->set('cart', $cart);
             }
         }
 
@@ -121,9 +118,9 @@ class Cart
 
         if ($item_id)
         {
-            $cart_items = $session->get('cart_items');
-            unset($cart_items[$item_id]);
-            $session->set('cart_items', $cart_items);
+            $cart = $session->get('cart');
+            unset($cart['items'][$item_id]);
+            $session->set('cart', $cart);
         }
 
         redirect('/cart');
@@ -132,6 +129,7 @@ class Cart
     public function coupon()
     {
         $session = Session::create();
+        $cart = $session->get('cart');
 
         $coupon = trim($_POST['coupon'] ?? '');
 
@@ -154,28 +152,24 @@ class Cart
 
                 if (time() > $expiration_date)
                 {
-                    $session->remove('cart_coupon');                    
+                    $cart['coupon'] = null;
+                    $session->set('cart', $cart);
                     $session->flash('coupon', ['message' => 'Cupom expirado.', 'type' => 'failure']);
                     redirect('/cart');
                 }
 
-                if (is_null($result['user_id']))
+                if (is_null($result['user_id']) || $result['user_id'] == $user_id)
                 {
-                    $session->set('cart_coupon', $result);
-                    $session->flash('coupon', ['message' => 'Cupom adicionado.', 'type' => 'success']);
-                    redirect('/cart');
-                }
-
-                if ($result['user_id'] == $user_id)
-                {
-                    $session->set('cart_coupon', $result);
+                    $cart['coupon'] = $result;
+                    $session->set('cart', $cart);
                     $session->flash('coupon', ['message' => 'Cupom adicionado.', 'type' => 'success']);
                     redirect('/cart');
                 }
             }
         }
 
-        $session->remove('cart_coupon');
+        $cart['coupon'] = null;
+        $session->set('cart', $cart);
         $session->flash('coupon', ['message' => 'Cupom inválido.', 'type' => 'failure']);
         redirect('/cart');
     }
