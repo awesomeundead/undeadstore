@@ -2,14 +2,129 @@
 
 namespace App\Controllers;
 
+use Awesomeundead\Undeadstore\Controller;
 use Awesomeundead\Undeadstore\Database;
 use Awesomeundead\Undeadstore\Session;
 use MercadoPago\Client\Common\RequestOptions;
 use MercadoPago\Client\Preference\PreferenceClient;
 use MercadoPago\MercadoPagoConfig;
 
-class Pay
+class Pay extends Controller
 {
+    private function _mercadopago($purchase)
+    {
+        $session = Session::create();
+
+        $config = (require ROOT . '/config.php')['mercadopago'];
+
+        $purchase['fee'] = round($purchase['total'] / 100 * $config['fee'], 2);
+
+        $pdo = Database::connect();
+
+        $query = 'SELECT * FROM purchase_items WHERE purchase_id = :purchase_id';
+        $stmt = $pdo->prepare($query);
+        $stmt->execute(['purchase_id' => $purchase['id']]);
+        $list = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        foreach ($list as $item)
+        {
+            $description[] = "1x {$item['item_name']}";
+        }
+
+        $items = [
+            [
+                'title' => 'Undead Store Item Digital',
+                'description' => implode(', ', $description),
+                'quantity' => 1,
+                'currency_id' => 'BRL',
+                'unit_price' =>  $purchase['total'] + $purchase['fee']
+            ]
+        ];
+
+        $payer = [
+            'name' => $session->get('steam_name'),
+            'surname' => '',
+            'email' => ''
+        ];
+
+        $payment_methods =
+        [
+            'excluded_payment_methods' => [
+                ['id' => 'pix'],
+                ['id' => 'bolbradesco'],
+                ['id' => 'pec']
+            ]
+        ];
+
+        $back_urls = [
+            'success' => HOST . BASE_PATH . '/payment/success',
+            'failure' => HOST . BASE_PATH . "/payment/failure?purchase_id={$purchase['id']}",
+            'pending' => HOST . BASE_PATH . '/payment/pending'
+        ];
+
+        $request = 
+        [
+            'items' => $items,
+            'payer' => $payer,
+            'auto_return' => 'approved',
+            'payment_methods' => $payment_methods,
+            'back_urls' => $back_urls,
+            'statement_descriptor' => 'Undead Store',
+            'external_reference' => $purchase['identifier']
+        ];
+
+        MercadoPagoConfig::setAccessToken($config['access_token']);
+        MercadoPagoConfig::setRuntimeEnviroment(MercadoPagoConfig::LOCAL);
+
+        $request_options = new RequestOptions();
+        $request_options->setCustomHeaders(["X-Idempotency-Key: {$purchase['identifier']}"]);
+
+        $client = new PreferenceClient();
+        $preference = $client->create($request, $request_options);
+
+        echo $this->templates->render('payment/mercadopago', [
+            'session' => [
+                'loggedin' => $session->get('logged_in'),
+                'steam_avatar' => $session->get('steam_avatar'),
+                'steam_name' => $session->get('steam_name')
+            ],
+            'description' => $description,
+            'preference' => $preference,
+            'public_key' => $config['public_key'],
+            'purchase' => $purchase,
+            'notification' => $session->flash('payment')
+        ]);
+    }
+
+    private function _pix($purchase)
+    {
+        $session = Session::create();
+
+        require ROOT . '/include/pix.php';
+        
+        $params = [
+            'key'         => 'f05b1356-f4e4-4d10-8abb-5a1cb3ed5729',
+            'description' => '',
+            'value'       => $purchase['total'],
+            'name'        => 'Undead Store',
+            'city'        => 'SAO PAULO',
+            'identifier'  => $purchase['identifier']
+        ];
+    
+        $code = pix($params);
+
+        echo $this->templates->render('payment/pix', [
+            'session' => [
+                'loggedin' => $session->get('logged_in'),
+                'steam_avatar' => $session->get('steam_avatar'),
+                'steam_name' => $session->get('steam_name')
+            ],
+            'code' => $code,
+            'purchase' => $purchase,
+            'purchase_total' => $purchase['total']
+        ]);
+    }
+
     public function index()
     {
         $session = Session::create();
@@ -38,103 +153,18 @@ class Pay
             redirect();
         }
         
-        $purchase_discount = (float) $purchase['discount'];
-        $purchase_total = (float) $purchase['total'];
-        $purchase_identifier = 'US' . str_pad(strtoupper(base_convert($purchase_id, 10, 36)), 7, 0, STR_PAD_LEFT);
+        $purchase['discount']= (float) $purchase['discount'];
+        $purchase['total'] = (float) $purchase['total'];
+        $purchase['identifier'] = 'US' . str_pad(strtoupper(base_convert($purchase_id, 10, 36)), 7, 0, STR_PAD_LEFT);
         
         if ($purchase['pay_method'] == 'pix')
         {
-            require ROOT . '/include/pix.php';
-        
-            $params = [
-                'key'         => 'f05b1356-f4e4-4d10-8abb-5a1cb3ed5729',
-                'description' => '',
-                'value'       => $purchase_total,
-                'name'        => 'Undead Store',
-                'city'        => 'SAO PAULO',
-                'identifier'  => $purchase_identifier
-            ];
-        
-            $code = pix($params);
-            $content_view = 'pay_pix.phtml';
+            $this->_pix($purchase);
         }
         elseif ($purchase['pay_method'] == 'mercadopago')
         {
-            $config = (require ROOT . '/config.php')['mercadopago'];
-
-            $fee = round($purchase_total / 100 * $config['fee'], 2);
-
-            $query = 'SELECT * FROM purchase_items WHERE purchase_id = :purchase_id';
-            $stmt = $pdo->prepare($query);
-            $stmt->execute(['purchase_id' => $purchase_id]);
-            $list = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-
-            foreach ($list as $item)
-            {
-                $description[] = "1x {$item['item_name']}";
-            }
-
-            $items = [
-                [
-                    'title' => 'Undead Store Item Digital',
-                    'description' => implode(', ', $description),
-                    'quantity' => 1,
-                    'currency_id' => 'BRL',
-                    'unit_price' =>  $purchase_total + $fee
-                ]
-            ];
-
-            $payer = [
-                'name' => $session->get('steam_name'),
-                'surname' => '',
-                'email' => ''
-            ];
-
-            $payment_methods =
-            [
-                'excluded_payment_methods' => [
-                    ['id' => 'pix'],
-                    ['id' => 'bolbradesco'],
-                    ['id' => 'pec']
-                ]
-            ];
-
-            $back_urls = [
-                'success' => HOST . BASE_PATH . '/payment/success',
-                'failure' => HOST . BASE_PATH . "/payment/failure?purchase_id={$purchase_id}",
-                'pending' => HOST . BASE_PATH . '/payment/pending'
-            ];
-
-            $request = 
-            [
-                'items' => $items,
-                'payer' => $payer,
-                'auto_return' => 'approved',
-                'payment_methods' => $payment_methods,
-                'back_urls' => $back_urls,
-                'statement_descriptor' => 'Undead Store',
-                'external_reference' => $purchase_identifier
-            ];
-
-            $access_token = $config['access_token'];
-            $public_key = $config['public_key'];
-
-            MercadoPagoConfig::setAccessToken($access_token);
-            //MercadoPagoConfig::setRuntimeEnviroment(MercadoPagoConfig::LOCAL);
-
-            $request_options = new RequestOptions();
-            $request_options->setCustomHeaders(["X-Idempotency-Key: {$purchase_identifier}"]);
-
-            $client = new PreferenceClient();
-            $preference = $client->create($request, $request_options);
-
-            $notification = $session->flash('payment');
-            $content_view = 'pay_mercadopago.phtml';
+            $this->_mercadopago($purchase);
         }
-        
-        $settings_title = 'Pagamento';
-        
-        require VIEW . 'layout.phtml';
     }
 
     public function failure()

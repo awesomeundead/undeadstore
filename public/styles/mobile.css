@@ -45,14 +45,14 @@
         padding: 10px 5px;
     }
 
-    footer .flex_space_between
+    #main_footer .flex_space_between
     {
         display: flex;
         flex-direction: column;
         gap: 10px;
     }
 
-    footer .icons img
+    #main_footer .icons img
     {
         background-color: #FFF;
         border-radius: 5px;
@@ -64,6 +64,26 @@
     {
         left: 0;
         width: 100%;
+    }
+
+    #carousel .side.left
+    {
+        left: 0;
+    }
+
+    #carousel .side.right
+    {
+        right: 0;
+    }
+
+    #carousel .container
+    {
+        width: calc(100vw - 10px);
+    }
+
+    #carousel .item
+    {
+        width: calc(100vw / 2 - 10px);
     }
 
     #container

@@ -1,3 +1,4 @@
+<?php $this->layout('layout', ['title' => 'Pedidos | Undead Store', 'session' => $session]) ?>
 <div class="flex column">
 <?php if ($notification ?? false): ?>
     <div class="box notification <?= $notification['type'] ?>">
@@ -5,8 +6,8 @@
     </div>
 <?php endif ?>
 
-<?php if ($result): ?>
-    <?php foreach ($result as $item): ?>
+<?php if ($list): ?>
+    <?php foreach ($list as $item): ?>
         <div class="order-history box">
             <header>
                 <div class="column">

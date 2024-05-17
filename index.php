@@ -2,9 +2,14 @@
 
 use Awesomeundead\Undeadstore\App;
 use Awesomeundead\Undeadstore\HttpException;
+use DI\ContainerBuilder;
 
 try
 {
+    $builder = new ContainerBuilder();
+    $container = $builder->build();
+
+    App::setContainer($container);
     $app = App::create();
     //$app->basePath(BASE_PATH);
     

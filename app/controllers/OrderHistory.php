@@ -2,10 +2,11 @@
 
 namespace App\Controllers;
 
+use Awesomeundead\Undeadstore\Controller;
 use Awesomeundead\Undeadstore\Database;
 use Awesomeundead\Undeadstore\Session;
 
-class OrderHistory
+class OrderHistory extends Controller
 {
     public function index()
     {
@@ -22,20 +23,24 @@ class OrderHistory
         $query = 'SELECT * FROM purchase WHERE user_id = :user_id ORDER BY id DESC';
         $stmt = $pdo->prepare($query);
         $stmt->execute(['user_id' => $session->get('user_id')]);
-        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $list = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-        foreach ($result as $index => $item)
+        foreach ($list as $index => $item)
         {
             $query = 'SELECT * FROM purchase_items WHERE purchase_id = :purchase_id';
             $stmt = $pdo->prepare($query);
             $stmt->execute(['purchase_id' => $item['id']]);
-            $result[$index]['items'] = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            $list[$index]['items'] = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         }
 
-        $notification = $session->flash('payment');
-        $content_view = 'orders.phtml';
-        $settings_title = 'Pedidos';
-
-        require VIEW . 'layout.phtml';
+        echo $this->templates->render('order-history/index', [
+            'session' => [
+                'loggedin' => $session->get('logged_in'),
+                'steam_avatar' => $session->get('steam_avatar'),
+                'steam_name' => $session->get('steam_name')
+            ],
+            'list' => $list,
+            'notification' => $session->flash('payment')
+        ]);
     }
 }

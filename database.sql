@@ -39,8 +39,9 @@ CREATE TABLE IF NOT EXISTS purchase_items (
 
 CREATE TABLE IF NOT EXISTS items (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    type_name VARCHAR(15) NOT NULL,
+    type_name ENUM('agent', 'weapon') NOT NULL,
     type_id INT UNSIGNED NOT NULL,
+    market_hash_name VARCHAR(255) NOT NULL,
     availability TINYINT NOT NULL,
     price DECIMAL(8,2),
     offer_price DECIMAL(8,2)
@@ -48,22 +49,42 @@ CREATE TABLE IF NOT EXISTS items (
 
 CREATE TABLE IF NOT EXISTS agents (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    agent_type VARCHAR(255) NOT NULL,
+    agent_type_br VARCHAR(255) NOT NULL,
     agent_name VARCHAR(255) NOT NULL,
     agent_name_br VARCHAR(255) NOT NULL,
-    agent_category VARCHAR(255) NOT NULL,
-    agent_category_br VARCHAR(255) NOT NULL,
+    agent_family VARCHAR(255) NOT NULL,
+    agent_family_br VARCHAR(255) NOT NULL,
     image VARCHAR(255) NOT NULL
+);
+
+--"market_hash_name": "StatTrak™ AK-47 | Uncharted (Minimal Wear)"
+--"market_hash_name": "Special Agent Ava | FBI"
+
+CREATE TABLE IF NOT EXISTS weapons_attributes (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    weapon_id INT UNSIGNED NOT NULL,
+    weapon_stattrak TINYINT(1) NOT NULL,    
+    weapon_exterior ENUM('fn', 'mw', 'ft', 'ww', 'bs') NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS weapons (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    weapon_collection_id INT UNSIGNED NOT NULL,
     weapon_type VARCHAR(255) NOT NULL,
     weapon_type_br VARCHAR(255) NOT NULL,
-    weapon_stattrak TINYINT(1) NOT NULL,
+    weapon_rarity TINYINT UNSIGNED NOT NULL,
     weapon_name VARCHAR(255) NOT NULL,
     weapon_name_br VARCHAR(255) NOT NULL,
-    weapon_exterior CHAR(2) NOT NULL,
+    weapon_family VARCHAR(255) NOT NULL,
+    weapon_family_br VARCHAR(255) NOT NULL,
     image VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS collections (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    name_br VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS coupon (

@@ -2,26 +2,23 @@
 
 namespace App\Controllers;
 
+use Awesomeundead\Undeadstore\Controller;
 use Awesomeundead\Undeadstore\Database;
 use Awesomeundead\Undeadstore\Session;
 
-class Checkout
+class Checkout extends Controller
 {
     public function index()
     {
         $session = Session::create();
 
         $logged_in = $session->get('logged_in');
-        $cart_items = $session->get('cart_items');
+        $cart = $session->get('cart');
 
-        if (!$logged_in || !$cart_items)
+        if (!$logged_in || !$cart['items'])
         {
             redirect('/auth?redirect=checkout');
         }
-
-        $subtotal = $session->get('cart_subtotal');
-        $discount = $session->get('cart_discount');
-        $total = $session->get('cart_total');
 
         $pdo = Database::connect();
 
@@ -29,14 +26,20 @@ class Checkout
         $stmt = $pdo->prepare($query);
         $stmt->execute(['id' => $session->get('user_id')]);
         $steam_trade_url = $stmt->fetchColumn();
-        $steamid = $session->get('steamid');
 
-        $notification = $session->flash('trade');
-
-        $content_view = 'checkout.phtml';
-        $settings_title = 'Fechar Pedido';
-
-        require VIEW . 'layout.phtml';
+        echo $this->templates->render('checkout/index', [
+            'session' => [
+                'loggedin' => $session->get('logged_in'),
+                'steam_avatar' => $session->get('steam_avatar'),
+                'steam_name' => $session->get('steam_name')
+            ],
+            'notification' => $session->flash('trade'),
+            'steam_trade_url' => $steam_trade_url,
+            'steamid' => $session->get('steamid'),
+            'subtotal' => $cart['subtotal'],
+            'discount' => $cart['discount'],
+            'total' => $cart['total']
+        ]);
     }
 
     public function end()
@@ -44,14 +47,14 @@ class Checkout
         $session = Session::create();
 
         $logged_in = $session->get('logged_in');
-        $cart_items = $session->get('cart_items');
+        $cart = $session->get('cart');
 
-        if (!$logged_in || !$cart_items)
+        if (!$logged_in || !$cart['items'])
         {
             redirect('/auth?redirect=pay');
         }
 
-        $coupon = $session->get('cart_coupon');
+        $coupon = $cart['coupon'] ?? false;
 
         if ($coupon)
         {
@@ -60,7 +63,8 @@ class Checkout
 
             if ($timestamp > $expiration_date)
             {
-                $session->remove('cart_coupon');
+                $cart['coupon'] = null;
+                $session->set('cart', $cart);
                 $session->flash('coupon', ['message' => 'Cupom expirado.', 'type' => 'failure']);
 
                 redirect('/cart');
@@ -82,9 +86,9 @@ class Checkout
         }
 
         $coupon = $coupon['name'] ?? '';
-        $subtotal = $session->get('cart_subtotal');
-        $discount = $session->get('cart_discount');
-        $total = $session->get('cart_total');
+        $subtotal = $cart['subtotal'];
+        $discount = $cart['discount'];
+        $total = $cart['total'];
 
         $pay_method = $_GET['pay_method'] ?? false;
 
@@ -117,14 +121,14 @@ class Checkout
         $purchase_id = $pdo->lastInsertId();
 
         // $item [id, item_id, item_name, availability, price, offer_price, image]
-        foreach ($cart_items as $item)
+        foreach ($cart['items'] as $item)
         {
             $query = 'INSERT INTO purchase_items (purchase_id, item_id, item_name, price, offer_price) VALUES (:purchase_id, :item_id, :item_name, :price, :offer_price)';
             $stmt = $pdo->prepare($query);
             $params = [
                 'purchase_id' => $purchase_id,
                 'item_id' => $item['id'],
-                'item_name' => $item['full_name'],
+                'item_name' => $item['market_hash_name'],
                 'price' => $item['price'],
                 'offer_price' => $item['offer_price']
             ];
@@ -139,11 +143,7 @@ class Checkout
             $stmt->execute($params);
         }
 
-        $session->remove('cart_items');
-        $session->remove('cart_subtotal');
-        $session->remove('cart_discount');
-        $session->remove('cart_total');
-        $session->remove('cart_coupon');
+        $session->remove('cart');
 
         redirect("/pay?purchase_id={$purchase_id}");
     }

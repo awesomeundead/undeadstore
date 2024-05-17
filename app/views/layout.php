@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="keywords" content="cs, csgo, cs2, counter-strike, skin">
 <meta property="og:image" content="https://undeadstore.com.br/logo.png" />
 <meta property="og:description" content="Skins de Counter-Strike 2 com os melhores preços." />
 <meta property="og:title" content="Undead Store" />
@@ -11,7 +12,7 @@
 <link href="/styles/default.css?release=4" rel="stylesheet" />
 <link href="/styles/index.css?release=4" rel="stylesheet" />
 <link href="/styles/mobile.css?release=4" rel="stylesheet" />
-<title><?= isset($settings_title) ? "{$settings_title} | Undead Store" : 'Undead Store' ?></title>
+<title><?= $this->e($title) ?></title>
 </head>
 <body>
 
@@ -28,11 +29,11 @@
                     <img alt="Imagem de um carrinho" src="/styles/cart_icon.png" />
                 </a>
             </div>
-            <?php if ($session->get('logged_in')): ?>
+            <?php if ($session['loggedin']): ?>
                 <div id="loggedin">
                     <div class="steam image">
-                        <img alt="Avatar" src="<?= $session->get('steam_avatar') ?>" />
-                        <span><?= $session->get('steam_name') ?></span>
+                        <img alt="Avatar" src="<?= $session['steam_avatar'] ?>" />
+                        <span><?= $session['steam_name']?></span>
                     </div>
                 </div>
             <?php else: ?>
@@ -43,7 +44,7 @@
                     </a>
                 </div>
             <?php endif ?>
-            <?php if ($session->get('logged_in')): ?>
+            <?php if ($session['loggedin']): ?>
                 <nav>
                     <a href="/settings">Configurações</a>
                     <a href="/order-history">Pedidos</a>
@@ -54,7 +55,7 @@
         </nav>
     </header>
     <section id="main_section">
-        <?php require $content_view; ?>
+        <?= $this->section('content') ?>
     </section>
     <footer id="main_footer">
         <div class="flex_space_between">
@@ -102,11 +103,14 @@
             <div class="flex column">
                 <div>Redes sociais</div>
                 <div class="social">
-                    <a href="https://discord.gg/YMvX8g5FhU">
-                        <img alt="Discord logo" src="/styles/discord_icon.svg" />
+                    <a href="https://discord.gg/YMvX8g5FhU" target="_blank">
+                        <img alt="Discord logo" src="/styles/icon_discord.png" />
                     </a>
-                    <a href="https://steamcommunity.com/groups/undeadstore">
-                        <img alt="Steam logo" src="/styles/steam_icon.svg" />
+                    <a href="https://steamcommunity.com/groups/undeadstore" target="_blank">
+                        <img alt="Steam logo" src="/styles/icon_steam.png" />
+                    </a>
+                    <a href="https://instagram.com/undeadstore.com.br" target="_blank">
+                        <img alt="Instagram logo" src="/styles/icon_instagram.png" />
                     </a>
                 </div>
             </div>
