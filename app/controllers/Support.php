@@ -84,6 +84,15 @@ class Support extends Controller
 
             $session->flash('support', ['message' => 'Mensagem enviada, responderemos assim que possível.', 'type' => 'success']);
 
+            require ROOT . '/include/mail.php';
+
+            $steamid = $session->get('steamid');
+            $personaname = $session->get('steam_name');
+            $params['subject'] = 'Novo ticket registrado';
+            $params['message'] = "O usuário {$personaname} ({$steamid}), abriu um chamado.";
+            
+            send_mail($params);
+
             redirect("/support/ticket?id={$ticket}");
         }
 
@@ -186,6 +195,15 @@ class Support extends Controller
 
         if ($result)
         {
+            require ROOT . '/include/mail.php';
+
+            $steamid = $session->get('steamid');
+            $personaname = $session->get('steam_name');
+            $params['subject'] = 'Nova mensagem registrada';
+            $params['message'] = "O usuário {$personaname} ({$steamid}), ticket #{$ticket}, enviou uma mensagem.";
+            
+            send_mail($params);
+
             $session->flash('support', ['message' => 'Mensagem enviada, responderemos assim que possível.', 'type' => 'success']);
         }
         else

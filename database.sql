@@ -70,14 +70,14 @@ CREATE TABLE IF NOT EXISTS weapons_attributes (
 
 CREATE TABLE IF NOT EXISTS weapons (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    weapon_collection_id INT UNSIGNED NOT NULL,
     weapon_type VARCHAR(255) NOT NULL,
     weapon_type_br VARCHAR(255) NOT NULL,
-    weapon_rarity TINYINT UNSIGNED NOT NULL,
     weapon_name VARCHAR(255) NOT NULL,
     weapon_name_br VARCHAR(255) NOT NULL,
     weapon_family VARCHAR(255) NOT NULL,
     weapon_family_br VARCHAR(255) NOT NULL,
+    weapon_collection_id INT UNSIGNED NOT NULL,
+    weapon_rarity TINYINT UNSIGNED NOT NULL,
     image VARCHAR(255) NOT NULL
 );
 

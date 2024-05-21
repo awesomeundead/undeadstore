@@ -1,6 +1,25 @@
 async function main()
 {
-    data = await request('/listings/family?item=' + item_type);
+    let query = new URLSearchParams(window.location.search);
+
+    if (query.has('family'))
+    {
+        url = `/list/family?item=${query.get('item')}&family=${query.get('family')}`;
+    }
+    else if (query.has('name'))
+    {
+        url = `/list/name?item=${query.get('item')}&name=${query.get('name')}`;
+    }    
+    else if (query.has('rarity'))
+    {
+        url = `/list/rarity?item=${query.get('item')}&rarity=${query.get('rarity')}`;
+    }
+    else if (query.has('type'))
+    {
+        url = `/list/type?item=${query.get('item')}&type=${query.get('type')}`;
+    }
+
+    data = await request(url);
     data = Object.values(data);
     create(data, fragment, container);
 }
@@ -39,8 +58,6 @@ function reorder()
 
 window.addEventListener('popstate', async () =>
 {
-    item_type = new URLSearchParams(window.location.search).get('item');
-
     main().catch((error) =>
     {
         console.log('Erro: ' + error.message);
@@ -50,28 +67,26 @@ window.addEventListener('popstate', async () =>
 
 document.addEventListener('DOMContentLoaded', () =>
 {
-    const nav_weapon_list = document.querySelectorAll('#nav_weapon a');
+    list = document.querySelectorAll('nav.listings a');
     
-    for (let item of nav_weapon_list)
+    for (let item of list)
     {
         item.addEventListener('click', (e) =>
         {
             e.preventDefault();
-            query = new URL(e.target.href).search;
-            item_type = new URLSearchParams(query).get('item');   
+
+            history.pushState(null, null, new URL(e.target.href));
 
             main().catch((error) =>
             {
                 console.log('Erro: ' + error.message);
             });
-
-            history.pushState(null, null, '?item=' + item_type);
         });
     }
 
-    const nav_list = document.querySelectorAll('#nav_order a');
+    list = document.querySelectorAll('#nav_order a');
 
-    for (let item of nav_list)
+    for (let item of list)
     {
         item.addEventListener('click', (e) =>
         {
@@ -79,11 +94,6 @@ document.addEventListener('DOMContentLoaded', () =>
             order = e.target.dataset.order;
             reorder();
         });
-    }
-
-    if (QUERY_STRING.has('item'))
-    {
-        item_type = QUERY_STRING.get('item');
     }
 
     main().catch((error) =>
@@ -96,6 +106,5 @@ const fragment = document.querySelector('template');
 const container = document.querySelector('#container');
 
 var language = 'br';
-var item_type;
 var order;
 var data;

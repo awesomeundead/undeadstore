@@ -83,6 +83,15 @@ class Auth
                 if ($result)
                 {
                     $session->set('user_id', $pdo->lastInsertId());
+
+                    require ROOT . '/include/mail.php';
+
+                    $steamid = $session->get('steamid');
+                    $personaname = $session->get('steam_name');
+                    $params['subject'] = 'Novo usuário registrado';
+                    $params['message'] = "O usuário {$personaname} ({$steamid}), foi registrado com sucesso.";
+                    
+                    send_mail($params);
                 }
             }
 

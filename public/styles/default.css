@@ -1,57 +1,3 @@
-#nav_weapon
-{
-    background-color: #247;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    justify-content: center;
-    margin-bottom: 5px;
-}
-
-#nav_weapon a
-{
-    background-color: #247;
-    border-top: 2px solid #136;
-    color: #FFF;
-    padding: 10px;
-    text-decoration: none;
-}
-
-#nav_weapon a:hover
-{
-    background-color: #CCC;
-    color: #000;
-}
-
-#weapon #nav_weapon a
-{
-    background-color: #247;
-    border-top: 2px solid #136;
-    color: #FFF;
-    padding: 10px;
-    text-decoration: none;
-}
-
-#weapon #nav_weapon a:hover
-{
-    background-color: #CCC;
-    color: #000;
-}
-
-#nav_order
-{
-    display: flex;
-    gap: 10px;
-    justify-content: end;
-}
-
-#nav_order a
-{
-    color: #FFF;
-    padding: 10px 0;
-    text-decoration: none;
-}
-
 #nav_buttons
 {
     display: flex;
@@ -234,6 +180,90 @@ button:hover
     font-size: 14px;
 }
 
+/**
+  * listings
+  **/
+
+nav.listings
+{
+    background-color: #247;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+nav.listings a
+{
+    display: block;
+    padding: 10px;
+}
+
+nav.listings a:hover
+{
+    background-color: #CCC;
+    color: #000;
+}
+
+nav.listings .menu > a,
+nav.listings button
+{
+    background-color: #247;
+    border-radius: 0;
+    cursor: pointer;
+    display: block;
+    font-weight: bold;
+    padding: 10px;
+}
+
+nav.listings .menu > a:hover,
+nav.listings button:hover
+{
+    background-color: #204070;
+    color: #FFF;
+}
+
+nav.listings .menu
+{
+    position: static;
+}
+
+nav.listings .menu:focus-within button
+{
+    background-color: #136;
+}
+
+nav.listings .menu:focus-within .submenu
+{
+    display: flex;
+    flex-direction: column;
+}
+
+nav.listings .submenu
+{
+    background-color: #136;
+    display: none;
+    position: absolute;
+    min-width: 150px;
+    z-index: 2;
+}
+
+#nav_order
+{
+    display: flex;
+    gap: 10px;
+    justify-content: end;
+}
+
+#nav_order a
+{
+    color: #FFF;
+    padding: 10px 0;
+    text-decoration: none;
+}
+
+/**
+  * cart
+  **/
+
 
 .cart img
 {
@@ -258,6 +288,11 @@ button:hover
     font-size: 14px;
 }
 
+.cart #coupon
+{
+    text-transform: uppercase;
+}
+
 label.icon
 {
     background-color: #FFF;
@@ -269,6 +304,10 @@ label.icon img
 {
     height: 48px;
 }
+
+/**
+  * partners
+  **/
 
 .partners
 {

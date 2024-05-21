@@ -23,7 +23,7 @@
         <div>Caso não seja identificado o pagamento após 24 horas, o pedido será cancelado.</div>
         <div>Caso aconteça algum problema com os servidores, inventário ou por manutenção do Steam, reembolsamos o pagamento.</div>
         <div>Não fazemos devolução após a transferência dos itens.</div>
-        <div>Qualquer dúvida, deixe sua mensagem no nosso <a href="https://discord.gg/YMvX8g5FhU">Discord</a>.</div>
+        <div>Qualquer dúvida, deixe sua mensagem em <a href="/support">Suporte</a> ou entre no nosso <a href="https://discord.gg/YMvX8g5FhU">Discord</a>.</div>
     </div>
     <div class="box white">
         <div class="flex align-center space-between">

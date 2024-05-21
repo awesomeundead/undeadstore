@@ -1,8 +1,7 @@
 <?php $this->layout('layout', ['title' => 'Undead Store', 'session' => $session]) ?>
+<?php $this->insert('home/nav') ?>
+<?php $this->insert('home/banner') ?>
 <nav>
-    <?php $this->insert('home/nav') ?>
-    <?php $this->insert('home/banner') ?>
-
     <div id="nav_order">
         <a class="order" data-order="asc" href="">Menor preço</a>
         <a class="order" data-order="desc" href="">Maior preço</a>
@@ -22,7 +21,9 @@
                 <span class="name"></span>
                 <span class="stattrak"></span>
             </div>            
-            <div class="family"></div>
+            <div class="family">
+                <a href=""></a>
+            </div>
         </div>
         <div class="image" data-name="">
             <a href="">
@@ -44,5 +45,5 @@
         </div>
     </div>
 </template>
-<script src="/scripts/library.js"></script>
-<script src="/scripts/listings.js"></script>
+<script src="/scripts/library.js?release=3"></script>
+<script src="/scripts/listings.js?release=3"></script>
