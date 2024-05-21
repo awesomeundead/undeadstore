@@ -27,7 +27,9 @@
                 <span class="name"></span>
                 <span class="stattrak"></span>
             </div>            
-            <div class="family"></div>
+            <div class="family">
+                <a href=""></a>
+            </div>
         </div>
         <div class="image" data-name="">
             <a href="">
@@ -49,5 +51,5 @@
         </div>
     </div>
 </template>
-<script src="/scripts/library.js"></script>
-<script src="/scripts/index.js"></script>
+<script src="/scripts/library.js?release=3"></script>
+<script src="/scripts/index.js?release=3"></script>

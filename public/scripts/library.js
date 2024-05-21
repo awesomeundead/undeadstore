@@ -31,7 +31,7 @@ create = (data, fragment, container) =>
     });
 
     const image = document.querySelector('#expanded img');
-    list = document.querySelectorAll('.item');
+    let list = document.querySelectorAll('.item');
     
     for (let item of list)
     {
@@ -135,7 +135,8 @@ function item_agent(item, clone)
         'br': item.agent_family_br
     }
 
-    clone.querySelector('.family').innerHTML = family[language];
+    clone.querySelector('.family a').innerHTML = family[language];
+    clone.querySelector('.family a').href = `/listings?item=agent&family=${family['en']}`;
     clone.querySelector('.name').innerHTML = name[language];
     clone.querySelector('.attribute-1').innerHTML = 'Agente';
     clone.querySelector('.attribute-2').innerHTML = type[language];
@@ -182,7 +183,8 @@ function item_weapon(item, clone)
     }
     
     clone.querySelector('.name').innerHTML = name[language];
-    clone.querySelector('.family').innerHTML = family[language];
+    clone.querySelector('.family a').innerHTML = family[language];
+    clone.querySelector('.family a').href = `/listings?item=weapon&family=${family['en']}`;
     clone.querySelector('.attribute-1').innerHTML = exterior[item.weapon_exterior][language];
     clone.querySelector('.attribute-2').innerHTML = `${type[language]} (${rarity[item.weapon_rarity][language]})`;
     clone.querySelector('.attribute-2').classList.add(classes[rarity[item.weapon_rarity]['en']]);
@@ -200,8 +202,6 @@ function item_weapon(item, clone)
 
     new_image.src = `/images/${item.image}_${item.weapon_exterior}.png`;
 }
-
-const QUERY_STRING = new URLSearchParams(window.location.search);
 
 const exterior = 
 {

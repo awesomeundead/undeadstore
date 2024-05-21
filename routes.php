@@ -49,9 +49,12 @@ return function (App $app)
 
     $app->post('/input/mercadopago', [Pay::class, 'input']);
     
-    $app->get('/listings/available', [Listings::class, 'available']);
-    $app->get('/listings/coming', [Listings::class, 'coming']);
-    $app->get('/listings/family', [Listings::class, 'family']);
+    $app->get('/list/available', [Listings::class, 'available']);
+    $app->get('/list/coming', [Listings::class, 'coming']);
+    $app->get('/list/family', [Listings::class, 'family']);
+    $app->get('/list/name', [Listings::class, 'name']);
+    $app->get('/list/rarity', [Listings::class, 'rarity']);
+    $app->get('/list/type', [Listings::class, 'type']);
 
     $app->get('/logout', function ()
     {

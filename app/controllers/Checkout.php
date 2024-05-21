@@ -145,6 +145,15 @@ class Checkout extends Controller
 
         $session->remove('cart');
 
+        require ROOT . '/include/mail.php';
+
+        $steamid = $session->get('steamid');
+        $personaname = $session->get('steam_name');
+        $params['subject'] = 'Nova venda registrada';
+        $params['message'] = "O usuário {$personaname} ({$steamid}), fez uma compra.";
+        
+        send_mail($params);
+
         redirect("/pay?purchase_id={$purchase_id}");
     }
 

@@ -79,6 +79,7 @@
     #carousel .container
     {
         width: calc(100vw - 10px);
+        overflow-x: auto;
     }
 
     #carousel .item
@@ -94,5 +95,10 @@
     .cart .price
     {
         width: max-content;
+    }
+
+    .partners
+    {
+        grid-template-columns: 1fr;
     }
 }

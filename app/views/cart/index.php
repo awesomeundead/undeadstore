@@ -1,11 +1,11 @@
 <?php $this->layout('layout', ['title' => 'Carrinho | Undead Store', 'session' => $session]) ?>
-<div class="flex column">
+<div class="flex column cart">
 <?php if ($cart['items'] ?? false): ?>
     <div class="box header">
         <div>Carrinho de compras</div>
     </div>
     <?php foreach ($cart['items'] as $item): ?>
-    <div class="box flex align-center space-between cart">
+    <div class="box flex align-center space-between">
         <div class="flex align-center space-between">
             <div><img alt="" src="/images/<?= $item['image'] ?>.png" /></div>
             <div>
@@ -37,9 +37,9 @@
     <?php endif ?>
     <div class="box flex column">
         <form action="/cart/coupon" method="post">
-            <label for="cupom">Cupom</label>
+            <label for="coupon">Cupom</label>
             <div class="flex align-center space-between">
-                <input id="cupom" name="coupon" type="text" value="<?= $cart['coupon']['name'] ?? '' ?>" />
+                <input id="coupon" name="coupon" type="text" value="<?= $cart['coupon']['name'] ?? '' ?>" />
                 <button type="submit">Adicionar</button>
             </div>
         </form>
