@@ -8,10 +8,10 @@
 <meta property="og:description" content="Skins de Counter-Strike 2 com os melhores preços." />
 <meta property="og:title" content="Undead Store" />
 <link href="/favicon.png" rel="icon" type="image/x-icon" />
-<link href="/styles/layout.css?release=6" rel="stylesheet" />
-<link href="/styles/default.css?release=6" rel="stylesheet" />
-<link href="/styles/index.css?release=6" rel="stylesheet" />
-<link href="/styles/mobile.css?release=6" rel="stylesheet" />
+<link href="/styles/layout.css?release=7" rel="stylesheet" />
+<link href="/styles/default.css?release=7" rel="stylesheet" />
+<link href="/styles/index.css?release=7" rel="stylesheet" />
+<link href="/styles/mobile.css?release=7" rel="stylesheet" />
 <title><?= $this->e($title) ?></title>
 </head>
 <body>

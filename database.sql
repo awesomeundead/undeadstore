@@ -44,8 +44,10 @@ CREATE TABLE IF NOT EXISTS items (
     market_hash_name VARCHAR(255) NOT NULL,
     availability TINYINT NOT NULL,
     price DECIMAL(8,2),
-    offer_price DECIMAL(8,2)
+    offer_percentage DECIMAL(5,2)
 );
+
+-- offer_type ENUM('numeric', 'percentage'),
 
 CREATE TABLE IF NOT EXISTS agents (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,

@@ -122,14 +122,25 @@
     color: #F90;
 }
 
+.item .image
+{
+    position: relative;
+}
+
+.item .offer
+{
+    background-color: #F33;
+    border-radius: 5px;
+    color: #FFF;
+    font-weight: bold;
+    padding: 5px;
+    position: absolute;
+    right: 0;
+}
+
 .item .image a
 {
     display: flex;
-}
-
-.item .image a:hover img
-{
-    --opacity: 0.7;
 }
 
 .item img
