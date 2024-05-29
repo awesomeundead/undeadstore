@@ -58,6 +58,7 @@ function template(item, fragment, container)
     
     if (item.availability == AVAILABILITY.ORDER)
     {
+        clone.querySelector('.offer').remove();
         clone.querySelector('.price').remove();
         clone.querySelector('.button_buy').remove();
     }
@@ -69,19 +70,23 @@ function template(item, fragment, container)
 
             if (item.offer_price == null)
             {
+                clone.querySelector('.offer').remove();
                 clone.querySelector('.old_price').remove();
                 clone.querySelector('.price').innerHTML = price;
             }
             else
             {
                 let offer_price = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.offer_price);
+                let percentage = parseFloat(item.offer_percentage);
 
+                clone.querySelector('.offer').innerHTML = `${percentage}% OFF`;
                 clone.querySelector('.old_price').innerHTML = price;
                 clone.querySelector('.price').innerHTML = offer_price;
             }
         }
         else
         {
+            clone.querySelector('.offer').remove();
             clone.querySelector('.price').remove();
         }
 

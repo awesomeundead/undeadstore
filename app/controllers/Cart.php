@@ -60,7 +60,10 @@ class Cart extends Controller
         {
             $pdo = Database::connect();
 
-            $query = 'SELECT * FROM items WHERE id = :id AND availability = 1';
+            $query = 'SELECT *,
+            IF (ISNULL(offer_percentage), NULL, price - (price / 100 * offer_percentage)) AS offer_price
+            FROM items WHERE id = :id AND availability = 1';
+            
             $stmt = $pdo->prepare($query);
             $stmt->execute(['id' => $item_id]);
             $result = $stmt->fetch(\PDO::FETCH_ASSOC);
