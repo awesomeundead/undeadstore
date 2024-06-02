@@ -1,4 +1,7 @@
 <?php $this->layout('layout', ['title' => 'Carrinho | Undead Store', 'session' => $session]) ?>
+<nav>
+    <?php $this->insert('home/nav') ?>
+</nav>
 <div class="flex column cart">
 <?php if ($cart['items'] ?? false): ?>
     <div class="box header">
@@ -10,7 +13,7 @@
             <div><img alt="" src="/images/<?= $item['image'] ?>.png" /></div>
             <div>
                 <div><?= $item['full_name_br'] ?></div>
-                <div class="en"><?= $item['full_name'] ?></div>
+                <div class="en"><?= $item['market_hash_name'] ?></div>
             </div>
         </div>
         <div class="flex align-center space-between">

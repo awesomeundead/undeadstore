@@ -28,11 +28,6 @@ class Support extends Controller
         $list = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         
         echo $this->templates->render('support/index', [
-            'session' => [
-                'loggedin' => $session->get('logged_in'),
-                'steam_avatar' => $session->get('steam_avatar'),
-                'steam_name' => $session->get('steam_name')
-            ],
             'list' => $list,
             'notification' => $session->flash('support')
         ]);
@@ -138,11 +133,6 @@ class Support extends Controller
         $list = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         
         echo $this->templates->render('support/ticket', [
-            'session' => [
-                'loggedin' => $session->get('logged_in'),
-                'steam_avatar' => $session->get('steam_avatar'),
-                'steam_name' => $session->get('steam_name')
-            ],
             'ticket' => $ticket,
             'list' => $list,
             'notification' => $session->flash('support')

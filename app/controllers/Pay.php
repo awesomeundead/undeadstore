@@ -74,7 +74,7 @@ class Pay extends Controller
         ];
 
         MercadoPagoConfig::setAccessToken($config['access_token']);
-        MercadoPagoConfig::setRuntimeEnviroment(MercadoPagoConfig::LOCAL);
+        //MercadoPagoConfig::setRuntimeEnviroment(MercadoPagoConfig::LOCAL);
 
         $request_options = new RequestOptions();
         $request_options->setCustomHeaders(["X-Idempotency-Key: {$purchase['identifier']}"]);
@@ -83,11 +83,6 @@ class Pay extends Controller
         $preference = $client->create($request, $request_options);
 
         echo $this->templates->render('payment/mercadopago', [
-            'session' => [
-                'loggedin' => $session->get('logged_in'),
-                'steam_avatar' => $session->get('steam_avatar'),
-                'steam_name' => $session->get('steam_name')
-            ],
             'description' => $description,
             'preference' => $preference,
             'public_key' => $config['public_key'],
@@ -114,11 +109,6 @@ class Pay extends Controller
         $code = pix($params);
 
         echo $this->templates->render('payment/pix', [
-            'session' => [
-                'loggedin' => $session->get('logged_in'),
-                'steam_avatar' => $session->get('steam_avatar'),
-                'steam_name' => $session->get('steam_name')
-            ],
             'code' => $code,
             'purchase' => $purchase,
             'purchase_total' => $purchase['total']

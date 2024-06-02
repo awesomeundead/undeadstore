@@ -40,11 +40,6 @@ class Cart extends Controller
         }
 
         echo $this->templates->render('cart/index', [
-            'session' => [
-                'loggedin' => $session->get('logged_in'),
-                'steam_avatar' => $session->get('steam_avatar'),
-                'steam_name' => $session->get('steam_name')
-            ],
             'cart' => $cart,
             'notification' => $session->flash('coupon')
         ]);
@@ -60,35 +55,34 @@ class Cart extends Controller
         {
             $pdo = Database::connect();
 
-            $query = 'SELECT *,
+            $query = 'SELECT *, products.id,
             IF (ISNULL(offer_percentage), NULL, price - (price / 100 * offer_percentage)) AS offer_price
-            FROM items WHERE id = :id AND availability = 1';
+            FROM products
+            LEFT JOIN items ON products.item_id = items.id
+            LEFT JOIN attributes ON products.attribute_id = attributes.id
+            WHERE products.id = :id AND availability = 1';
             
             $stmt = $pdo->prepare($query);
             $stmt->execute(['id' => $item_id]);
-            $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+            $item = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-            if ($result)
+            if ($item)
             {
-                if ($result['type_name'] == 'agent')
+                if ($item['type'] == 'Agent')
                 {
-                    $query = 'SELECT * FROM agents WHERE id = :id';
-                    $stmt = $pdo->prepare($query);
-                    $stmt->execute(['id' => $result['type_id']]);
-                    $item = $stmt->fetch(\PDO::FETCH_ASSOC);
-
-                    $result['full_name'] = "{$item['agent_name']} | {$item['agent_family']}";
-                    $result['full_name_br'] = "{$item['agent_name_br']} | {$item['agent_family_br']}";
-                    $result['image'] = $item['image'];
+                    $item['full_name_br'] = "{$item['name_br']} | {$item['family_br']}";
                 }
-                elseif ($result['type_name'] == 'weapon')
+                else
                 {
-                    $query = 'SELECT *, weapons_atrributes.id FROM weapons_atrributes
-                    LEFT JOIN weapons ON weapons_atrributes.weapon_id = weapons.id
-                    WHERE weapons_atrributes.id = :id';
-                    $stmt = $pdo->prepare($query);
-                    $stmt->execute(['id' => $result['type_id']]);
-                    $item = $stmt->fetch(\PDO::FETCH_ASSOC);
+                    $categories = [
+                        'normal' => ['en' => 'Normal', 'br' => 'Normal'],
+                        'tournament' => ['en' => 'Souvenir', 'br' => 'Lembrança'],
+                        'strange' => ['en' => 'StatTrak™', 'br' => 'StatTrak™'],
+                        'unusual' => ['en' => '★', 'br' => '★'],
+                        'unusual_strange' => ['en' => '★ StatTrak™', 'br' => '★ StatTrak™']
+                    ];
+
+                    $category = $item['category'] == 'normal' ? '' : " {$categories[$item['category']]['br']}";
 
                     $exterior = [
                         'fn' => ['en' => 'Factory New', 'br' => 'Nova de Fábrica'],
@@ -98,14 +92,12 @@ class Cart extends Controller
                         'bs' => ['en' => 'Battle-Scarred', 'br' => 'Veterana de Guerra']
                     ];
 
-                    $stattrak = $item['weapon_stattrak'] ? ' (StatTrak™)' : '';
-                    $result['full_name'] = "{$item['weapon_name']}{$stattrak} | {$item['weapon_family']} ({$exterior[$item['weapon_exterior']]['en']})";
-                    $result['full_name_br'] = "{$item['weapon_name_br']}{$stattrak} | {$item['weapon_family_br']} ({$exterior[$item['weapon_exterior']]['br']})";
-                    $result['image'] = "{$item['image']}_{$item['weapon_exterior']}";
+                    $item['full_name_br'] = "{$item['name_br']}{$category} | {$item['family_br']} ({$exterior[$item['exterior']]['br']})";
+                    $item['image'] = "{$item['image']}_{$item['exterior']}";
                 }
 
                 $cart = $session->get('cart');
-                $cart['items'][$result['id']] = $result;
+                $cart['items'][$item['id']] = $item;
                 $session->set('cart', $cart);
             }
         }

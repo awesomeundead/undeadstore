@@ -1,29 +1,3 @@
-#expanded
-{
-    background-color: #444;
-    background-image: url('close.png');
-    background-position: right top;
-    background-repeat: no-repeat;
-    height: 100%;    
-    position: fixed;
-    top: 0;
-    width: 1200px;
-    z-index: 1;
-}
-
-#expanded .image
-{
-    display: flex;
-    align-items: center;
-    height: 100%;
-    justify-content: center;
-}
-
-#expanded img
-{
-    width: 100%;
-}
-
 .banner img
 {
     width: 100%;
@@ -117,9 +91,14 @@
     font-size: 18px;
 }
 
-.item .title .stattrak
+.item .title a
 {
-    color: #F90;
+    color: #FFF;
+}
+
+.item .title .family
+{
+    display: block;
 }
 
 .item .image
@@ -166,96 +145,57 @@
     background-color: #333;
 }
 
-.item .attribute-2.consumer-grade
-{
-    color: #b0c3d9;
-}
-
-.item .attribute-2.industrial-grade
-{
-    color: #5e98d9;
-}
-
-.item .attribute-2.mil-spec
-{
-    color: #4b69ff;
-}
-
-.item .attribute-2.restricted
-{
-    color: #8847ff;
-}
-
-.item .attribute-2.classified
-{
-    color: #d32ce6;
-}
-
-.item .attribute-2.covert
-{
-    color: #eb4b4b;
-}
-
-.item .attribute-2.distinguished
-{
-    color: #4b69ff;
-}
-
-.item .attribute-2.exceptional
-{
-    color: #8847ff;
-}
-
-.item .attribute-2.superior
-{
-    color: #d32ee6;
-}
-
-.item .attribute-2.master
-{
-    color: #eb4b4b;
-}
-
-.item .market a
+.market a
 {
     background-color: #136;
     border-radius: 5px;
     color: #F90;
-    display: block;
+    display: inline-block;
     padding: 5px;
     text-decoration: none;
 }
 
-.item .market a:hover
+.market a:hover
 {
     background-color: #247;
 }
 
-.item .availability
+.item .market a
+{
+    display: block;
+}
+
+.availability
 {
     background-color: #333;
     color: rgba(255, 255, 255, 0.8);
 }
 
-.item .availability.soon
+.availability.soon
 {
     background-color: #F93;
     color: rgba(0, 0, 0, 0.8);
 }
 
-.item .button_buy
+.button_buy
 {
     background-color: #294;
     border-radius: 5px;
     color: #FFF;
-    display: block;
+    display: inline-block;
     padding: 10px;
     text-decoration: none;
 }
 
-.item .button_buy:hover
+.button_buy:hover
 {
     background-color: #3A5;
+    color: #FFF;
+}
+
+.item .button_buy
+{
+    display: block;
 }
 
 .item .buy
@@ -277,4 +217,30 @@
 {
     color: #CCC;
     text-decoration: line-through;
+}
+
+#expanded
+{
+    background-color: #444;
+    background-image: url('close.png');
+    background-position: right top;
+    background-repeat: no-repeat;
+    height: 100%;    
+    position: fixed;
+    top: 0;
+    width: 1200px;
+    z-index: 1;
+}
+
+#expanded .image
+{
+    display: flex;
+    align-items: center;
+    height: 100%;
+    justify-content: center;
+}
+
+#expanded img
+{
+    width: 100%;
 }

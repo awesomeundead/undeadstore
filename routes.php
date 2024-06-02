@@ -1,8 +1,6 @@
 <?php
 
 use Awesomeundead\Undeadstore\App;
-use Awesomeundead\Undeadstore\Database;
-use Awesomeundead\Undeadstore\Session;
 use App\Controllers\
 {
     Auth, Cart, Checkout, Home, Listings, OrderHistory, Partners, Pay, Settings, Support
@@ -12,6 +10,7 @@ return function (App $app)
 {
     $app->get('/', [Home::class, 'index']);
     $app->get('/listings', [Home::class, 'listings']);
+    $app->get('/item/{id:\d+}/{name}', [Home::class, 'item']);
     
     $app->get('/auth', [Auth::class, 'index']);
     $app->get('/auth/login', [Auth::class, 'login']);
@@ -51,10 +50,7 @@ return function (App $app)
     
     $app->get('/list/available', [Listings::class, 'available']);
     $app->get('/list/coming', [Listings::class, 'coming']);
-    $app->get('/list/family', [Listings::class, 'family']);
-    $app->get('/list/name', [Listings::class, 'name']);
-    $app->get('/list/rarity', [Listings::class, 'rarity']);
-    $app->get('/list/type', [Listings::class, 'type']);
+    $app->get('/list/item', [Listings::class, 'item']);
 
     $app->get('/logout', function ()
     {

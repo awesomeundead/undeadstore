@@ -21,28 +21,6 @@ create = (data, fragment, container) =>
     {
         template(data[key], fragment, container);
     }
-
-    const expanded = document.querySelector('#expanded');
-
-    expanded.addEventListener('click', () =>
-    {
-        document.body.style.overflow = 'visible';
-        expanded.hidden = true;
-    });
-
-    const image = document.querySelector('#expanded img');
-    let list = document.querySelectorAll('.item');
-    
-    for (let item of list)
-    {
-        item.querySelector('.image a').addEventListener('click', (e) => 
-        {
-            e.preventDefault();
-            document.body.style.overflow = 'hidden';
-            expanded.hidden = false;
-            image.src = item.querySelector('.image').dataset.name;
-        });
-    }
 }
 
 function template(item, fragment, container)
@@ -108,113 +86,56 @@ function template(item, fragment, container)
         }
     }
 
-    if (item.type_name == 'agent')
+    clone.querySelector('.title a').href = `/item/${item.id}/${item.market_hash_name}`;
+    clone.querySelector('.image a').href = `/item/${item.id}/${item.market_hash_name}`;
+
+    const type = {'en': item.type, 'br': item.type_br}
+
+    const name = {'en': item.name, 'br': item.name_br}
+
+    const family = {'en': item.family, 'br': item.family_br}
+
+    if (item.category && item.category != 'normal')
     {
-        item_agent(item, clone);
+        clone.querySelector('.category').innerHTML = categories[item.category][language];
+        clone.querySelector('.category').classList.add(item.category);
     }
-    else if (item.type_name == 'weapon')
+    
+    clone.querySelector('.name').innerHTML = name[language];
+    clone.querySelector('.family').innerHTML = family[language];
+
+    if (item.exterior)
     {
-        item_weapon(item, clone);
+        clone.querySelector('.attribute-1').innerHTML = exterior[item.exterior][language];
+    }
+    else
+    {
+        clone.querySelector('.attribute-1').remove();
+    }
+    
+    clone.querySelector('.attribute-2').innerHTML = `${type[language]} (${rarity[item.rarity][language]})`;
+    clone.querySelector('.attribute-2').classList.add(item.rarity);
+    clone.querySelector('.market a').href = 'https://steamcommunity.com/market/listings/730/' + item.market_hash_name;   
+
+    const image = clone.querySelector('img');
+
+    new_image = new Image();
+
+    new_image.addEventListener('load', (e) =>
+    {        
+        image.src = e.target.src;
+    });
+
+    if (item.type == 'Agent')
+    {
+        new_image.src = `/images/${item.image}.png`;
+    }
+    else
+    {
+        new_image.src = `/images/${item.image}_${item.exterior}.png`;
     }
     
     container.appendChild(clone);
-}
-
-function item_agent(item, clone)
-{
-    const type =
-    {
-        'en': item.agent_type,
-        'br': item.agent_type_br
-    }
-
-    const name =
-    {
-        'en': item.agent_name,
-        'br': item.agent_name_br
-    }
-
-    const family =
-    {
-        'en': item.agent_family,
-        'br': item.agent_family_br
-    }
-
-    clone.querySelector('.family a').innerHTML = family[language];
-    clone.querySelector('.family a').href = `/listings?item=agent&family=${family['en']}`;
-    clone.querySelector('.name').innerHTML = name[language];
-    clone.querySelector('.attribute-1').innerHTML = 'Agente';
-    clone.querySelector('.attribute-2').innerHTML = type[language];
-    clone.querySelector('.attribute-2').classList.add(classes[item.agent_type]);
-    clone.querySelector('.market a').href = 'https://steamcommunity.com/market/listings/730/' + item.market_hash_name;
-    clone.querySelector('.image').dataset.name = `/images/${item.image}.png`;
-    
-
-    const image = clone.querySelector('img');
-
-    new_image = new Image();
-
-    new_image.addEventListener('load', (e) =>
-    {        
-        image.src = e.target.src;
-    });
-
-    new_image.src = `/images/${item.image}.png`;
-}
-
-function item_weapon(item, clone)
-{
-    const type =
-    {
-        'en': item.weapon_type,
-        'br': item.weapon_type_br
-    }
-
-    const name =
-    {
-        'en': item.weapon_name,
-        'br': item.weapon_name_br
-    }
-
-    const family =
-    {
-        'en': item.weapon_family,
-        'br': item.weapon_family_br
-    }
-
-    if (item.weapon_stattrak)
-    {
-        clone.querySelector('.stattrak').innerHTML = '(StatTrak)';
-    }
-    
-    clone.querySelector('.name').innerHTML = name[language];
-    clone.querySelector('.family a').innerHTML = family[language];
-    clone.querySelector('.family a').href = `/listings?item=weapon&family=${family['en']}`;
-    clone.querySelector('.attribute-1').innerHTML = exterior[item.weapon_exterior][language];
-    clone.querySelector('.attribute-2').innerHTML = `${type[language]} (${rarity[item.weapon_rarity][language]})`;
-    clone.querySelector('.attribute-2').classList.add(classes[rarity[item.weapon_rarity]['en']]);
-    clone.querySelector('.market a').href = 'https://steamcommunity.com/market/listings/730/' + item.market_hash_name;
-    clone.querySelector('.image').dataset.name = `/images/${item.image}.png`;    
-
-    const image = clone.querySelector('img');
-
-    new_image = new Image();
-
-    new_image.addEventListener('load', (e) =>
-    {        
-        image.src = e.target.src;
-    });
-
-    new_image.src = `/images/${item.image}_${item.weapon_exterior}.png`;
-}
-
-const exterior = 
-{
-    'fn': {'en': 'Factory New', 'br': 'Nova de Fábrica'},
-    'mw': {'en': 'Minimal Wear', 'br': 'Pouca Usada'},
-    'ft': {'en': 'Field-Tested', 'br': 'Testada em Campo'},
-    'ww': {'en': 'Well Worm', 'br': 'Bem Desgastada'},
-    'bs': {'en': 'Battle-Scarred', 'br': 'Veterana de Guerra'}
 };
 
 const AVAILABILITY =
@@ -230,24 +151,39 @@ const AVAILABILITY =
     }
 };
 
-const rarity = {
-    1: {'en': 'Consumer Grade', 'br': 'Nível Consumidor'},
-    2: {'en': 'Industrial Grade', 'br': 'Nível Industrial'},
-    3: {'en': 'Mil-Spec', 'br': 'Nível Militar'},
-    4: {'en': 'Restricted', 'br': 'Restrito'},
-    5: {'en': 'Classified', 'br': 'Secreto'},
-    6: {'en': 'Covert', 'br': 'Oculto'}
+const categories =
+{
+    'normal': {'en': 'Normal', 'br': 'Normal'},
+    'tournament': {'en': 'Souvenir', 'br': 'Lembrança'},
+    'strange': {'en': 'StatTrak™', 'br': 'StatTrak™'},
+    'unusual': {'en': '★', 'br': '★'},
+    'unusual_strange': {'en': '★ StatTrak™', 'br': '★ StatTrak™'}
 };
 
-const classes = {
-    'Consumer Grade': 'consumer-grade',
-    'Industrial Grade': 'industrial-grade',
-    'Mil-Spec': 'mil-spec',
-    'Restricted': 'restricted',
-    'Classified': 'classified',
-    'Covert': 'covert',
-    'Distinguished': 'distinguished',
-    'Exceptional': 'exceptional',
-    'Superior': 'superior',
-    'Master': 'master'
+const exterior = 
+{
+    'fn': {'en': 'Factory New', 'br': 'Nova de Fábrica'},
+    'mw': {'en': 'Minimal Wear', 'br': 'Pouca Usada'},
+    'ft': {'en': 'Field-Tested', 'br': 'Testada em Campo'},
+    'ww': {'en': 'Well Worm', 'br': 'Bem Desgastada'},
+    'bs': {'en': 'Battle-Scarred', 'br': 'Veterana de Guerra'}
+}
+
+const rarity = {
+    'common': {'en': 'Base Grade', 'br': ''},
+    'rare': {'en': 'High Grade', 'br': ''},
+    'mythical': {'en': 'Remarkable', 'br': ''},
+    'legendary': {'en': 'Exotic', 'br': ''},
+    'ancient': {'en': 'Extraordinary', 'br': ''},
+    'contraband': {'en': 'Contraband', 'br': 'Contrabando'},
+    'common_weapon': {'en': 'Consumer Grade', 'br': 'Nível Consumidor'},
+    'uncommon_weapon': {'en': 'Industrial Grade', 'br': 'Nível Industrial'},
+    'rare_weapon': {'en': 'Mil-Spec', 'br': 'Nível Militar'},
+    'mythical_weapon': {'en': 'Restricted', 'br': 'Restrito'},
+    'legendary_weapon': {'en': 'Classified', 'br': 'Secreto'},
+    'ancient_weapon': {'en': 'Covert', 'br': 'Oculto'},
+    'rare_character': {'en': 'Distinguished', 'br': 'Distinto'},
+    'mythical_character': {'en': 'Exceptional', 'br': 'Excepcional'},
+    'legendary_character': {'en': 'Superior', 'br': 'Superior'},
+    'ancient_character': {'en': 'Master', 'br': 'Mestre'}
 };
