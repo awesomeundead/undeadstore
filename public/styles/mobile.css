@@ -1,104 +1,103 @@
-@media only screen and (max-width: 768px)
+body
 {
-    body
-    {
-        width: 100;
-        padding: 5px;
-    }
+    width: 100;
+    padding: 5px;
+}
 
-    #grid
-    {
-        grid-template-rows: min-content auto min-content;
-        width: auto;
-    }
+#grid
+{
+    grid-template-rows: min-content auto min-content;
+    width: auto;
+}
 
-    #main_header
-    {
-        display: block;
-        margin-bottom: 5px;
-    }
+#main_header
+{
+    display: block;
+    margin-bottom: 5px;
+}
 
-    #main_header .left img
-    {
-        width: 100%;
-    }
+#main_header .left img
+{
+    width: 100%;
+}
 
-    #loggedin
-    {
-        flex: 1;
-    }
+#loggedin
+{
+    flex: 1;
+}
 
-    .right
-    {
-        flex-flow: row wrap;
-    }
+.right
+{
+    flex-flow: row wrap;
+}
 
-    .right nav
-    {
-        flex: 1;
-        flex-direction: row;
-    }
+.right nav
+{
+    flex: 1;
+    flex-direction: row;
+}
 
-    .right nav a
-    {
-        flex: 1;
-        padding: 10px 5px;
-    }
+.right nav a
+{
+    flex: 1;
+    padding: 10px 5px;
+}
 
-    #main_footer .flex_space_between
-    {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
+#main_footer .flex_space_between
+{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
 
-    #main_footer .icons img
-    {
-        background-color: #FFF;
-        border-radius: 5px;
-        height: 28px;
-        padding: 5px 10px;
-    }
+#expanded
+{
+    left: 0;
+    width: 100%;
+}
 
-    #expanded
-    {
-        left: 0;
-        width: 100%;
-    }
+#carousel .side.left
+{
+    left: 0;
+}
 
-    #carousel .side.left
-    {
-        left: 0;
-    }
+#carousel .side.right
+{
+    right: 0;
+}
 
-    #carousel .side.right
-    {
-        right: 0;
-    }
+#carousel .container
+{
+    width: calc(100vw - 10px);
+    overflow-x: auto;
+}
 
-    #carousel .container
-    {
-        width: calc(100vw - 10px);
-        overflow-x: auto;
-    }
+#carousel .item
+{
+    width: calc(100vw / 2 - 10px);
+}
 
-    #carousel .item
-    {
-        width: calc(100vw / 2 - 10px);
-    }
+.product
+{
+    display: block;
+}
 
-    #container
-    {
-        grid-template-columns: 1fr 1fr;
-    }
+.product .image img
+{
+    width: 100%;
+}
 
-    .cart .price
-    {
-        width: max-content;
-    }
+#container
+{
+    grid-template-columns: 1fr 1fr;
+}
 
-    .partners
-    {
-        grid-template-columns: 1fr;
-    }
+.cart .price
+{
+    width: max-content;
+}
+
+.partners
+{
+    grid-template-columns: 1fr;
 }

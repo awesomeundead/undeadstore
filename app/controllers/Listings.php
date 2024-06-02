@@ -20,18 +20,12 @@ class Listings
 
     public function available()
     {
-        $query = 'SELECT *, items.id,
-        IF (ISNULL(offer_percentage), NULL, price - (price / 100 * offer_percentage)) AS offer_price,
-        (CASE 
-            WHEN items.type_name = "agent" THEN agents.image
-            WHEN items.type_name = "weapon" THEN weapons.image
-        END) AS image
-        FROM items
-        LEFT JOIN agents ON items.type_id = agents.id AND items.type_name = "agent"
-        LEFT JOIN weapons_atrributes ON items.type_id = weapons_atrributes.id AND items.type_name = "weapon"
-        LEFT JOIN weapons ON weapons_atrributes.weapon_id = weapons.id
-        WHERE availability = :availability
-        ORDER BY items.offer_percentage IS NOT NULL DESC, items.price ASC, items.id DESC';
+        $query = 'SELECT *, products.id,
+        IF (ISNULL(offer_percentage), NULL, price - (price / 100 * offer_percentage)) AS offer_price
+        FROM products
+        LEFT JOIN items ON products.item_id = items.id
+        LEFT JOIN attributes ON products.attribute_id = attributes.id
+        WHERE availability = :availability';
 
         $params = ['availability' => '1'];
 
@@ -40,16 +34,11 @@ class Listings
 
     public function coming()
     {
-        $query = 'SELECT *, items.id,
-        IF (ISNULL(offer_percentage), NULL, price - (price / 100 * offer_percentage)) AS offer_price,
-        (CASE 
-            WHEN items.type_name = "agent" THEN agents.image
-            WHEN items.type_name = "weapon" THEN weapons.image
-        END) AS image
-        FROM items
-        LEFT JOIN agents ON items.type_id = agents.id AND items.type_name = "agent"
-        LEFT JOIN weapons_atrributes ON items.type_id = weapons_atrributes.id AND items.type_name = "weapon"
-        LEFT JOIN weapons ON weapons_atrributes.weapon_id = weapons.id
+        $query = 'SELECT *, products.id,
+        IF (ISNULL(offer_percentage), NULL, price - (price / 100 * offer_percentage)) AS offer_price
+        FROM products
+        LEFT JOIN items ON products.item_id = items.id
+        LEFT JOIN attributes ON products.attribute_id = attributes.id
         WHERE availability = :availability';
 
         $params = ['availability' => '3'];
@@ -57,137 +46,45 @@ class Listings
         $this->_get($query, $params);
     }
 
-    public function family()
+    public function item()
     {
-        $item = $_GET['item'] ?? false;
         $family = $_GET['family'] ?? false;
-
-        if ($item || $family)
-        {
-            if ($item == 'agent')
-            {
-                $query = 'SELECT *, items.id,
-                IF (ISNULL(offer_percentage), NULL, price - (price / 100 * offer_percentage)) AS offer_price
-                FROM items
-                LEFT JOIN agents ON items.type_id = agents.id AND items.type_name = "agent"
-                WHERE agents.agent_family = :family';
-            }
-            elseif ($item == 'weapon')
-            {
-                $query = 'SELECT *, items.id,
-                IF (ISNULL(offer_percentage), NULL, price - (price / 100 * offer_percentage)) AS offer_price
-                FROM items
-                LEFT JOIN weapons_atrributes ON items.type_id = weapons_atrributes.id AND items.type_name = "weapon"
-                LEFT JOIN weapons ON weapons_atrributes.weapon_id = weapons.id
-                WHERE weapons.weapon_family = :family';
-            }
-
-            $params = ['family' => $family];
-        }
-        
-        $this->_get($query, $params);
-    }
-
-    public function name()
-    {
-        $item = $_GET['item'] ?? false;
         $name = $_GET['name'] ?? false;
-
-        if ($item || $name)
-        {
-            if ($item == 'agent')
-            {
-                $query = 'SELECT *, items.id,
-                IF (ISNULL(offer_percentage), NULL, price - (price / 100 * offer_percentage)) AS offer_price
-                FROM items
-                LEFT JOIN agents ON items.type_id = agents.id AND items.type_name = "agent"
-                WHERE items.type_name = :agent';
-                $params = ['agent' => 'agent'];
-            }
-            elseif ($item == 'weapon')
-            {
-                $query = 'SELECT *, items.id,
-                IF (ISNULL(offer_percentage), NULL, price - (price / 100 * offer_percentage)) AS offer_price
-                FROM items
-                LEFT JOIN weapons_atrributes ON items.type_id = weapons_atrributes.id AND items.type_name = "weapon"
-                LEFT JOIN weapons ON weapons_atrributes.weapon_id = weapons.id
-                WHERE weapons.weapon_name = :name';
-                $params = ['name' => $name];
-            }
-        }
-        
-        $this->_get($query, $params);
-    }
-
-    public function rarity()
-    {
-        $item = $_GET['item'] ?? false;
         $rarity = $_GET['rarity'] ?? false;
-
-        if ($item || $rarity)
-        {
-            $rarities = [
-                'Consumer Grade' => 1,
-                'Industrial Grade' => 2,
-                'Mil-Spec' => 3,
-                'Restricted' => 4,
-                'Classified' => 5,
-                'Covert' => 6
-            ];
-
-            if ($item == 'agent')
-            {
-                $query = 'SELECT *, items.id,
-                IF (ISNULL(offer_percentage), NULL, price - (price / 100 * offer_percentage)) AS offer_price
-                FROM items
-                LEFT JOIN agents ON items.type_id = agents.id AND items.type_name = "agent"
-                WHERE items.type_name = :agent AND agents.agent_type = :type';
-                $params = ['agent' => 'agent', 'type' => $rarity];
-            }
-            elseif ($item == 'weapon')
-            {
-                $rarity = $rarities[$rarity] ?? 0;
-
-                $query = 'SELECT *, items.id,
-                IF (ISNULL(offer_percentage), NULL, price - (price / 100 * offer_percentage)) AS offer_price
-                FROM items
-                LEFT JOIN weapons_atrributes ON items.type_id = weapons_atrributes.id AND items.type_name = "weapon"
-                LEFT JOIN weapons ON weapons_atrributes.weapon_id = weapons.id
-                WHERE weapons.weapon_rarity = :rarity';
-                $params = ['rarity' => $rarity];
-            }
-        }
-        
-        $this->_get($query, $params);
-    }
-
-    public function type()
-    {
-        $item = $_GET['item'] ?? false;
         $type = $_GET['type'] ?? false;
 
-        if ($item || $type)
+        if ($family)
         {
-            if ($item == 'agent')
-            {
-                $query = 'SELECT *, items.id,
-                IF (ISNULL(offer_percentage), NULL, price - (price / 100 * offer_percentage)) AS offer_price
-                FROM items
-                LEFT JOIN agents ON items.type_id = agents.id AND items.type_name = "agent"
-                WHERE agents.agent_type = :type';
-            }
-            elseif ($item == 'weapon')
-            {
-                $query = 'SELECT *, items.id,
-                IF (ISNULL(offer_percentage), NULL, price - (price / 100 * offer_percentage)) AS offer_price
-                FROM items
-                LEFT JOIN weapons_atrributes ON items.type_id = weapons_atrributes.id AND items.type_name = "weapon"
-                LEFT JOIN weapons ON weapons_atrributes.weapon_id = weapons.id
-                WHERE weapons.weapon_type = :type';
-            }
-
-            $params = ['type' => $type];
+            $index = 'family';
+            $params = ['value' => $family];
         }
+        elseif ($name)
+        {
+            $index = 'name';
+            $params = ['value' => $name];
+        }
+        elseif ($rarity)
+        {
+            $index = 'rarity';
+            $params = ['value' => $rarity];
+        }
+        elseif ($type)
+        {
+            $index = 'type';
+            $params = ['value' => $type];
+        }
+        else
+        {
+            $index = 'type';
+            $params = ['value' => 'Rifle'];
+        }
+
+        $query = "SELECT *, products.id,
+        IF (ISNULL(offer_percentage), NULL, price - (price / 100 * offer_percentage)) AS offer_price
+        FROM products
+        LEFT JOIN items ON products.item_id = items.id
+        LEFT JOIN attributes ON products.attribute_id = attributes.id
+        WHERE {$index} = :value";
         
         $this->_get($query, $params);
     }

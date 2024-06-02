@@ -34,11 +34,6 @@ class OrderHistory extends Controller
         }
 
         echo $this->templates->render('order-history/index', [
-            'session' => [
-                'loggedin' => $session->get('logged_in'),
-                'steam_avatar' => $session->get('steam_avatar'),
-                'steam_name' => $session->get('steam_name')
-            ],
             'list' => $list,
             'notification' => $session->flash('payment')
         ]);

@@ -4,19 +4,19 @@ async function main()
 
     if (query.has('family'))
     {
-        url = `/list/family?item=${query.get('item')}&family=${query.get('family')}`;
+        url = `/list/item?family=${query.get('family')}`;
     }
     else if (query.has('name'))
     {
-        url = `/list/name?item=${query.get('item')}&name=${query.get('name')}`;
+        url = `/list/item?name=${query.get('name')}`;
     }    
     else if (query.has('rarity'))
     {
-        url = `/list/rarity?item=${query.get('item')}&rarity=${query.get('rarity')}`;
+        url = `/list/item?rarity=${query.get('rarity')}`;
     }
     else if (query.has('type'))
     {
-        url = `/list/type?item=${query.get('item')}&type=${query.get('type')}`;
+        url = `/list/item?type=${query.get('type')}`;
     }
 
     data = await request(url);

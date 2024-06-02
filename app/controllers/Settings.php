@@ -26,11 +26,6 @@ class Settings extends Controller
         $result = $stmt->fetch(\PDO::FETCH_ASSOC);
 
         echo $this->templates->render('settings/index', [
-            'session' => [
-                'loggedin' => $session->get('logged_in'),
-                'steam_avatar' => $session->get('steam_avatar'),
-                'steam_name' => $session->get('steam_name')
-            ],
             'steam_trade_url' => $result['steam_trade_url'],
             'steamid' => $session->get('steamid'),
             'name' => $result['name'],

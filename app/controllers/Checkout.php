@@ -28,11 +28,6 @@ class Checkout extends Controller
         $steam_trade_url = $stmt->fetchColumn();
 
         echo $this->templates->render('checkout/index', [
-            'session' => [
-                'loggedin' => $session->get('logged_in'),
-                'steam_avatar' => $session->get('steam_avatar'),
-                'steam_name' => $session->get('steam_name')
-            ],
             'notification' => $session->flash('trade'),
             'steam_trade_url' => $steam_trade_url,
             'steamid' => $session->get('steamid'),
@@ -134,7 +129,7 @@ class Checkout extends Controller
             ];
             $stmt->execute($params);
 
-            $query = 'UPDATE items SET availability = :availability WHERE id = :id';
+            $query = 'UPDATE products SET availability = :availability WHERE id = :id';
             $stmt = $pdo->prepare($query);
             $params = [
                 'id' => $item['id'],

@@ -2,16 +2,17 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="keywords" content="cs, csgo, cs2, counter-strike, skin">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Skins de Counter-Strike 2 com os melhores preços." />
+<meta name="keywords" content="cs, csgo, cs2, counter-strike, skin" />
 <meta property="og:image" content="https://undeadstore.com.br/logo.png" />
 <meta property="og:description" content="Skins de Counter-Strike 2 com os melhores preços." />
 <meta property="og:title" content="Undead Store" />
 <link href="/favicon.png" rel="icon" type="image/x-icon" />
-<link href="/styles/layout.css?release=7" rel="stylesheet" />
-<link href="/styles/default.css?release=7" rel="stylesheet" />
-<link href="/styles/index.css?release=7" rel="stylesheet" />
-<link href="/styles/mobile.css?release=7" rel="stylesheet" />
+<link href="/styles/layout.css?release=8" rel="stylesheet" />
+<link href="/styles/default.css?release=8" rel="stylesheet" />
+<link href="/styles/index.css?release=8" rel="stylesheet" />
+<link href="/styles/mobile.css?release=8" media="only screen and (max-width: 768px)" rel="stylesheet" />
 <title><?= $this->e($title) ?></title>
 </head>
 <body>
