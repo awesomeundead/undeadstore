@@ -35,6 +35,28 @@ summary
     user-select: none;
 }
 
+.background.container
+{
+    display: grid;
+    grid-template-columns: auto 1200px auto;
+    min-height: 100%;
+}
+
+.background.left
+{
+    background-image: url('festa_junina.png');
+    background-position: top right;
+    background-repeat: repeat-y;
+}
+
+.background.right
+{
+    background-image: url('festa_junina.png');
+    background-position: top right;
+    background-repeat: repeat-y;
+    transform: scaleX(-1);
+}
+
 #grid
 {
     background-color: #222;

@@ -23,7 +23,8 @@
             <a href="/listings?name=CZ75-Auto">CZ75-Auto</a>
             <a href="/listings?name=Desert Eagle">Desert Eagle</a>
             <a href="/listings?name=Five-SeveN">Five-SeveN</a>
-            <a href="/listings?name=Glock-18">Glock-18</a>    
+            <a href="/listings?name=Glock-18">Glock-18</a>
+            <a href="/listings?name=P250">P250</a>
             <a href="/listings?name=R8 Revolver">Revolvér R8</a>    
             <a href="/listings?name=USP-S">USP-S</a>
             <a href="/listings?name=Tec-9">Tec-9</a>

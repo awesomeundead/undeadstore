@@ -29,6 +29,13 @@
             <a href="https://steamcommunity.com/market/listings/730/<?= $item['market_hash_name'] ?>" target="_blank">Mercado Steam</a>
         </div>
         <div class="attribute availability"><?= $item['availability'] ?></div>
+        <?php if ($item['offer_price']): ?>
+            <div class="old_price"><?= html_money($item['price']) ?></div>
+            <div class="price"><?= html_money($item['offer_price']) ?></div>
+            <div class="offer"><?= (float) $item['offer_percentage'] ?>% OFF</div>
+        <?php elseif ($item['price']): ?>
+            <div class="price"><?= html_money($item['price']) ?></div>
+        <?php endif ?>
         <?php if ($item['availability'] == 'Disponível'): ?>
             <a class="button_buy" href="/cart/add?item_id=<?= $item['id'] ?>">Comprar</a>
         <?php endif ?>

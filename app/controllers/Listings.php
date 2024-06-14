@@ -24,8 +24,8 @@ class Listings
         IF (ISNULL(offer_percentage), NULL, price - (price / 100 * offer_percentage)) AS offer_price
         FROM products
         LEFT JOIN items ON products.item_id = items.id
-        LEFT JOIN attributes ON products.attribute_id = attributes.id
-        WHERE availability = :availability';
+        WHERE availability = :availability || availability = 3
+        ORDER BY price DESC';
 
         $params = ['availability' => '1'];
 
@@ -38,7 +38,6 @@ class Listings
         IF (ISNULL(offer_percentage), NULL, price - (price / 100 * offer_percentage)) AS offer_price
         FROM products
         LEFT JOIN items ON products.item_id = items.id
-        LEFT JOIN attributes ON products.attribute_id = attributes.id
         WHERE availability = :availability';
 
         $params = ['availability' => '3'];
@@ -83,8 +82,8 @@ class Listings
         IF (ISNULL(offer_percentage), NULL, price - (price / 100 * offer_percentage)) AS offer_price
         FROM products
         LEFT JOIN items ON products.item_id = items.id
-        LEFT JOIN attributes ON products.attribute_id = attributes.id
-        WHERE {$index} = :value";
+        WHERE {$index} = :value
+        ORDER BY availability = 1 DESC, availability = 3 DESC";
         
         $this->_get($query, $params);
     }

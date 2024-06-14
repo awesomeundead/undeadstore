@@ -5,23 +5,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="description" content="Skins de Counter-Strike 2 com os melhores preços." />
 <meta name="keywords" content="cs, csgo, cs2, counter-strike, skin" />
-<meta property="og:image" content="https://undeadstore.com.br/logo.png" />
+<meta property="og:image" content="https://undeadstore.com.br/styles/undeadstore_especial_junina.png" />
 <meta property="og:description" content="Skins de Counter-Strike 2 com os melhores preços." />
 <meta property="og:title" content="Undead Store" />
-<link href="/favicon.png" rel="icon" type="image/x-icon" />
-<link href="/styles/layout.css?release=8" rel="stylesheet" />
-<link href="/styles/default.css?release=8" rel="stylesheet" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link href="/styles/layout.css?release=10" rel="stylesheet" />
+<link href="/styles/default.css?release=9" rel="stylesheet" />
 <link href="/styles/index.css?release=8" rel="stylesheet" />
-<link href="/styles/mobile.css?release=8" media="only screen and (max-width: 768px)" rel="stylesheet" />
+<link href="/styles/mobile.css?release=10" media="only screen and (max-width: 768px)" rel="stylesheet" />
 <title><?= $this->e($title) ?></title>
 </head>
 <body>
 
+<div class="background container">
+<div class="background left"></div>
 <div id="grid">
     <header id="main_header">
         <div class="left">
             <a href="/">
-                <img alt="Logotipo" src="/styles/logo128.png" />
+                <img alt="Logotipo" src="/styles/undeadstore_h_junina.png" />
             </a>
         </div>
         <nav class="right">
@@ -124,6 +129,8 @@
         </div>
     </footer>
 </div>
-    
+<div class="background right"></div>
+</div>
+
 </body>
 </html>

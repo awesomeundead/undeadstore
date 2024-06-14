@@ -42,6 +42,8 @@ CREATE TABLE IF NOT EXISTS products (
     item_id INT UNSIGNED NOT NULL,
     attribute_id INT UNSIGNED,
     market_hash_name VARCHAR(255) NOT NULL,
+    category ENUM('normal', 'tournament', 'strange', 'unusual', 'unusual_strange'),
+    exterior ENUM('fn', 'mw', 'ft', 'ww', 'bs'),
     availability TINYINT NOT NULL,
     price DECIMAL(8,2),
     offer_percentage DECIMAL(5,2)
@@ -67,12 +69,6 @@ CREATE TABLE IF NOT EXISTS items (
 -- category: Normal, Souvenir, StatTrak™, ★, ★ StatTrak™
 -- category: normal, tournament, strange, unusual, unusual_strange
 -- rarity: Consumer Grade, Industrial Grade, Mil-Spec, Restricted, Classified, Covert, Contraband, Distinguished, Exceptional, Superior, Master
-
-CREATE TABLE IF NOT EXISTS attributes (
-    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    category ENUM('normal', 'tournament', 'strange', 'unusual', 'unusual_strange') NOT NULL,
-    exterior ENUM('fn', 'mw', 'ft', 'ww', 'bs') NOT NULL
-);
 
 CREATE TABLE IF NOT EXISTS collections (
     id SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
