@@ -371,6 +371,28 @@ nav.listings .submenu
     padding: 5px;
 }
 
+.product .price
+{
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.product .old_price
+{
+    color: #CCC;
+    font-size: 18px;
+    text-decoration: line-through;
+}
+
+.product .offer
+{
+    background-color: #F33;
+    border-radius: 5px;
+    color: #FFF;
+    font-weight: bold;
+    padding: 5px;
+}
+
 /**
   * cart
   **/

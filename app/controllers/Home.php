@@ -24,7 +24,6 @@ class Home extends Controller
         IF (ISNULL(offer_percentage), NULL, price - (price / 100 * offer_percentage)) AS offer_price
         FROM products
         LEFT JOIN items ON products.item_id = items.id
-        LEFT JOIN attributes ON products.attribute_id = attributes.id
         WHERE products.id = :id';
         $params = ['id' => $id];
 

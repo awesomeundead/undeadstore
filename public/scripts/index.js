@@ -1,6 +1,7 @@
 async function main()
 {
     const fragment = document.querySelector('template');
+    /*
     const carousel = document.querySelector('#carousel .container');
 
     data = await request('/list/coming');
@@ -41,6 +42,7 @@ async function main()
     {
         document.querySelector('#carousel').remove();
     }
+    */
 
     data = await request('/list/available');
     create(data, fragment, document.querySelector('#container')); 
