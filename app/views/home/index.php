@@ -17,4 +17,4 @@
 
 <?php $this->insert('home/template') ?>
 <script src="/scripts/library.js?release=5"></script>
-<script src="/scripts/index.js?release=5"></script>
+<script src="/scripts/index.js?release=6"></script>

@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS purchase (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     user_id INT UNSIGNED NOT NULL,
     pay_method VARCHAR(255) NOT NULL,
-    status VARCHAR(255) NOT NULL,
+    status enum('pending', 'approved', 'complete', 'canceled') NOT NULL,
     coupon VARCHAR(255) NOT NULL,
     subtotal DECIMAL(8,2) NOT NULL,
     discount DECIMAL(8,2) NOT NULL,
@@ -31,7 +31,8 @@ CREATE TABLE IF NOT EXISTS purchase (
 CREATE TABLE IF NOT EXISTS purchase_items (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     purchase_id INT UNSIGNED NOT NULL,
-    item_id INT UNSIGNED NOT NULL,
+    product_id INT UNSIGNED NOT NULL,
+    status enum('pending', 'trading', 'canceled') NOT NULL,
     item_name TEXT NOT NULL,
     price DECIMAL(8,2) NOT NULL,
     offer_price DECIMAL(8,2)
@@ -39,20 +40,29 @@ CREATE TABLE IF NOT EXISTS purchase_items (
 
 CREATE TABLE IF NOT EXISTS products (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    item_id INT UNSIGNED NOT NULL,
-    attribute_id INT UNSIGNED,
+    variant_item_id INT UNSIGNED NOT NULL,
+    steam_asset VARCHAR(255) NOT NULL,
+    availability TINYINT NOT NULL,
+    base_price DECIMAL(8,2),
+    price DECIMAL(8,2),
+    offer_percentage DECIMAL(5,2),
+    updated_date DATE
+);
+
+CREATE TABLE IF NOT EXISTS cs_variant_item (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    unique_item_id INT UNSIGNED NOT NULL,
     market_hash_name VARCHAR(255) NOT NULL,
     category ENUM('normal', 'tournament', 'strange', 'unusual', 'unusual_strange'),
-    exterior ENUM('fn', 'mw', 'ft', 'ww', 'bs'),
-    availability TINYINT NOT NULL,
-    price DECIMAL(8,2),
-    offer_percentage DECIMAL(5,2)
+    exterior ENUM('fn', 'mw', 'ft', 'ww', 'bs')
 );
 
 --"market_hash_name": "StatTrak™ AK-47 | Uncharted (Minimal Wear)"
 --"market_hash_name": "Special Agent Ava | FBI"
+-- category: Normal, Souvenir, StatTrak™, ★, ★ StatTrak™
+-- category: normal, tournament, strange, unusual, unusual_strange
 
-CREATE TABLE IF NOT EXISTS items (
+CREATE TABLE IF NOT EXISTS cs_unique_item (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     type VARCHAR(255) NOT NULL,
     type_br VARCHAR(255) NOT NULL,
@@ -66,11 +76,9 @@ CREATE TABLE IF NOT EXISTS items (
 );
 
 -- type: Agent, Machinegun, Pistol, Rifle, Shotgun, SMG, Sniper Rifle
--- category: Normal, Souvenir, StatTrak™, ★, ★ StatTrak™
--- category: normal, tournament, strange, unusual, unusual_strange
 -- rarity: Consumer Grade, Industrial Grade, Mil-Spec, Restricted, Classified, Covert, Contraband, Distinguished, Exceptional, Superior, Master
 
-CREATE TABLE IF NOT EXISTS collections (
+CREATE TABLE IF NOT EXISTS cs_collections (
     id SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     name_br VARCHAR(255) NOT NULL
