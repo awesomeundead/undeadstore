@@ -98,7 +98,7 @@ class Checkout extends Controller
         $params = [
             'user_id' => $session->get('user_id'),
             'pay_method' => $pay_method,
-            'status' => 'Em andamento',
+            'status' => 'pending',
             'coupon' => $coupon,
             'subtotal' => $subtotal,
             'discount' => $discount,
@@ -118,11 +118,12 @@ class Checkout extends Controller
         // $item [id, item_id, item_name, availability, price, offer_price, image]
         foreach ($cart['items'] as $item)
         {
-            $query = 'INSERT INTO purchase_items (purchase_id, item_id, item_name, price, offer_price) VALUES (:purchase_id, :item_id, :item_name, :price, :offer_price)';
+            $query = 'INSERT INTO purchase_items (purchase_id, product_id, status, item_name, price, offer_price) VALUES (:purchase_id, :product_id, :status, :item_name, :price, :offer_price)';
             $stmt = $pdo->prepare($query);
             $params = [
                 'purchase_id' => $purchase_id,
-                'item_id' => $item['id'],
+                'product_id' => $item['id'],
+                'status' => 'pending',
                 'item_name' => $item['market_hash_name'],
                 'price' => $item['price'],
                 'offer_price' => $item['offer_price']

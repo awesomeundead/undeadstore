@@ -23,7 +23,8 @@ class Listings
         $query = 'SELECT *, products.id,
         IF (ISNULL(offer_percentage), NULL, price - (price / 100 * offer_percentage)) AS offer_price
         FROM products
-        LEFT JOIN items ON products.item_id = items.id
+        LEFT JOIN cs_variant_item ON products.variant_item_id = cs_variant_item.id
+        LEFT JOIN cs_unique_item ON cs_variant_item.unique_item_id = cs_unique_item.id
         WHERE availability = :availability || availability = 3
         ORDER BY price DESC';
 
@@ -37,7 +38,8 @@ class Listings
         $query = 'SELECT *, products.id,
         IF (ISNULL(offer_percentage), NULL, price - (price / 100 * offer_percentage)) AS offer_price
         FROM products
-        LEFT JOIN items ON products.item_id = items.id
+        LEFT JOIN cs_variant_item ON products.variant_item_id = cs_variant_item.id
+        LEFT JOIN cs_unique_item ON cs_variant_item.unique_item_id = cs_unique_item.id
         WHERE availability = :availability';
 
         $params = ['availability' => '3'];
@@ -81,7 +83,8 @@ class Listings
         $query = "SELECT *, products.id,
         IF (ISNULL(offer_percentage), NULL, price - (price / 100 * offer_percentage)) AS offer_price
         FROM products
-        LEFT JOIN items ON products.item_id = items.id
+        LEFT JOIN cs_variant_item ON products.variant_item_id = cs_variant_item.id
+        LEFT JOIN cs_unique_item ON cs_variant_item.unique_item_id = cs_unique_item.id
         WHERE {$index} = :value
         ORDER BY availability = 1 DESC, availability = 3 DESC";
         
