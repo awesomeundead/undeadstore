@@ -5,9 +5,43 @@ namespace App\Controllers;
 use Awesomeundead\Undeadstore\Controller;
 use Awesomeundead\Undeadstore\Database;
 use Awesomeundead\Undeadstore\Session;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 
 class Settings extends Controller
 {
+    private function _send_email($address, $user_id)
+    {
+        $mail = new PHPMailer();
+
+        $mail->SMTPDebug = SMTP::DEBUG_OFF;
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.hostinger.com';
+        $mail->SMTPAuth   = true;
+        $mail->Username   = 'noreply@undeadstore.com.br';
+        $mail->Password   = 'ed8f1new$TO';
+        $mail->Port       = 587;
+        $mail->CharSet    = PHPMailer::CHARSET_UTF8;
+    
+        $mail->setFrom('noreply@undeadstore.com.br', 'Undead Store');
+        $mail->addAddress($address);
+
+        $token = hash('sha512', 'coisa_ridicula' . $address);
+    
+        $mail->isHTML(true); 
+        $mail->Subject = 'Verificação de endereço de e-mail';
+        $mail->Body = "<p>Para continuar com o cadastro, verifique o endereço de e-mail pelo link abaixo.</p>
+        <br />
+        <p><a href=\"https://undeadstore.com.br/emailverification?token={$token}&userid={$user_id}\">Verificar endereço de e-mail</a></p>
+        <br />
+        <p>Adicione nosso endereço de e-mail a lista de contatos confiáveis.</p>
+        <br />
+        <p>Caso não tenha tentado se cadastrar com este endereço de e-mail recentemente, ignore esta mensagem.</p>";
+    
+        $mail->send();
+    }
+
     public function index()
     {
         $session = Session::create();
@@ -30,9 +64,41 @@ class Settings extends Controller
             'steamid' => $session->get('steamid'),
             'name' => $result['name'],
             'email' => $result['email'],
+            'verified_email' => $result['verified_email'],
             'phone' => $result['phone'],
             'notification' => $session->flash('settings')
         ]);
+    }
+
+    public function email_verification()
+    {
+        $token = $_GET['token'] ?? false;
+        $user_id = $_GET['userid'] ?? false;
+
+        if ($token && $user_id)
+        {
+            $pdo = Database::connect();
+
+            $query = 'SELECT email FROM users WHERE id = :id';
+            $stmt = $pdo->prepare($query);
+            $stmt->execute(['id' => $user_id]);
+            $email = $stmt->fetchColumn();
+
+            $verify_token = hash('sha512', 'coisa_ridicula' . $email);
+
+            if ($verify_token == $token)
+            {
+                $query = 'UPDATE users SET verified_email = :verified_email WHERE id = :id';
+                $stmt = $pdo->prepare($query);
+                $params = [
+                    'id' => $user_id,
+                    'verified_email' => '1'
+                ];
+                $result = $stmt->execute($params);
+            }
+        }
+
+        redirect();
     }
 
     public function save()
@@ -45,7 +111,14 @@ class Settings extends Controller
             redirect('/auth');
         }
 
+        $user_id = $session->get('user_id');
+
         $pdo = Database::connect();
+
+        $query = 'SELECT steam_trade_url, name, email, phone FROM users WHERE id = :id';
+        $stmt = $pdo->prepare($query);
+        $stmt->execute(['id' => $user_id]);
+        $user_data = $stmt->fetch(\PDO::FETCH_ASSOC);
 
         $steam_trade_url = trim($_POST['steam_trade_url'] ?? '');
 
@@ -55,23 +128,41 @@ class Settings extends Controller
             redirect('/settings');
         }
 
-        $name = trim($_POST['name']);
-        $email = trim($_POST['email']);
-        $phone = trim($_POST['phone']);
+        $name = trim($_POST['name'] ?? '');
+        $email = trim($_POST['email'] ?? '');
+        $phone = trim($_POST['phone'] ?? '');
 
-        $query = 'UPDATE users SET steam_trade_url = :steam_trade_url, name = :name, email = :email, phone = :phone WHERE id = :id';
+        $query = 'UPDATE users SET steam_trade_url = :steam_trade_url, name = :name, phone = :phone WHERE id = :id';
         $stmt = $pdo->prepare($query);
         $params = [
-            'id' => $session->get('user_id'),
+            'id' => $user_id,
             'steam_trade_url' => $steam_trade_url,
-            'name' => $name,
-            'email' => $email,
+            'name' => $name, 
             'phone' => $phone
         ];
         $result = $stmt->execute($params);
 
         if ($result)
         {
+            if ($user_data['email'] != $email)
+            {
+                $query = 'UPDATE users SET email = :email, verified_email = :verified_email WHERE id = :id';
+                $stmt = $pdo->prepare($query);
+                $params = [
+                    'id' => $user_id,
+                    'email' => $email,
+                    'verified_email' => '0'
+                ];
+                $result = $stmt->execute($params);
+
+                if ($result)
+                {
+                    $session->set('notification', 'EMAIL_ADDRESS_NOT_VERIFIED');
+
+                    $this->_send_email($email, $user_id);
+                }
+            }
+
             $session->flash('settings', ['message' => 'Atualizado com sucesso.', 'type' => 'success']);
         }
         else

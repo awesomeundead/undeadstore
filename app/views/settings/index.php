@@ -5,12 +5,16 @@
             <div class="flex column gap-20">
                 <div>
                     <label for="name">Nome</label>
-                    <input id="name" name="name" placeholder="Seu nome" type="text" value="<?= html_escape($name ?? '') ?>" />
+                    <input id="name" name="name" placeholder="Seu nome" required="required" type="text" value="<?= html_escape($name ?? '') ?>" />
                 </div>
                 <div>
                     <label for="email">E-mail</label>
-                    <input id="email" name="email" placeholder="Seu endereço de e-mail" type="email" value="<?= html_escape($email ?? '') ?>" />
+                    <input id="email" name="email" placeholder="Seu endereço de e-mail" required="required" type="email" value="<?= html_escape($email ?? '') ?>" />
                 </div>
+                <?php if ($verified_email == '0'): ?>
+                    <div>Endereço de e-mail não verificado.</div>
+                    <div>Verifique sua pasta de lixo eletrônico (Spam).</div>
+                <?php endif ?>
                 <div>
                     <label for="phone">Telefone</label>
                     <input id="phone" name="phone" placeholder="Seu número de telefone com DDD" type="tel" value="<?= html_escape($phone ?? '') ?>" />

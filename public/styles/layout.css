@@ -41,36 +41,57 @@ summary
     grid-template-columns: auto 1200px auto;
     min-height: 100%;
 }
-
+/*
 .background.left
 {
-    background-image: url('festa_junina.png');
     background-position: top right;
     background-repeat: repeat-y;
 }
 
 .background.right
 {
-    background-image: url('festa_junina.png');
     background-position: top right;
     background-repeat: repeat-y;
     transform: scaleX(-1);
+}
+*/
+
+.background.center
+{
+    min-height: 100%;
+}
+
+.main.notification
+{
+    background-color: #FFBB0050;
+    border: 1px solid #FB0;
+    color: #FB0;
+    font-weight: bold;
+    margin: 5px 0;
+    padding: 5px;
+}
+
+.main.notification a
+{
+    color: #FB0;
+    display: block;
 }
 
 #grid
 {
     background-color: #222;
     display: grid;
-    grid-template-rows: 150px auto 200px;
-    min-height: 100%;
+    grid-template-rows: min-content auto 200px;
+    height: 100vh;
     margin: 0 auto;
     width: 1200px;
 }
 
-#main_header
+#main_header .content
 {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    height: 150px;
 }
 
 #main_header a

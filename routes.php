@@ -73,6 +73,7 @@ return function (App $app)
     $app->get('/qrcode', [Pay::class, 'qrcode']);
 
     $app->get('/settings', [Settings::class, 'index']);
+    $app->get('/emailverification', [Settings::class, 'email_verification']);
     $app->post('/settings', [Settings::class, 'save']);
 
     $app->get('/support', [Support::class, 'index']);

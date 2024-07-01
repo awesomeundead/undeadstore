@@ -59,7 +59,7 @@ class Auth
             $pdo = Database::connect();
 
             // VERIFICA SE ESSE USUÁRIO JÁ É REGISTRADO
-            $query = 'SELECT id FROM users WHERE steamid = :steamid';
+            $query = 'SELECT id, verified_email FROM users WHERE steamid = :steamid';
             $stmt = $pdo->prepare($query);
             $stmt->execute(['steamid' => $session->get('steamid')]);
             $result = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -68,6 +68,11 @@ class Auth
             {
                 // USUÁRIO JÁ REGISTRADO
                 $session->set('user_id', $result['id']);
+
+                if ($result['verified_email'] == '1')
+                {
+                    $verified_email = true;
+                }
             }
             else
             {
@@ -93,6 +98,11 @@ class Auth
                     
                     send_mail($params);
                 }
+            }
+
+            if (!isset($verified_email))
+            {
+                $session->set('notification', 'EMAIL_ADDRESS_NOT_VERIFIED');
             }
 
             $address = $_SERVER['HTTP_CLIENT_IP']
