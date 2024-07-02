@@ -13,7 +13,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="manifest" href="/site.webmanifest">
 <link href="/styles/layout.css?release=12" rel="stylesheet" />
-<link href="/styles/default.css?release=9" rel="stylesheet" />
+<link href="/styles/default.css?release=10" rel="stylesheet" />
 <link href="/styles/index.css?release=8" rel="stylesheet" />
 <link href="/styles/mobile.css?release=10" media="only screen and (max-width: 768px)" rel="stylesheet" />
 <title><?= $this->e($title) ?></title>
@@ -78,6 +78,7 @@
             <div class="flex column">
                 <div>Links</div>
                 <a href="/partners">Parceiros</a>
+                <a href="/security">Segurança</a>
                 <a href="/support">Suporte</a>
             </div>
             <div class="flex column">
