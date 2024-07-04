@@ -183,6 +183,18 @@ button:hover
     font-size: 14px;
 }
 
+.alert.info
+{
+    color: #0BF;
+    padding: 5px 0;
+}
+
+.alert.warning
+{
+    color: #FB0;
+    padding: 5px 0;
+}
+
 /**
   * Steam colors
   **/

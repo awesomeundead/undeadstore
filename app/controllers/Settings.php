@@ -111,6 +111,8 @@ class Settings extends Controller
             redirect('/auth');
         }
 
+        $redirect = $_POST['redirect'] ?? false;
+
         $user_id = $session->get('user_id');
 
         $pdo = Database::connect();
@@ -122,15 +124,37 @@ class Settings extends Controller
 
         $steam_trade_url = trim($_POST['steam_trade_url'] ?? '');
 
-        if (!preg_match('#^https://steamcommunity.com/tradeoffer/new/\?partner=(\d+)&token=(\w+)$#', $steam_trade_url, $matches))
+        if ($steam_trade_url)
         {
-            $session->flash('settings', ['message' => 'URL inválida.', 'type' => 'failure']);
-            redirect('/settings');
+            if (!preg_match('#^https://steamcommunity.com/tradeoffer/new/\?partner=(\d+)&token=(\w+)$#', $steam_trade_url, $matches))
+            {
+                $session->flash('settings', ['message' => 'URL inválida.', 'type' => 'failure']);
+                
+                if ($redirect == 'checkout')
+                {
+                    redirect('/settings?redirect=checkout');
+                }
+
+                redirect('/settings');
+            }
         }
 
         $name = trim($_POST['name'] ?? '');
         $email = trim($_POST['email'] ?? '');
         $phone = trim($_POST['phone'] ?? '');
+
+        if ($user_data['steam_trade_url'] == $steam_trade_url &&
+            $user_data['name'] == $name &&
+            $user_data['email'] == $email &&
+            $user_data['phone'] == $phone)
+        {
+            if ($redirect == 'checkout')
+            {
+                redirect('/settings?redirect=checkout');
+            }
+
+            redirect('/settings');
+        }
 
         $query = 'UPDATE users SET steam_trade_url = :steam_trade_url, name = :name, phone = :phone WHERE id = :id';
         $stmt = $pdo->prepare($query);
@@ -164,10 +188,20 @@ class Settings extends Controller
             }
 
             $session->flash('settings', ['message' => 'Atualizado com sucesso.', 'type' => 'success']);
+
+            if ($redirect == 'checkout')
+            {
+                redirect('/checkout');
+            }
         }
         else
         {
             $session->flash('settings', ['message' => 'Ocorreu um erro ao atualizar.', 'type' => 'failure']);
+        }
+
+        if ($redirect == 'checkout')
+        {
+            redirect('/settings?redirect=checkout');
         }
 
         redirect('/settings');
