@@ -76,8 +76,8 @@ class Checkout extends Controller
         if (!$steam_trade_url)
         {
             // Mensagem de url de troca vazia
-            $session->flash('trade', ['message' => 'Não deixe o campo URL vazio.', 'type' => 'failure']);
-            redirect('/checkout');
+            $session->flash('settings', ['message' => 'Não deixe o campo URL de troca vazio.', 'type' => 'failure']);
+            redirect('/settings?redirect=checkout');
         }
 
         $coupon = $coupon['name'] ?? '';
@@ -109,7 +109,7 @@ class Checkout extends Controller
 
         if (!$result)
         {
-            $session->flash('trade', ['message' => 'Ocorreu um erro.', 'type' => 'failure']);
+            $session->flash('settings', ['message' => 'Ocorreu um erro.', 'type' => 'failure']);
             redirect('/checkout');
         }
 
@@ -151,38 +151,5 @@ class Checkout extends Controller
         send_mail($params);
 
         redirect("/pay?purchase_id={$purchase_id}");
-    }
-
-    public function trade()
-    {
-        $session = Session::create();
-
-        // Verifica se o usuário está logado
-        if (!$session->get('logged_in'))
-        {
-            redirect('/auth');
-        }
-
-        $steam_trade_url = trim($_POST['steam_trade_url'] ?? '');
-
-        if (preg_match('#^https://steamcommunity.com/tradeoffer/new/\?partner=(\d+)&token=(\w+)$#', $steam_trade_url, $matches))
-        {
-            $pdo = Database::connect();
-
-            $query = 'UPDATE users SET steam_trade_url = :steam_trade_url WHERE id = :id';
-            $stmt = $pdo->prepare($query);
-            $params = [
-                'id' => $session->get('user_id'),
-                'steam_trade_url' => $steam_trade_url
-            ];
-            $stmt->execute($params);
-            $session->flash('trade', ['message' => 'Atualizado', 'type' => 'success']);
-        }
-        else
-        {
-            $session->flash('trade', ['message' => 'URL inválida.', 'type' => 'failure']);
-        }
-        
-        redirect('/checkout');
     }
 }

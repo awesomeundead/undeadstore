@@ -1,18 +1,27 @@
 <?php
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
 function send_mail($params)
 {
-    $message = wordwrap($params['message'], 70, "\r\n");
-    $headers = [
-        'From' => $params['from'],
-        'X-Mailer' => 'PHP/' . phpversion(),
-        'Content-Type' => 'text/plain; charset=utf-8'
-    ];
+    $mail = new PHPMailer();
 
-    return mail($params['to'], $params['subject'], $message, $headers);
+    $mail->SMTPDebug = SMTP::DEBUG_OFF;
+    $mail->isSMTP();
+    $mail->Host       = 'smtp.hostinger.com';
+    $mail->SMTPAuth   = true;
+    $mail->Username   = 'noreply@undeadstore.com.br';
+    $mail->Password   = 'ed8f1new$TO';
+    $mail->Port       = 587;
+    $mail->CharSet    = PHPMailer::CHARSET_UTF8;
+
+    $mail->setFrom('noreply@undeadstore.com.br', 'Undead Store');
+    $mail->addAddress('daniel.ximenes@outlook.com', 'Undead');
+
+    $mail->Subject = $params['subject'];
+    $mail->Body = $params['message'];
+
+    $mail->send();
 }
-
-$params = [
-    'to' => 'daniel.ximenes@outlook.com',
-    'from' => 'noreply@undeadstore.com.br'
-];

@@ -5,39 +5,8 @@
             <?= $notification['message'] ?>
         </div>
     <?php endif ?>
-    <div class="box flex column">
-        <form action="/checkout/trade" method="post">
-            <label for="offer_trade">URL de troca (Trade)</label>
-            <div class="flex align-center space-between">
-                <input id="offer_trade" name="steam_trade_url" required="required" type="text" value="<?= $steam_trade_url ?>" />
-                <button type="submit">Atualizar</button>
-            </div>
-        </form>
-        <div class="flex column text">
-            <div>Para obter sua URL de troca, <a href="https://steamcommunity.com/profiles/<?= $steamid ?>/tradeoffers/privacy#trade_offer_access_url" target="_blank">clique aqui</a>.</div>
-            <div>Precisamos dessa URL para que possamos enviar uma proposta de troca.</div>
-        </div>
-    </div>
-    <div class="box flex column text">
-        <div>Após a confirmação do pagamento, uma das nossas contas enviará uma proposta de troca. Dependendo do dia pode levar algumas horas.</div>
-        <div>Caso não seja identificado o pagamento após 24 horas, o pedido será cancelado.</div>
-        <div>Caso aconteça algum problema com os servidores, inventário ou por manutenção do Steam, reembolsamos o pagamento.</div>
-        <div>Não fazemos devolução após a transferência dos itens.</div>
-        <div>Qualquer dúvida, deixe sua mensagem em <a href="/support">Suporte</a> ou entre no nosso <a href="https://discord.gg/YMvX8g5FhU">Discord</a>.</div>
-    </div>
-    <div class="box white">
-        <div class="flex align-center space-between">
-            <div>Subtotal</div>
-            <div><?= html_money($subtotal) ?></div>
-        </div>
-        <div class="flex align-center space-between">
-            <div>Desconto</div>
-            <div><?= html_money($discount) ?></div>
-        </div>
-        <div class="flex align-center space-between">
-            <div>Total</div>
-            <div><?= html_money($total) ?></div>
-        </div>
+    <div class="box header">
+        <div>Carrinho de compras</div>
     </div>
     <form action="/checkout/end">
         <div class="flex column">
@@ -57,6 +26,30 @@
                     <div>Este serviço de pagamentos cobra uma tarifa adicional por usar esta forma de pagamento.</div>
                 </div>
             </div>
+    <div class="box flex column">
+        <div class="alert warning">
+            <div>Lembre-se de manter sua URL de troca (Trade URL) atualizada, para que possamos enviar o pedido.</div>
+            <div>Após a confirmação do pagamento, uma das nossas contas enviará uma proposta de troca. Dependendo do dia pode levar algumas horas.</div>
+            <div>Caso não seja identificado o pagamento após 24 horas, o pedido será cancelado.</div>
+            <div>Caso aconteça algum problema com os servidores, inventário ou por manutenção do Steam, reembolsamos o pagamento.</div>
+            <div>Não fazemos devolução após a transferência dos itens.</div>
+            <div>Qualquer dúvida, deixe sua mensagem em <a href="/support">Suporte</a> ou entre no nosso <a href="https://discord.gg/YMvX8g5FhU">Discord</a>.</div>
+        </div>
+    </div>
+    <div class="box white">
+        <div class="flex align-center space-between">
+            <div>Subtotal</div>
+            <div><?= html_money($subtotal) ?></div>
+        </div>
+        <div class="flex align-center space-between">
+            <div>Desconto</div>
+            <div><?= html_money($discount) ?></div>
+        </div>
+        <div class="flex align-center space-between">
+            <div>Total</div>
+            <div><?= html_money($total) ?></div>
+        </div>
+    </div>
             <div id="nav_buttons">
                 <a href="/cart">Voltar</a>
                 <button type="submit">Finalizar pedido</button>

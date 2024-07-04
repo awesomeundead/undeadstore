@@ -138,7 +138,7 @@ button:hover
 
 .flex.gap-10
 {
-    gap: 20px;
+    gap: 10px;
 }
 
 .flex.gap-20
@@ -167,6 +167,11 @@ button:hover
     padding: 20px 10px;
 }
 
+.height-100p
+{
+    height: 100%;
+}
+
 .line_through
 {
     font-size: 14px;
@@ -176,6 +181,18 @@ button:hover
 .text
 {
     font-size: 14px;
+}
+
+.alert.info
+{
+    color: #0BF;
+    padding: 5px 0;
+}
+
+.alert.warning
+{
+    color: #FB0;
+    padding: 5px 0;
 }
 
 /**

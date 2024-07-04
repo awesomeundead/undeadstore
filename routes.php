@@ -3,7 +3,7 @@
 use Awesomeundead\Undeadstore\App;
 use App\Controllers\
 {
-    Auth, Cart, Checkout, Home, Listings, OrderHistory, Partners, Pay, Settings, Support
+    Auth, Cart, Checkout, Coins, Home, Listings, OrderHistory, Partners, Pay, Security, Settings, Support
 };
 
 return function (App $app)
@@ -42,7 +42,8 @@ return function (App $app)
 
     $app->get('/checkout', [Checkout::class, 'index']);
     $app->get('/checkout/end', [Checkout::class, 'end']);
-    $app->post('/checkout/trade', [Checkout::class, 'trade']);
+
+    $app->get('/coins', [Coins::class, 'index']);
 
     $app->get('/data', [Home::class, 'data']);
 
@@ -72,7 +73,10 @@ return function (App $app)
 
     $app->get('/qrcode', [Pay::class, 'qrcode']);
 
+    $app->get('/security', [Security::class, 'index']);
+
     $app->get('/settings', [Settings::class, 'index']);
+    $app->get('/emailverification', [Settings::class, 'email_verification']);
     $app->post('/settings', [Settings::class, 'save']);
 
     $app->get('/support', [Support::class, 'index']);
