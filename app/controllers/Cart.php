@@ -68,37 +68,40 @@ class Cart extends Controller
 
             if ($item)
             {
-                if ($item['type'] == 'Agent')
+                if ($item['price'] != null)
                 {
-                    $item['full_name_br'] = "{$item['name_br']} | {$item['family_br']}";
+                    if ($item['type'] == 'Agent')
+                    {
+                        $item['full_name_br'] = "{$item['name_br']} | {$item['family_br']}";
+                    }
+                    else
+                    {
+                        $categories = [
+                            'normal' => ['en' => 'Normal', 'br' => 'Normal'],
+                            'tournament' => ['en' => 'Souvenir', 'br' => 'Lembrança'],
+                            'strange' => ['en' => 'StatTrak™', 'br' => 'StatTrak™'],
+                            'unusual' => ['en' => '★', 'br' => '★'],
+                            'unusual_strange' => ['en' => '★ StatTrak™', 'br' => '★ StatTrak™']
+                        ];
+
+                        $category = $item['category'] == 'normal' ? '' : " {$categories[$item['category']]['br']}";
+
+                        $exterior = [
+                            'fn' => ['en' => 'Factory New', 'br' => 'Nova de Fábrica'],
+                            'mw' => ['en' => 'Minimal Wear', 'br' => 'Pouca Usada'],
+                            'ft' => ['en' => 'Field-Tested', 'br' => 'Testada em Campo'],
+                            'ww' => ['en' => 'Well Worm', 'br' => 'Bem Desgastada'],
+                            'bs' => ['en' => 'Battle-Scarred', 'br' => 'Veterana de Guerra']
+                        ];
+
+                        $item['full_name_br'] = "{$item['name_br']}{$category} | {$item['family_br']} ({$exterior[$item['exterior']]['br']})";
+                        $item['image'] = "{$item['image']}_{$item['exterior']}";
+                    }
+
+                    $cart = $session->get('cart');
+                    $cart['items'][$item['id']] = $item;
+                    $session->set('cart', $cart);
                 }
-                else
-                {
-                    $categories = [
-                        'normal' => ['en' => 'Normal', 'br' => 'Normal'],
-                        'tournament' => ['en' => 'Souvenir', 'br' => 'Lembrança'],
-                        'strange' => ['en' => 'StatTrak™', 'br' => 'StatTrak™'],
-                        'unusual' => ['en' => '★', 'br' => '★'],
-                        'unusual_strange' => ['en' => '★ StatTrak™', 'br' => '★ StatTrak™']
-                    ];
-
-                    $category = $item['category'] == 'normal' ? '' : " {$categories[$item['category']]['br']}";
-
-                    $exterior = [
-                        'fn' => ['en' => 'Factory New', 'br' => 'Nova de Fábrica'],
-                        'mw' => ['en' => 'Minimal Wear', 'br' => 'Pouca Usada'],
-                        'ft' => ['en' => 'Field-Tested', 'br' => 'Testada em Campo'],
-                        'ww' => ['en' => 'Well Worm', 'br' => 'Bem Desgastada'],
-                        'bs' => ['en' => 'Battle-Scarred', 'br' => 'Veterana de Guerra']
-                    ];
-
-                    $item['full_name_br'] = "{$item['name_br']}{$category} | {$item['family_br']} ({$exterior[$item['exterior']]['br']})";
-                    $item['image'] = "{$item['image']}_{$item['exterior']}";
-                }
-
-                $cart = $session->get('cart');
-                $cart['items'][$item['id']] = $item;
-                $session->set('cart', $cart);
             }
         }
 

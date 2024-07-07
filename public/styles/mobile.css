@@ -6,7 +6,7 @@ body
 
 .background.container
 {
-    grid-template-columns: auto 100% auto;
+    grid-template-columns: 0 100% 0;
 }
 
 #grid
@@ -15,9 +15,10 @@ body
     width: auto;
 }
 
-#main_header
+#main_header .content
 {
     display: block;
+    height: auto;
     margin-bottom: 5px;
 }
 

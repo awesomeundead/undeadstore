@@ -12,8 +12,13 @@ return function (App $app)
     $app->get('/listings', [Home::class, 'listings']);
     $app->get('/item/{id:\d+}/{name}', [Home::class, 'item']);
     
-    $app->get('/auth', [Auth::class, 'index']);
-    $app->get('/auth/login', [Auth::class, 'login']);
+    $app->group('/auth', function ($group)
+    {
+        header('X-Robots-Tag: noindex, nofollow');
+
+        $group->get('', [Auth::class, 'index']);
+        $group->get('/login', [Auth::class, 'login']);
+    });
 
     $app->get('/cs2', function ()
     {
@@ -35,10 +40,24 @@ return function (App $app)
         redirect('/');
     });
 
+    /*
+
     $app->get('/cart', [Cart::class, 'index']);
     $app->get('/cart/add', [Cart::class, 'add']);
     $app->get('/cart/delete', [Cart::class, 'delete']);
     $app->post('/cart/coupon', [Cart::class, 'coupon']);
+
+    */
+
+    $app->group('/cart', function ($group)
+    {
+        header('X-Robots-Tag: noindex, nofollow');
+
+        $group->get('', [Cart::class, 'index']);
+        $group->get('/add', [Cart::class, 'add']);
+        $group->get('/delete', [Cart::class, 'delete']);
+        $group->post('/coupon', [Cart::class, 'coupon']);
+    });
 
     $app->get('/checkout', [Checkout::class, 'index']);
     $app->get('/checkout/end', [Checkout::class, 'end']);
