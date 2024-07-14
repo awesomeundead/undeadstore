@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () =>
 });
 
 const fragment = document.querySelector('template');
-const container = document.querySelector('#container');
+const container = document.querySelector('#container .items');
 
 var language = 'br';
 var order;

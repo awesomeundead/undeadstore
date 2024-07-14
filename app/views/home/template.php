@@ -1,4 +1,7 @@
-<div id="container"></div>
+<div id="container">
+    <div class="coming"></div>
+    <div class="items"></div>
+</div>
 <template>
     <div class="item">
         <div class="title">

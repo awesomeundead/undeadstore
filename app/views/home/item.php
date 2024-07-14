@@ -2,6 +2,12 @@
 <nav>
     <?php $this->insert('home/nav') ?>
 </nav>
+<nav class="breadcrumb">
+    <div><a href="/">Início</a></div>
+    <div><a href="/listings?type=<?= $item['type'] ?>"><?= $item['type_br'] ?></a></div>
+    <div><a href="/listings?name=<?= $item['name'] ?>"><?= $item['name_br'] ?></a></div>
+    <div><a href="/listings?family=<?= $item['family'] ?>"><?= $item['family_br'] ?></a></div>
+</nav>
 <div class="product">
     <div class="image">
         <?php if ($item['exterior']): ?>

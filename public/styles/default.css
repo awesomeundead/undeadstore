@@ -348,6 +348,28 @@ nav.listings .submenu
   * home item
   **/
 
+.breadcrumb
+{
+    display: flex;
+}
+
+.breadcrumb div
+{
+    display: flex;
+}
+
+.breadcrumb a
+{
+    padding: 5px;
+}
+
+.breadcrumb div:not(:last-child)::after
+{
+    display: inline-block;
+    content: ">";
+    padding: 5px;
+}
+
 .product
 {
     display: grid;

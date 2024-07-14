@@ -20,12 +20,12 @@ class Listings
 
     public function available()
     {
-        $query = 'SELECT *, products.id,
+        $query = 'SELECT cs_variant_item.*, cs_unique_item.*, p.id, p.availability, p.price, p.offer_percentage,
         IF (ISNULL(offer_percentage), NULL, price - (price / 100 * offer_percentage)) AS offer_price
-        FROM products
-        LEFT JOIN cs_variant_item ON products.variant_item_id = cs_variant_item.id
+        FROM products AS p
+        LEFT JOIN cs_variant_item ON p.variant_item_id = cs_variant_item.id
         LEFT JOIN cs_unique_item ON cs_variant_item.unique_item_id = cs_unique_item.id
-        WHERE availability = :availability || availability = 3
+        WHERE availability = :availability
         ORDER BY price DESC';
 
         $params = ['availability' => '1'];
@@ -35,12 +35,14 @@ class Listings
 
     public function coming()
     {
-        $query = 'SELECT *, products.id,
+        $query = 'SELECT cs_variant_item.*, cs_unique_item.*, p.id, p.availability, p.price, p.offer_percentage,
         IF (ISNULL(offer_percentage), NULL, price - (price / 100 * offer_percentage)) AS offer_price
-        FROM products
-        LEFT JOIN cs_variant_item ON products.variant_item_id = cs_variant_item.id
+        FROM products AS p
+        LEFT JOIN cs_variant_item ON p.variant_item_id = cs_variant_item.id
         LEFT JOIN cs_unique_item ON cs_variant_item.unique_item_id = cs_unique_item.id
-        WHERE availability = :availability';
+        WHERE availability = :availability
+        ORDER BY RAND()
+        LIMIT 4';
 
         $params = ['availability' => '3'];
 
@@ -80,10 +82,10 @@ class Listings
             $params = ['value' => 'Rifle'];
         }
 
-        $query = "SELECT *, products.id,
+        $query = "SELECT cs_variant_item.*, cs_unique_item.*, p.id, p.availability, p.price, p.offer_percentage,
         IF (ISNULL(offer_percentage), NULL, price - (price / 100 * offer_percentage)) AS offer_price
-        FROM products
-        LEFT JOIN cs_variant_item ON products.variant_item_id = cs_variant_item.id
+        FROM products AS p
+        LEFT JOIN cs_variant_item ON p.variant_item_id = cs_variant_item.id
         LEFT JOIN cs_unique_item ON cs_variant_item.unique_item_id = cs_unique_item.id
         WHERE {$index} = :value
         ORDER BY availability = 1 DESC, availability = 3 DESC";

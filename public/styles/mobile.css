@@ -62,27 +62,6 @@ body
     width: 100%;
 }
 
-#carousel .side.left
-{
-    left: 0;
-}
-
-#carousel .side.right
-{
-    right: 0;
-}
-
-#carousel .container
-{
-    width: calc(100vw - 10px);
-    overflow-x: auto;
-}
-
-#carousel .item
-{
-    width: calc(100vw / 2 - 10px);
-}
-
 .product
 {
     display: block;
@@ -93,7 +72,8 @@ body
     width: 100%;
 }
 
-#container
+#container .coming,
+#container .items
 {
     grid-template-columns: 1fr 1fr;
 }
