@@ -60,8 +60,8 @@ class Cart extends Controller
             $query = 'SELECT *, products.id,
             IF (ISNULL(offer_percentage), NULL, price - (price / 100 * offer_percentage)) AS offer_price
             FROM products
-            LEFT JOIN cs_variant_item ON products.variant_item_id = cs_variant_item.id
-            LEFT JOIN cs_unique_item ON cs_variant_item.unique_item_id = cs_unique_item.id
+            LEFT JOIN cs_item_variant ON products.cs_item_variant_id = cs_item_variant.id
+            LEFT JOIN cs_item ON cs_item_variant.cs_item_id = cs_item.id
             WHERE products.id = :id AND availability = 1';
             
             $stmt = $pdo->prepare($query);
