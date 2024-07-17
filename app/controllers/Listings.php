@@ -51,11 +51,12 @@ class Listings
 
     public function item()
     {
-        $family = $_GET['family'] ?? false;
-        $name = $_GET['name'] ?? false;
-        $rarity = $_GET['rarity'] ?? false;
-        $type = $_GET['type'] ?? false;
-
+        $family     = $_GET['family'] ?? false;
+        $name       = $_GET['name'] ?? false;
+        $rarity     = $_GET['rarity'] ?? false;
+        $type       = $_GET['type'] ?? false;
+        $collection = $_GET['collection'] ?? false;
+        
         if ($family)
         {
             $index = 'family';
@@ -75,6 +76,11 @@ class Listings
         {
             $index = 'type';
             $params = ['value' => $type];
+        }
+        elseif ($collection)
+        {
+            $index = 'collection_id';
+            $params = ['value' => $collection];
         }
         else
         {

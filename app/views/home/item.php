@@ -54,7 +54,9 @@
         </div>
         <div class="attribute flex space-between">
             <div>Coleção</div>
-            <div><?= $item['collection_br'] ?></div>
+            <div>
+                <a href="/listings?collection=<?= $item['collection_id'] ?>"><?= $item['collection_br'] ?></a>
+            </div>
         </div>
         <div class="attribute flex space-between">
             <div>Disponibilidade</div>

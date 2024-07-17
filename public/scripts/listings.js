@@ -18,6 +18,10 @@ async function main()
     {
         url = `/list/item?type=${query.get('type')}`;
     }
+    else if (query.has('collection'))
+    {
+        url = `/list/item?collection=${query.get('collection')}`;
+    }
 
     data = await request(url);
     data = Object.values(data);
