@@ -40,8 +40,9 @@ CREATE TABLE IF NOT EXISTS purchase_items (
 
 CREATE TABLE IF NOT EXISTS products (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    variant_item_id INT UNSIGNED NOT NULL,
-    steam_asset VARCHAR(255) NOT NULL,
+    cs_item_variant_id INT UNSIGNED NOT NULL,
+    steam_asset BIGINT UNSIGNED,
+    pattern_float DOUBLE,
     availability TINYINT NOT NULL,
     base_price DECIMAL(8,2),
     price DECIMAL(8,2),
@@ -49,9 +50,9 @@ CREATE TABLE IF NOT EXISTS products (
     updated_date DATE
 );
 
-CREATE TABLE IF NOT EXISTS cs_variant_item (
+CREATE TABLE IF NOT EXISTS cs_item_variant (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    unique_item_id INT UNSIGNED NOT NULL,
+    cs_item_id INT UNSIGNED NOT NULL,
     market_hash_name VARCHAR(255) NOT NULL,
     category ENUM('normal', 'tournament', 'strange', 'unusual', 'unusual_strange'),
     exterior ENUM('fn', 'mw', 'ft', 'ww', 'bs')
@@ -62,7 +63,7 @@ CREATE TABLE IF NOT EXISTS cs_variant_item (
 -- category: Normal, Souvenir, StatTrak™, ★, ★ StatTrak™
 -- category: normal, tournament, strange, unusual, unusual_strange
 
-CREATE TABLE IF NOT EXISTS cs_unique_item (
+CREATE TABLE IF NOT EXISTS cs_item (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     type VARCHAR(255) NOT NULL,
     type_br VARCHAR(255) NOT NULL,

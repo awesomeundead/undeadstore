@@ -5,7 +5,7 @@ namespace Awesomeundead\Undeadstore;
 use Awesomeundead\Undeadstore\HttpException;
 use DI\Container;
 
-class App
+class App extends RouteCollector
 {
     private static $app;
 
@@ -13,7 +13,7 @@ class App
 
     private static $container;
 
-    private static $routes;
+    private static $groups;
 
     private function __construct(){}
     
@@ -37,28 +37,36 @@ class App
         self::$basePath = $path;
     }
 
-    public function get($path, $callback)
+    public function group($path, $callback)
     {
-        self::$routes[] = ['GET', $path, $callback];
-    }
-
-    public function post($path, $callback)
-    {
-        self::$routes[] = ['POST', $path, $callback];
+        self::$groups[] = [$path, $callback];
     }
 
     public function run()
     {
         $dispatcher = \FastRoute\simpleDispatcher(function (\FastRoute\RouteCollector $r)
         {
-            /*
-            if (!empty($this->group))
+            if (!empty(self::$groups))
             {
-                $this->group_routes($r);
-            }
-            */
+                foreach (self::$groups as $group)
+                {
+                    list($path, $callback) = $group;
 
-            foreach (self::$routes as $route)
+                    $collection = new RouteCollector;
+
+                    call_user_func($callback, $collection);
+
+                    $r->addGroup($path, function (\FastRoute\RouteCollector $r) use ($collection)
+                    {                        
+                        foreach ($collection->routes as $route)
+                        {
+                            $r->addRoute(...$route);
+                        }
+                    });
+                }
+            }
+
+            foreach ($this->routes as $route)
             {
                 $r->addRoute(...$route);
             }

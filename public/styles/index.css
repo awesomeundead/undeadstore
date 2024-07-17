@@ -3,75 +3,17 @@
     width: 100%;
 }
 
-#carousel
-{
-    margin-bottom: 10px;
-    position: relative;
-}
-
-#carousel .side
-{
-    align-items: center;
-    display: flex;
-    height: 100%;
-    width: 48px;
-    position: absolute;
-    top: 0;
-}
-
-#carousel .side button
-{
-    border-radius: 50%;
-    display: block;
-    height: 48px;
-    width: 48px;
-}
-
-#carousel .side button:hover
-{
-    box-shadow: 0 0 5px #FFF;
-}
-
-#carousel .side.left
-{
-    left: -24px;
-}
-
-#carousel .side.left button
-{
-    background: #F93 url('icon_arrow_left_white.png') center/auto 32px no-repeat;
-}
-
-#carousel .side.right
-{
-    right: -24px;
-}
-
-#carousel .side.right button
-{
-    background: #F93 url('icon_arrow_right_white.png') center/auto 32px no-repeat;
-}
-
-#carousel .container
-{
-    display: flex;
-    gap: 10px;
-    overflow-x: hidden;
-    scroll-behavior: smooth;
-    width: 1200px;
-}
-
-#carousel .item
-{
-    flex-shrink: 0;
-    width: 292.5px;
-}
-
-#container
+#container .coming,
+#container .items
 {
     display: grid;
     gap: 10px;
     grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+#container .coming
+{
+    margin-bottom: 10px;
 }
 
 .item

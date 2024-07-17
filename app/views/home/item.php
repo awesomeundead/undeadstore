@@ -2,6 +2,12 @@
 <nav>
     <?php $this->insert('home/nav') ?>
 </nav>
+<nav class="breadcrumb">
+    <div><a href="/">Início</a></div>
+    <div><a href="/listings?type=<?= $item['type'] ?>"><?= $item['type_br'] ?></a></div>
+    <div><a href="/listings?name=<?= $item['name'] ?>"><?= $item['name_br'] ?></a></div>
+    <div><a href="/listings?family=<?= $item['family'] ?>"><?= $item['family_br'] ?></a></div>
+</nav>
 <div class="product">
     <div class="image">
         <?php if ($item['exterior']): ?>
@@ -20,15 +26,46 @@
             <?php endif ?>
             <span><?= $item['family_br'] ?></span>
         </div>
-        <?php if ($item['exterior']): ?>
-            <div class="attribute"><?= $exterior[$item['exterior']]['br'] ?></div>
+        <?php if ($item['pattern_float'] && ($item['availability'] == 1 || $item['availability'] == 3)): ?>
+            <div class="attribute pattern">
+                <div class="flex space-between">
+                    <div>Float</div>
+                    <div><?= $item['pattern_float'] ?></div>
+                </div>
+                <div class="range"></div>
+                <div class="position">
+                    <div class="indicator" style="left: calc(100% * <?= $item['pattern_float'] ?> - 8px)"></div>
+                </div>
+            </div>
         <?php endif ?>
-        <div class="attribute rarity <?= $item['rarity'] ?>"><?= $item['type_br'] ?> (<?= $rarities[$item['rarity']]['br'] ?>)</div>
-        <div class="attribute">Coleção: <?= $item['collection_br'] ?></div>
+        <?php if ($item['exterior']): ?>
+            <div class="attribute flex space-between">
+                <div>Exterior</div>
+                <div><?= $exterior[$item['exterior']]['br'] ?></div>
+            </div>
+        <?php endif ?>
+        <div class="attribute flex space-between">
+            <div>Tipo</div>
+            <div><?= $item['type_br'] ?></div>
+        </div>
+        <div class="attribute flex space-between">
+            <div>Raridade</div>
+            <div class="rarity <?= $item['rarity'] ?>">(<?= $rarities[$item['rarity']]['br'] ?>)</div>
+        </div>
+        <div class="attribute flex space-between">
+            <div>Coleção</div>
+            <div><?= $item['collection_br'] ?></div>
+        </div>
+        <div class="attribute flex space-between">
+            <div>Disponibilidade</div>
+            <div><?= $availability[$item['availability']] ?></div>
+        </div>
         <div class="market">
             <a href="https://steamcommunity.com/market/listings/730/<?= $item['market_hash_name'] ?>" target="_blank">Mercado Steam</a>
+            <?php if ($item['steam_asset'] && $item['availability'] == '1'): ?>
+                <a href="https://steamcommunity.com/id/undeadstore/inventory#730_2_<?= $item['steam_asset'] ?>" target="_blank">Ver no inventário</a>
+            <?php endif ?>
         </div>
-        <div class="attribute availability"><?= $item['availability'] ?></div>
         <?php if ($item['offer_price']): ?>
             <div class="old_price"><?= html_money($item['price']) ?></div>
             <div class="price"><?= html_money($item['offer_price']) ?></div>
@@ -36,8 +73,10 @@
         <?php elseif ($item['price']): ?>
             <div class="price"><?= html_money($item['price']) ?></div>
         <?php endif ?>
-        <?php if ($item['availability'] == 'Disponível'): ?>
-            <a class="button_buy" href="/cart/add?item_id=<?= $item['id'] ?>">Comprar</a>
+        <?php if ($item['availability'] == '1'): ?>
+            <div>
+                <a class="button_buy" href="/cart/add?item_id=<?= $item['id'] ?>">Comprar</a>
+            </div>
         <?php endif ?>
     </div>
 </div>

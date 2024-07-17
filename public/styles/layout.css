@@ -61,22 +61,6 @@ summary
     min-height: 100%;
 }
 
-.main.notification
-{
-    background-color: #FFBB0050;
-    border: 1px solid #FB0;
-    color: #FB0;
-    font-weight: bold;
-    margin: 5px 0;
-    padding: 5px;
-}
-
-.main.notification a
-{
-    color: #FB0;
-    display: block;
-}
-
 #grid
 {
     background-color: #222;
@@ -87,6 +71,22 @@ summary
     width: 1200px;
 }
 
+#main_header .main.notification
+{
+    background-color: #FFBB0050;
+    border: 1px solid #FB0;
+    color: #FB0;
+    font-weight: bold;
+    margin: 5px 0;
+    padding: 5px;
+}
+
+#main_header .main.notification a
+{
+    color: #FB0;
+    display: block;
+}
+
 #main_header .content
 {
     display: grid;
@@ -94,7 +94,7 @@ summary
     height: 150px;
 }
 
-#main_header a
+#main_header .content a
 {
     display: flex;
 }

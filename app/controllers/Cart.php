@@ -10,6 +10,8 @@ class Cart extends Controller
 {
     public function index()
     {
+        header('X-Robots-Tag: noindex, nofollow');
+        
         $session = Session::create();
         
         $cart = $session->get('cart');
@@ -58,8 +60,8 @@ class Cart extends Controller
             $query = 'SELECT *, products.id,
             IF (ISNULL(offer_percentage), NULL, price - (price / 100 * offer_percentage)) AS offer_price
             FROM products
-            LEFT JOIN cs_variant_item ON products.variant_item_id = cs_variant_item.id
-            LEFT JOIN cs_unique_item ON cs_variant_item.unique_item_id = cs_unique_item.id
+            LEFT JOIN cs_item_variant ON products.cs_item_variant_id = cs_item_variant.id
+            LEFT JOIN cs_item ON cs_item_variant.cs_item_id = cs_item.id
             WHERE products.id = :id AND availability = 1';
             
             $stmt = $pdo->prepare($query);
@@ -68,37 +70,40 @@ class Cart extends Controller
 
             if ($item)
             {
-                if ($item['type'] == 'Agent')
+                if ($item['price'] != null)
                 {
-                    $item['full_name_br'] = "{$item['name_br']} | {$item['family_br']}";
+                    if ($item['type'] == 'Agent')
+                    {
+                        $item['full_name_br'] = "{$item['name_br']} | {$item['family_br']}";
+                    }
+                    else
+                    {
+                        $categories = [
+                            'normal' => ['en' => 'Normal', 'br' => 'Normal'],
+                            'tournament' => ['en' => 'Souvenir', 'br' => 'Lembrança'],
+                            'strange' => ['en' => 'StatTrak™', 'br' => 'StatTrak™'],
+                            'unusual' => ['en' => '★', 'br' => '★'],
+                            'unusual_strange' => ['en' => '★ StatTrak™', 'br' => '★ StatTrak™']
+                        ];
+
+                        $category = $item['category'] == 'normal' ? '' : " {$categories[$item['category']]['br']}";
+
+                        $exterior = [
+                            'fn' => ['en' => 'Factory New', 'br' => 'Nova de Fábrica'],
+                            'mw' => ['en' => 'Minimal Wear', 'br' => 'Pouca Usada'],
+                            'ft' => ['en' => 'Field-Tested', 'br' => 'Testada em Campo'],
+                            'ww' => ['en' => 'Well Worm', 'br' => 'Bem Desgastada'],
+                            'bs' => ['en' => 'Battle-Scarred', 'br' => 'Veterana de Guerra']
+                        ];
+
+                        $item['full_name_br'] = "{$item['name_br']}{$category} | {$item['family_br']} ({$exterior[$item['exterior']]['br']})";
+                        $item['image'] = "{$item['image']}_{$item['exterior']}";
+                    }
+
+                    $cart = $session->get('cart');
+                    $cart['items'][$item['id']] = $item;
+                    $session->set('cart', $cart);
                 }
-                else
-                {
-                    $categories = [
-                        'normal' => ['en' => 'Normal', 'br' => 'Normal'],
-                        'tournament' => ['en' => 'Souvenir', 'br' => 'Lembrança'],
-                        'strange' => ['en' => 'StatTrak™', 'br' => 'StatTrak™'],
-                        'unusual' => ['en' => '★', 'br' => '★'],
-                        'unusual_strange' => ['en' => '★ StatTrak™', 'br' => '★ StatTrak™']
-                    ];
-
-                    $category = $item['category'] == 'normal' ? '' : " {$categories[$item['category']]['br']}";
-
-                    $exterior = [
-                        'fn' => ['en' => 'Factory New', 'br' => 'Nova de Fábrica'],
-                        'mw' => ['en' => 'Minimal Wear', 'br' => 'Pouca Usada'],
-                        'ft' => ['en' => 'Field-Tested', 'br' => 'Testada em Campo'],
-                        'ww' => ['en' => 'Well Worm', 'br' => 'Bem Desgastada'],
-                        'bs' => ['en' => 'Battle-Scarred', 'br' => 'Veterana de Guerra']
-                    ];
-
-                    $item['full_name_br'] = "{$item['name_br']}{$category} | {$item['family_br']} ({$exterior[$item['exterior']]['br']})";
-                    $item['image'] = "{$item['image']}_{$item['exterior']}";
-                }
-
-                $cart = $session->get('cart');
-                $cart['items'][$item['id']] = $item;
-                $session->set('cart', $cart);
             }
         }
 

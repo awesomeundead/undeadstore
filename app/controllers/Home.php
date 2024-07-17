@@ -23,8 +23,8 @@ class Home extends Controller
         $query = 'SELECT *, products.id,
         IF (ISNULL(offer_percentage), NULL, price - (price / 100 * offer_percentage)) AS offer_price
         FROM products
-        LEFT JOIN cs_variant_item ON products.variant_item_id = cs_variant_item.id
-        LEFT JOIN cs_unique_item ON cs_variant_item.unique_item_id = cs_unique_item.id
+        LEFT JOIN cs_item_variant ON products.cs_item_variant_id = cs_item_variant.id
+        LEFT JOIN cs_item ON cs_item_variant.cs_item_id = cs_item.id
         WHERE products.id = :id';
         $params = ['id' => $id];
 
@@ -75,13 +75,14 @@ class Home extends Controller
             'ancient_character' => ['en' => 'Master', 'br' => 'Mestre']
         ];
 
-        $item['availability'] = [1 => 'Disponível', 'Sob encomenda', 'Disponível em breve'][$item['availability']];
+        $availability = [1 => 'Disponível', 'Sob encomenda', 'Disponível em breve'];
 
         echo $this->templates->render('home/item', [
             'item' => $item,
             'exterior' => $exterior,
             'categories' => $categories,
-            'rarities' => $rarities
+            'rarities' => $rarities,
+            'availability' => $availability
         ]);
     }
 }

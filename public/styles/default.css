@@ -348,6 +348,28 @@ nav.listings .submenu
   * home item
   **/
 
+.breadcrumb
+{
+    display: flex;
+}
+
+.breadcrumb div
+{
+    display: flex;
+}
+
+.breadcrumb a
+{
+    padding: 5px;
+}
+
+.breadcrumb div:not(:last-child)::after
+{
+    display: inline-block;
+    content: ">";
+    padding: 5px;
+}
+
 .product
 {
     display: grid;
@@ -370,7 +392,6 @@ nav.listings .submenu
 
 .product .description
 {
-    align-items: flex-start;
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -408,6 +429,28 @@ nav.listings .submenu
     color: #FFF;
     font-weight: bold;
     padding: 5px;
+}
+
+.pattern .range
+{
+    background: linear-gradient(to right, #08F 7%, #0F8 7%, #0F8 15%, #FF5 15%, #FF5 38%, #F80 38%, #F80 45%, #F55 45%);
+    height: 10px;
+    width: 100%;
+}
+
+.position
+{
+    height: 16px;
+    position: relative;
+}
+
+.indicator
+{
+    background-image: url('indicator.png');
+    background-size: 16px 16px;
+    height: 16px;
+    position: absolute;
+    width: 16px;
 }
 
 /**

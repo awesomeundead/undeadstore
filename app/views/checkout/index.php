@@ -1,4 +1,7 @@
 <?php $this->layout('layout', ['title' => 'Fechar Pedido | Undead Store', 'session' => $session]) ?>
+<nav>
+    <?php $this->insert('home/nav') ?>
+</nav>
 <div class="flex column">
     <?php if ($notification ?? false): ?>
         <div class="box notification <?= $notification['type'] ?>">
@@ -33,7 +36,7 @@
             <div>Caso não seja identificado o pagamento após 24 horas, o pedido será cancelado.</div>
             <div>Caso aconteça algum problema com os servidores, inventário ou por manutenção do Steam, reembolsamos o pagamento.</div>
             <div>Não fazemos devolução após a transferência dos itens.</div>
-            <div>Qualquer dúvida, deixe sua mensagem em <a href="/support">Suporte</a> ou entre no nosso <a href="https://discord.gg/YMvX8g5FhU">Discord</a>.</div>
+            <div>Qualquer dúvida, deixe sua mensagem em <a href="/support">Suporte</a> ou entre no nosso <a href="https://discord.gg/xAe6QYfsCJ" target="_blank">Discord</a>.</div>
         </div>
     </div>
     <div class="box white">

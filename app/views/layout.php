@@ -12,10 +12,10 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="manifest" href="/site.webmanifest">
-<link href="/styles/layout.css?release=12" rel="stylesheet" />
-<link href="/styles/default.css?release=11" rel="stylesheet" />
-<link href="/styles/index.css?release=8" rel="stylesheet" />
-<link href="/styles/mobile.css?release=10" media="only screen and (max-width: 768px)" rel="stylesheet" />
+<link href="/styles/layout.css?release=14" rel="stylesheet" />
+<link href="/styles/default.css?release=13" rel="stylesheet" />
+<link href="/styles/index.css?release=9" rel="stylesheet" />
+<link href="/styles/mobile.css?release=12" media="only screen and (max-width: 768px)" rel="stylesheet" />
 <title><?= $this->e($title) ?></title>
 </head>
 <body>
@@ -91,6 +91,7 @@
                         <img alt="Logo Mercado Pago" src="/styles/mercadopago_icon.png" />
                     </div>
                 </div>
+                <!--
                 <div class="flex icons">
                     <div>
                         <img alt="Logo Visa" src="/styles/visa_icon.png" />
@@ -108,6 +109,7 @@
                         <img alt="Logo American Express" src="/styles/amex_icon.png" />
                     </div>
                 </div>
+                -->
             </div>
             <!--
             <div class="flex column">
