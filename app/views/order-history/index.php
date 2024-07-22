@@ -24,11 +24,14 @@
                 </div>
                 <div class="flex column">
                     <div class="label">Pagamento</div>
-                    <div><?= ['pix' => 'PIX', 'mercadopago' => 'Mercado Pago'][$item['pay_method']] ?></div>
                     <?php if ($item['status'] == 'pending'): ?>
                         <div>
-                            <a class="button" href="/pay?purchase_id=<?= $item['id'] ?>">Tentar Novamente</a>
+                            <a class="button" href="/payment?id=<?= $item['id'] ?>">Tentar Novamente</a>
                         </div>
+                    <?php elseif ($item['status'] == 'approved' || $item['status'] == 'complete'): ?>
+                        <div><?= ['pix' => 'PIX', 'mercadopago' => 'Mercado Pago'][$item['pay_method']] ?></div>
+                    <?php else: ?>
+                        <div>Cancelado</div>
                     <?php endif ?>
                 </div>
             </header>

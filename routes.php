@@ -3,7 +3,7 @@
 use Awesomeundead\Undeadstore\App;
 use App\Controllers\
 {
-    Auth, Cart, Checkout, Coins, Home, Listings, OrderHistory, Partners, Pay, Security, Settings, Support
+    Auth, Cart, Checkout, Coins, Home, Listings, OrderHistory, Partners, Payment, Security, Settings, Support
 };
 
 return function (App $app)
@@ -65,9 +65,7 @@ return function (App $app)
     $app->get('/coins', [Coins::class, 'index']);
 
     $app->get('/data', [Home::class, 'data']);
-
-    $app->post('/input/mercadopago', [Pay::class, 'input']);
-    
+   
     $app->get('/list/available', [Listings::class, 'available']);
     $app->get('/list/coming', [Listings::class, 'coming']);
     $app->get('/list/item', [Listings::class, 'item']);
@@ -85,12 +83,13 @@ return function (App $app)
 
     $app->get('/partners', [Partners::class, 'index']);
 
-    $app->get('/pay', [Pay::class, 'index']);    
-    $app->get('/payment/failure', [Pay::class, 'failure']);
-    $app->get('/payment/pending', [Pay::class, 'pending']);
-    $app->get('/payment/success', [Pay::class, 'success']);
+    $app->get('/payment', [Payment::class, 'index']);
+    $app->post('/payment/process', [Payment::class, 'process']);
 
-    $app->get('/qrcode', [Pay::class, 'qrcode']);
+    $app->get('/payment/index_mp_payment', [Payment::class, 'index_mp_payment']);
+    $app->post('/payment/process_mp_payment', [Payment::class, 'process_mp_payment']);
+
+    $app->get('/payment/pix', [Payment::class, 'mp_pix']);
 
     $app->get('/security', [Security::class, 'index']);
 

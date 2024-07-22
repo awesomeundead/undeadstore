@@ -6,10 +6,12 @@ use Awesomeundead\Undeadstore\Controller;
 use Awesomeundead\Undeadstore\Database;
 use Awesomeundead\Undeadstore\Session;
 use MercadoPago\Client\Common\RequestOptions;
+use MercadoPago\Client\Payment\PaymentClient;
 use MercadoPago\Client\Preference\PreferenceClient;
+use MercadoPago\Exceptions\MPApiException;
 use MercadoPago\MercadoPagoConfig;
 
-class Pay extends Controller
+class Payment extends Controller
 {
     private function _mercadopago($purchase)
     {
@@ -112,6 +114,61 @@ class Pay extends Controller
             'code' => $code,
             'purchase' => $purchase,
             'purchase_total' => $purchase['total']
+        ]);
+    }
+
+    public function mp_pix_test()
+    {
+        $session = Session::create();
+
+        // Verifica se o usuário está logado
+        if (!$session->get('logged_in'))
+        {
+            redirect('/auth');
+        }
+
+        $config = (require ROOT . '/config.php')['mercadopago'];
+        $uniqid = uniqid('pay', true);
+
+        $request = [
+            'transaction_amount' => 5.5,
+            'description' => 'description',
+            'external_reference' => $uniqid,
+            'notification_url' => 'https://undeadstore.com.br/',
+            'payment_method_id' => 'pix',
+            'payer' => [
+                'email' => 'awesome.undead@outlook.com'
+            ]
+        ];
+
+        try
+        {
+            //MercadoPagoConfig::setAccessToken('APP_USR-7407069493848525-043015-dfebb4b1a40be6a83a2aeb563cfb3aa6-234415597');
+            MercadoPagoConfig::setAccessToken($config['access_token']);
+            MercadoPagoConfig::setRuntimeEnviroment(MercadoPagoConfig::LOCAL);
+
+            $client = new PaymentClient();
+            $options = new RequestOptions();
+            $options->setCustomHeaders(["X-Idempotency-Key: {$uniqid}"]);
+            $payment = $client->create($request, $options);
+
+            $pix =
+            [
+                'qrcode_base64' => $payment->point_of_interaction->transaction_data->qr_code_base64,
+                'qrcode' => $payment->point_of_interaction->transaction_data->qr_code
+            ];
+        }
+        catch (MPApiException $e)
+        {
+            echo "Status code: " . $e->getApiResponse()->getStatusCode() . "\n";
+            echo "Content: ";
+            var_dump($e->getApiResponse()->getContent());
+            echo "\n";
+        }
+
+        echo $this->templates->render('payment/mp_pix_test', [
+            'pix' => $pix,
+            'public_key' => $config['public_key']
         ]);
     }
 

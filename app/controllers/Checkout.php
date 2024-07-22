@@ -84,13 +84,7 @@ class Checkout extends Controller
         $subtotal = $cart['subtotal'];
         $discount = $cart['discount'];
         $total = $cart['total'];
-
-        $pay_method = $_GET['pay_method'] ?? false;
-
-        if ($pay_method != 'pix' && $pay_method != 'mercadopago')
-        {
-            redirect('/');
-        }
+        $pay_method = '';
 
         $query = 'INSERT INTO purchase (user_id, pay_method, status, coupon, subtotal, discount, total, created_date)
             VALUES (:user_id, :pay_method, :status, :coupon, :subtotal, :discount, :total, :created_date)';
@@ -150,6 +144,6 @@ class Checkout extends Controller
         
         send_mail($params);
 
-        redirect("/pay?purchase_id={$purchase_id}");
+        redirect("/payment?id={$purchase_id}");
     }
 }

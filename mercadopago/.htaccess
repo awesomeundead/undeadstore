@@ -1,0 +1,5 @@
+AddDefaultCharset UTF-8
+
+<IfModule rewrite_module>
+    RewriteEngine Off
+</IfModule>
