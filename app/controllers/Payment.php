@@ -190,7 +190,7 @@ class Payment extends Controller
             $config = (require ROOT . '/config.php')['mercadopago'];
 
             $manifest = "id:{$data_id};request-id:{$xRequestId};ts:{$matches['ts']};";
-            $sha = hash_hmac('sha256', $manifest, $config['secret']);
+            $sha = hash_hmac('sha256', $manifest, $config['secret_signature']);
 
             if ($sha === $matches['hash'])
             {
@@ -202,13 +202,15 @@ class Payment extends Controller
 
                 if (preg_match('/^US(\d{5})$/', $payment->external_reference, $matches))
                 {
+                    $status = ($payment->status == 'approved') ? 'approved' : 'pending';
+
                     $query = 'UPDATE purchase SET payment_method = :payment_method, payment_id = :payment_id, status = :status WHERE id = :id';
                     $stmt = $pdo->prepare($query);
                     $params = [
                         'id' => $matches[1],
-                        'payment_method' => $data['payment_method_id'],
-                        'payment_id' => $data['id'],
-                        'status' => $data['status'] == 'approved' ? 'approved' : 'pending'
+                        'payment_method' => $payment->payment_method_id,
+                        'payment_id' => $payment->id,
+                        'status' => $status
                     ];
                     $stmt->execute($params);
                 }
