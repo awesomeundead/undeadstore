@@ -19,7 +19,8 @@ CREATE TABLE IF NOT EXISTS login_log (
 CREATE TABLE IF NOT EXISTS purchase (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     user_id INT UNSIGNED NOT NULL,
-    pay_method VARCHAR(255) NOT NULL,
+    payment_method VARCHAR(255),
+    payment_id BIGINT UNSIGNED,
     status enum('pending', 'approved', 'complete', 'canceled') NOT NULL,
     coupon VARCHAR(255) NOT NULL,
     subtotal DECIMAL(8,2) NOT NULL,
@@ -94,7 +95,7 @@ CREATE TABLE IF NOT EXISTS coupon (
 );
 
 CREATE TABLE IF NOT EXISTS mercadopago (
-    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     data_id INT UNSIGNED NOT NULL,
     ts INT UNSIGNED NOT NULL,
     hash VARCHAR(64) NOT NULL

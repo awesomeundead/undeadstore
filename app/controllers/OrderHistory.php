@@ -33,8 +33,21 @@ class OrderHistory extends Controller
             $list[$index]['items'] = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         }
 
+        $status = ['pending' => 'Pendente', 'approved' => 'Aprovado', 'complete' => 'Concluído', 'canceled' => 'Cancelado'];
+
+        $payment_methods = [
+            'pix' => 'PIX',
+            'master' => 'Cartão de Crédito',
+            'visa' => 'Cartão de Crédito',
+            'hypercard' => 'Cartão de Crédito',
+            'elo' => 'Cartão de Crédito',
+            'amex' => 'Cartão de Crédito'
+        ];
+
         echo $this->templates->render('order-history/index', [
             'list' => $list,
+            'status' => $status,
+            'payment_methods' => $payment_methods,
             'notification' => $session->flash('payment')
         ]);
     }

@@ -19,3 +19,8 @@ function html_money(string $string)
 {
     return 'R$ ' . number_format($string, 2, ',', '.');
 }
+
+function create_external_reference($purchase_id)
+{
+    return 'US' . str_pad($purchase_id, 5, 0, STR_PAD_LEFT);
+}

@@ -132,16 +132,16 @@
         },
         {
             "name": "mercadopago/dx-php",
-            "version": "3.0.5",
+            "version": "3.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mercadopago/sdk-php.git",
-                "reference": "c0c6b738a3f8517ef941c218bb7e44d1ad93fd5e"
+                "reference": "3e52ce992bbe79116eafbe9b7b658f0c3f105290"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mercadopago/sdk-php/zipball/c0c6b738a3f8517ef941c218bb7e44d1ad93fd5e",
-                "reference": "c0c6b738a3f8517ef941c218bb7e44d1ad93fd5e",
+                "url": "https://api.github.com/repos/mercadopago/sdk-php/zipball/3e52ce992bbe79116eafbe9b7b658f0c3f105290",
+                "reference": "3e52ce992bbe79116eafbe9b7b658f0c3f105290",
                 "shasum": ""
             },
             "require": {
@@ -165,9 +165,9 @@
             "description": "Mercado Pago PHP SDK",
             "homepage": "https://github.com/mercadopago/sdk-php",
             "support": {
-                "source": "https://github.com/mercadopago/sdk-php/tree/3.0.5"
+                "source": "https://github.com/mercadopago/sdk-php/tree/3.0.7"
             },
-            "time": "2024-04-09T18:05:55+00:00"
+            "time": "2024-07-04T17:06:16+00:00"
         },
         {
             "name": "nikic/fast-route",

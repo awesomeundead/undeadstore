@@ -85,19 +85,11 @@ class Checkout extends Controller
         $discount = $cart['discount'];
         $total = $cart['total'];
 
-        $pay_method = $_GET['pay_method'] ?? false;
-
-        if ($pay_method != 'pix' && $pay_method != 'mercadopago')
-        {
-            redirect('/');
-        }
-
-        $query = 'INSERT INTO purchase (user_id, pay_method, status, coupon, subtotal, discount, total, created_date)
-            VALUES (:user_id, :pay_method, :status, :coupon, :subtotal, :discount, :total, :created_date)';
+        $query = 'INSERT INTO purchase (user_id, status, coupon, subtotal, discount, total, created_date)
+                VALUES (:user_id, :status, :coupon, :subtotal, :discount, :total, :created_date)';
         $stmt = $pdo->prepare($query);
         $params = [
             'user_id' => $session->get('user_id'),
-            'pay_method' => $pay_method,
             'status' => 'pending',
             'coupon' => $coupon,
             'subtotal' => $subtotal,
@@ -150,6 +142,6 @@ class Checkout extends Controller
         
         send_mail($params);
 
-        redirect("/pay?purchase_id={$purchase_id}");
+        redirect("/payment?id={$purchase_id}");
     }
 }

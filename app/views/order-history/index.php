@@ -20,16 +20,17 @@
                 </div>
                 <div class="column">
                     <div class="label">Status</div>
-                    <div><?= ['pending' => 'Pendente', 'approved' => 'Aprovado', 'complete' => 'Concluído', 'canceled' => 'Cancelado'][$item['status']] ?></div>
+                    <div><?= $status[$item['status']] ?></div>
                 </div>
                 <div class="flex column">
                     <div class="label">Pagamento</div>
-                    <div><?= ['pix' => 'PIX', 'mercadopago' => 'Mercado Pago'][$item['pay_method']] ?></div>
-                    <?php if ($item['status'] == 'pending'): ?>
-                        <div>
-                            <a class="button" href="/pay?purchase_id=<?= $item['id'] ?>">Tentar Novamente</a>
-                        </div>
-                    <?php endif ?>
+                    <div>
+                        <?php if ($item['payment_method']): ?>
+                            <a href="/payment?id=<?= $item['id'] ?>"><?= $payment_methods[$item['payment_method']] ?></a>
+                        <?php else: ?>
+                            <a class="button" href="/payment?id=<?= $item['id'] ?>">Tentar Novamente</a>
+                        <?php endif ?>
+                    </div>
                 </div>
             </header>
             
