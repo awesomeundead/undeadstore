@@ -1,6 +1,0 @@
-Array
-(
-    [data_id] => 
-    [xSignature] => 
-    [xRequestId] => 
-)

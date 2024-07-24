@@ -57,6 +57,7 @@
             <a href="/listings?type=SMG">Todos</a>
             <a href="/listings?name=MAC-10">MAC-10</a>
             <a href="/listings?name=MP5-SD">MP5-SD</a>
+            <a href="/listings?name=MP7">MP7</a>
             <a href="/listings?name=MP9">MP9</a>
             <a href="/listings?name=PP-Bizon">PP-Bizon</a>
             <a href="/listings?name=P90">P90</a>

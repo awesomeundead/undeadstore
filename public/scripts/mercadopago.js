@@ -13,14 +13,7 @@ const renderPaymentBrick = async (bricksBuilder) =>
         },
         customization:
         {
-            paymentMethods:
-            {
-                bankTransfer: "all",
-                creditCard: "all",
-                debitCard: "all",
-                mercadoPago: "all",
-                maxInstallments: 12
-            }
+            paymentMethods: MP_PAYMENT_METHODS
         },
         callbacks: 
         {
@@ -32,7 +25,7 @@ const renderPaymentBrick = async (bricksBuilder) =>
             {
                 return new Promise((resolve, reject) =>
                 {
-                    fetch('/payment/process',
+                    fetch('/payment/process?id=' + PURCHASE_ID,
                     {
                         method: 'POST',
                         headers:
@@ -47,34 +40,18 @@ const renderPaymentBrick = async (bricksBuilder) =>
                         if (!response.id)
                         {
                             throw new Error(response.message);
-                        }
+                        } 
 
-                        const renderStatusScreenBrick = async (bricksBuilder) =>
-                        {
-                            const settings =
-                            {
-                                initialization: { paymentId: response.id },
-                                callbacks:
-                                {
-                                    onReady: () =>
-                                    {
-                                        document.getElementById('paymentBrick_container').hidden = true;
-                                    },
-                                    onError: (error) =>
-                                    {
-                                        console.error(error);
-                                    },
-                                },
-                            };
-                            window.statusScreenBrickController = await bricksBuilder.create( 'statusScreen', 'statusScreenBrick_container', settings);  
-                        };
-
-                        renderStatusScreenBrick(bricksBuilder);
+                        renderStatusScreenBrick(bricksBuilder, response);
                         resolve();
                     })
                     .catch((error) =>
                     {
-                        console.error(error);
+                        if (error.message == 'internal_error')
+                        {
+                            document.getElementById('mercadopago_alert').hidden = false;
+                        }
+
                         reject();
                     });
                 });
@@ -89,4 +66,42 @@ const renderPaymentBrick = async (bricksBuilder) =>
     window.paymentBrickController = await bricksBuilder.create('payment', 'paymentBrick_container', settings);
 };
 
-renderPaymentBrick(bricksBuilder);
+const renderStatusScreenBrick = async (bricksBuilder, response) =>
+{
+    const settings =
+    {
+        initialization:
+        {
+            paymentId: response.id
+        },
+        callbacks:
+        {
+            onReady: () =>
+            {
+                document.getElementById('paymentBrick_container').hidden = true;
+            },
+            onError: (error) =>
+            {
+                console.error(error);
+            },
+        },
+        customization:
+        {
+            backUrls: MP_BACK_URLS,
+            visual:
+            {
+                showExternalReference: true
+            }
+        }
+    };
+    window.statusScreenBrickController = await bricksBuilder.create( 'statusScreen', 'statusScreenBrick_container', settings);  
+};
+
+if (MP_PAYMENT_ID != undefined)
+{
+    renderStatusScreenBrick(bricksBuilder, {id: MP_PAYMENT_ID});
+}
+else
+{
+    renderPaymentBrick(bricksBuilder);
+}

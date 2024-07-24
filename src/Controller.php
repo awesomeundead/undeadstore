@@ -25,6 +25,7 @@ class Controller
 
             if ($verified_email == '1')
             {
+                $session->remove('notification');
                 $notification = null;
             }
         }

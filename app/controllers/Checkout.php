@@ -84,14 +84,12 @@ class Checkout extends Controller
         $subtotal = $cart['subtotal'];
         $discount = $cart['discount'];
         $total = $cart['total'];
-        $pay_method = '';
 
-        $query = 'INSERT INTO purchase (user_id, pay_method, status, coupon, subtotal, discount, total, created_date)
-            VALUES (:user_id, :pay_method, :status, :coupon, :subtotal, :discount, :total, :created_date)';
+        $query = 'INSERT INTO purchase (user_id, status, coupon, subtotal, discount, total, created_date)
+                VALUES (:user_id, :status, :coupon, :subtotal, :discount, :total, :created_date)';
         $stmt = $pdo->prepare($query);
         $params = [
             'user_id' => $session->get('user_id'),
-            'pay_method' => $pay_method,
             'status' => 'pending',
             'coupon' => $coupon,
             'subtotal' => $subtotal,
@@ -108,6 +106,14 @@ class Checkout extends Controller
         }
 
         $purchase_id = $pdo->lastInsertId();
+
+        $query = 'UPDATE purchase SET external_reference = :external_reference WHERE id = :id';
+        $stmt = $pdo->prepare($query);
+        $params = [
+            'id' => $purchase_id,
+            'external_reference' => create_external_reference($purchase_id)
+        ];
+        $stmt->execute($params);
 
         // $item [id, item_id, item_name, availability, price, offer_price, image]
         foreach ($cart['items'] as $item)

@@ -1,7 +1,17 @@
 <?php $this->layout('layout', ['title' => 'Pagamento | Undead Store', 'session' => $session]) ?>
 
-<div class="flex column">
-    <div class="box white" hidden="hidden" id="mercadopago_alert">Erro interno, tente novamente mais tarde.</div>
+<div class="flex column gap-10">
+    <!--
+    <div class="box flex white">
+        <div>Valor Total</div>
+        <div><?= html_money($mercadopago['amount']) ?></div>
+    </div>
+    -->
+    <?php if ($payment_status == 'pending' || $payment_status == 'rejected'): ?>
+        <div class="box flex">
+            <a href="/payment/update?id=<?= $purchase_id ?>">Mudar método de pagamento</a>
+        </div>
+    <?php endif ?>
     <div id="statusScreenBrick_container"></div>
     <div id="paymentBrick_container"></div>
 </div>

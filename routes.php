@@ -62,8 +62,6 @@ return function (App $app)
     $app->get('/checkout', [Checkout::class, 'index']);
     $app->get('/checkout/end', [Checkout::class, 'end']);
 
-    $app->get('/coins', [Coins::class, 'index']);
-
     $app->get('/data', [Home::class, 'data']);
    
     $app->get('/list/available', [Listings::class, 'available']);
@@ -85,11 +83,8 @@ return function (App $app)
 
     $app->get('/payment', [Payment::class, 'index']);
     $app->post('/payment/process', [Payment::class, 'process']);
-
-    $app->get('/payment/index_mp_payment', [Payment::class, 'index_mp_payment']);
-    $app->post('/payment/process_mp_payment', [Payment::class, 'process_mp_payment']);
-
-    $app->get('/payment/pix', [Payment::class, 'mp_pix']);
+    $app->post('/payment/notification', [Payment::class, 'notification']);
+    $app->get('/payment/update', [Payment::class, 'update']);
 
     $app->get('/security', [Security::class, 'index']);
 

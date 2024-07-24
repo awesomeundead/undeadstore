@@ -56,6 +56,21 @@ class Payment extends Controller
         // remover
         $config = (require ROOT . '/config.php')['mercadopago']['checkout_bricks'];
 
+        if ($purchase['payment_id'])
+        {
+            MercadoPagoConfig::setAccessToken($config['access_token']);
+            // remover
+            MercadoPagoConfig::setRuntimeEnviroment(MercadoPagoConfig::LOCAL);
+
+            $client = new PaymentClient();
+            $payment = $client->get($purchase['payment_id']);
+
+            if ($payment->status == 'approved')
+            {
+                //redirect('/order-history');
+            }
+        }
+
         $pdo = Database::connect();
 
         $query = 'SELECT email FROM users WHERE id = :id';
@@ -83,6 +98,28 @@ class Payment extends Controller
             'return' =>  HOST . BASE_PATH . '/order-history'
         ];
 
+        /*
+        $credit_card = ['master', 'visa', 'hipercard', 'elo', 'amex'];
+
+        if ($purchase['payment_method'] == 'pix')
+        {
+            $payment_methods = [
+                'bankTransfer' => $purchase['payment_method']
+            ];
+        }
+        elseif(in_array($purchase['payment_method'], $credit_card))
+        {
+            $payment_methods = [
+                'creditCard' => $purchase['payment_method'],
+                'maxInstallments' => 12
+            ];
+        }
+        else
+        {
+            
+        }
+        */
+
         $mercadopago['public_key'] = $config['public_key'];
         $mercadopago['amount'] = (float) $purchase['total'];
         $mercadopago['payer'] = json_encode($payer);
@@ -92,7 +129,8 @@ class Payment extends Controller
         
         echo $this->templates->render('payment/index', [
             'mercadopago' => $mercadopago,
-            'purchase_id' => $purchase_id
+            'purchase_id' => $purchase_id,
+            'payment_status' => $payment->status ?? null
         ]);
     }
 
@@ -139,8 +177,10 @@ class Payment extends Controller
         }
 
         $request['description'] = 'UNDEAD STORE ITEM DIGITAL';
+        //$request['external_reference'] = $purchase['external_reference'];
         $request['external_reference'] = create_external_reference($purchase_id);
         $idempotency_key = $request['external_reference'] . time();
+        //$request['callback_url'] = HOST . BASE_PATH . '/order-history';
        
         // remover
         $config = (require ROOT . '/config.php')['mercadopago']['checkout_bricks'];
@@ -209,22 +249,49 @@ class Payment extends Controller
         $client = new PaymentClient();
         $payment = $client->get($purchase['payment_id']);
 
-        if ($payment->status == 'rejected')
+        if ($payment->status == 'approved' || $payment->status == 'in_process')
         {
-            $pdo = Database::connect();
+            redirect('/order-history');
+        }
 
-            $query = 'UPDATE purchase
-                    SET status = :status, payment_method = :payment_method, payment_id = :payment_id
-                    WHERE id = :id AND user_id = :user_id';
-            $stmt = $pdo->prepare($query);
-            $params = [
-                'id' => $purchase_id,
-                'user_id' => $user_id,
-                'payment_method' => null,
-                'payment_id' => null,
-                'status' => 'pending'
-            ];
-            $stmt->execute($params);
+        $pdo = Database::connect();
+
+        $query = 'UPDATE purchase
+                  SET status = :status, payment_method = :payment_method, payment_id = :payment_id, external_reference = :external_reference
+                  WHERE id = :id AND user_id = :user_id';
+        $stmt = $pdo->prepare($query);
+        $params = [
+            'id' => $purchase_id,
+            'user_id' => $user_id,
+            'payment_method' => null,
+            'payment_id' => null,
+            'external_reference' => create_external_reference($purchase_id, $purchase['external_reference']),
+            'status' => 'pending'
+        ];
+        $result = $stmt->execute($params);
+        $result = true;
+
+        if ($result)
+        {
+            /*
+            // remover
+            $config = (require ROOT . '/config.php')['mercadopago']['checkout_bricks'];
+
+            $data = json_encode(['status' => 'cancelled']);
+            $context = stream_context_create([
+                'http' => [
+                    'method' => 'PUT',
+                    'header' => "Content-type: application/json; charset=UTF-8\r\n" .
+                                'Authorization: Bearer ' . $config['access_token'],
+                    'content' => $data,
+                    'ignore_errors' => true
+                ]
+            ]);
+            
+            $response = file_get_contents('https://api.mercadopago.com/v1/payments/' . $purchase['payment_id'], false, $context);
+            print_r($http_response_header);
+            file_put_contents(ROOT . '/log/update.json', $response, FILE_APPEND);
+            */
         }
 
         redirect('/payment?id=' . $purchase_id);
