@@ -11,7 +11,6 @@ return [
     'mercadopago' => [
         'access_token' => '',
         'public_key' => '',
-        'secret_signature' => '',
-        'fee' => ''
+        'secret_signature' => ''
     ]
 ];
