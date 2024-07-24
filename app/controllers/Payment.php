@@ -7,9 +7,10 @@ use Awesomeundead\Undeadstore\Database;
 use Awesomeundead\Undeadstore\Session;
 use MercadoPago\Client\Common\RequestOptions;
 use MercadoPago\Client\Payment\PaymentClient;
-use MercadoPago\Client\Preference\PreferenceClient;
 use MercadoPago\Exceptions\MPApiException;
 use MercadoPago\MercadoPagoConfig;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
 
 class Payment extends Controller
 {
@@ -26,6 +27,36 @@ class Payment extends Controller
         $stmt->execute($params);
         
         return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
+
+    private function _send_email($address)
+    {
+        $config = (require ROOT . '/config.php')['email'];
+
+        $mail = new PHPMailer();
+
+        $mail->SMTPDebug = SMTP::DEBUG_OFF;
+        $mail->isSMTP();
+        $mail->Host       = $config['host'];
+        $mail->SMTPAuth   = true;
+        $mail->Username   = $config['username'];
+        $mail->Password   = $config['password'];
+        $mail->Port       = $config['port'];
+        $mail->CharSet    = PHPMailer::CHARSET_UTF8;
+    
+        $mail->setFrom($config['from']['address'], $config['from']['name']);
+        $mail->addAddress($address);
+    
+        $mail->isHTML(true); 
+        $mail->Subject = 'Seu pagamento foi aprovado';
+        $mail->Body = "<p>Seu pagamento foi aprovado, agradecemos a sua compra.</p>
+        <br />
+        <p>Em breve enviaremos uma proposta com os itens para a sua conta do Steam.</p>
+        <br />
+        <p>Undead Store</p>
+        <p>www.undeadstore.com.br</p>";
+    
+        $mail->send();
     }
 
     public function index()
@@ -213,6 +244,24 @@ class Payment extends Controller
                         'status' => $status
                     ];
                     $stmt->execute($params);
+
+                    if ($status == 'approved')
+                    {
+                        $query = 'SELECT email FROM users
+                        INNER JOIN purchase ON users.id = purchase.user_id
+                        WHERE purchase.id = :id';
+                        $stmt = $pdo->prepare($query);
+                        $params = [
+                            'id' => $matches[1]
+                        ];
+                        $stmt->execute($params);
+                        $email = $stmt->fetchColumn();
+                        
+                        if (filter_var($email, FILTER_VALIDATE_EMAIL))
+                        {
+                            $this->_send_email($email);
+                        }
+                    }
                 }
             }
         }

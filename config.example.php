@@ -7,6 +7,15 @@ return [
         'username' => '',
         'password' => ''
     ],
+    'email' => [
+        'host' => '',
+        'username' => '',
+        'password' => '',
+        'from' => [
+            'address' => '',
+            'name' => ''
+        ]
+    ],
     'steam_api_key' => '',
     'mercadopago' => [
         'access_token' => '',

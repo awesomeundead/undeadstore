@@ -13,18 +13,20 @@ class Settings extends Controller
 {
     private function _send_email($address, $user_id)
     {
+        $config = (require ROOT . '/config.php')['email'];
+
         $mail = new PHPMailer();
 
         $mail->SMTPDebug = SMTP::DEBUG_OFF;
         $mail->isSMTP();
-        $mail->Host       = 'smtp.hostinger.com';
+        $mail->Host       = $config['host'];
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'noreply@undeadstore.com.br';
-        $mail->Password   = 'ed8f1new$TO';
-        $mail->Port       = 587;
+        $mail->Username   = $config['username'];
+        $mail->Password   = $config['password'];
+        $mail->Port       = $config['port'];
         $mail->CharSet    = PHPMailer::CHARSET_UTF8;
     
-        $mail->setFrom('noreply@undeadstore.com.br', 'Undead Store');
+        $mail->setFrom($config['from']['address'], $config['from']['name']);
         $mail->addAddress($address);
 
         $token = hash('sha512', 'coisa_ridicula' . $address);
