@@ -53,8 +53,7 @@ class Payment extends Controller
             redirect();
         }
 
-        // remover
-        $config = (require ROOT . '/config.php')['mercadopago']['checkout_bricks'];
+        $config = (require ROOT . '/config.php')['mercadopago'];
 
         $pdo = Database::connect();
 
@@ -142,14 +141,12 @@ class Payment extends Controller
         $request['external_reference'] = create_external_reference($purchase_id);
         $idempotency_key = $request['external_reference'] . time();
        
-        // remover
-        $config = (require ROOT . '/config.php')['mercadopago']['checkout_bricks'];
+        $config = (require ROOT . '/config.php')['mercadopago'];
 
         try
         {
             MercadoPagoConfig::setAccessToken($config['access_token']);
-            // remover
-            MercadoPagoConfig::setRuntimeEnviroment(MercadoPagoConfig::LOCAL);
+            //MercadoPagoConfig::setRuntimeEnviroment(MercadoPagoConfig::LOCAL);
 
             $client = new PaymentClient();
             $options = new RequestOptions();
@@ -163,6 +160,8 @@ class Payment extends Controller
             $response = $e->getApiResponse();
 
             file_put_contents(ROOT . '/log/mercadopago.json', json_encode($response->getContent()), FILE_APPEND);
+
+            echo json_encode($response->getContent());
         }
     }
 
@@ -171,7 +170,50 @@ class Payment extends Controller
      */
     public function notification()
     {
+        $data_id = $_REQUEST['data_id'] ?? false;
+        $xSignature = $_SERVER['HTTP_X_SIGNATURE'] ?? '';
+        $xRequestId = $_SERVER['HTTP_X_REQUEST_ID'] ?? '';
 
+        if (preg_match('/^ts=(?P<ts>\d+),v1=(?P<hash>\w{64})$/', $xSignature, $matches))
+        {
+            $pdo = Database::connect();
+
+            $query = 'INSERT INTO mercadopago (data_id, ts, hash) VALUES (:data_id, :ts, :hash)';
+            $stmt = $pdo->prepare($query);
+            $params = [
+                'data_id' => $data_id,
+                'ts' => $matches['ts'],
+                'hash' => $matches['hash']
+            ];
+            $stmt->execute($params);
+
+            $config = (require ROOT . '/config.php')['mercadopago'];
+
+            $manifest = "id:{$data_id};request-id:{$xRequestId};ts:{$matches['ts']};";
+            $sha = hash_hmac('sha256', $manifest, $config['secret']);
+
+            if ($sha === $matches['hash'])
+            {
+                MercadoPagoConfig::setAccessToken($config['access_token']);
+                //MercadoPagoConfig::setRuntimeEnviroment(MercadoPagoConfig::LOCAL);
+
+                $client = new PaymentClient();
+                $payment = $client->get($data_id);
+
+                if (preg_match('/^US(\d{5})$/', $payment->external_reference, $matches))
+                {
+                    $query = 'UPDATE purchase SET payment_method = :payment_method, payment_id = :payment_id, status = :status WHERE id = :id';
+                    $stmt = $pdo->prepare($query);
+                    $params = [
+                        'id' => $matches[1],
+                        'payment_method' => $data['payment_method_id'],
+                        'payment_id' => $data['id'],
+                        'status' => $data['status'] == 'approved' ? 'approved' : 'pending'
+                    ];
+                    $stmt->execute($params);
+                }
+            }
+        }
     }
 
     public function update()
@@ -199,12 +241,10 @@ class Payment extends Controller
             redirect();
         }
         
-        // remover
-        $config = (require ROOT . '/config.php')['mercadopago']['checkout_bricks'];
+        $config = (require ROOT . '/config.php')['mercadopago'];
 
         MercadoPagoConfig::setAccessToken($config['access_token']);
-        // remover
-        MercadoPagoConfig::setRuntimeEnviroment(MercadoPagoConfig::LOCAL);
+        //MercadoPagoConfig::setRuntimeEnviroment(MercadoPagoConfig::LOCAL);
 
         $client = new PaymentClient();
         $payment = $client->get($purchase['payment_id']);

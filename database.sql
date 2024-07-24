@@ -21,7 +21,6 @@ CREATE TABLE IF NOT EXISTS purchase (
     user_id INT UNSIGNED NOT NULL,
     payment_method VARCHAR(255),
     payment_id BIGINT UNSIGNED,
-    external_reference VARCHAR(255) NOT NULL,
     status enum('pending', 'approved', 'complete', 'canceled') NOT NULL,
     coupon VARCHAR(255) NOT NULL,
     subtotal DECIMAL(8,2) NOT NULL,

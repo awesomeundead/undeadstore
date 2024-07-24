@@ -107,14 +107,6 @@ class Checkout extends Controller
 
         $purchase_id = $pdo->lastInsertId();
 
-        $query = 'UPDATE purchase SET external_reference = :external_reference WHERE id = :id';
-        $stmt = $pdo->prepare($query);
-        $params = [
-            'id' => $purchase_id,
-            'external_reference' => create_external_reference($purchase_id)
-        ];
-        $stmt->execute($params);
-
         // $item [id, item_id, item_name, availability, price, offer_price, image]
         foreach ($cart['items'] as $item)
         {
