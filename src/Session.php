@@ -21,7 +21,7 @@ class Session
 
         session_start();
 
-        $user_agent = $_SERVER['HTTP_USER_AGENT'];
+        $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? 'UNKNOWN';
         $address = $_SERVER['HTTP_CLIENT_IP']
         ?? $_SERVER['HTTP_X_FORWARDED_FOR']
         ?? $_SERVER['HTTP_X_FORWARDED']

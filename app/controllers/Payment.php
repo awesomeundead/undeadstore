@@ -59,6 +59,86 @@ class Payment extends Controller
         $mail->send();
     }
 
+    private function send_trade_offer($purchase_id)
+    {
+        $pdo = Database::connect();
+
+        $query = 'SELECT id FROM purchase WHERE id = :id AND status = :status';
+        $params = [
+            'id' => $purchase_id,
+            'status' => 'approved'
+        ];
+
+        $stmt = $pdo->prepare($query);
+        $stmt->execute($params);
+        $result = $stmt->fetchColumn();
+
+        if ($result)
+        {
+            $query = 'SELECT purchase_items.id, steam_asset FROM purchase_items
+                      INNER JOIN products ON purchase_items.product_id = products.id
+                      WHERE purchase_id = :purchase_id AND status = :status';
+            $params = [
+                'purchase_id' => $purchase_id,
+                'status' => 'pending'
+            ];
+
+            $stmt = $pdo->prepare($query);
+            $stmt->execute($params);
+            $list = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+            foreach ($list as $item)
+            {
+                if ($item['steam_asset'])
+                {
+                    $assets[] = [
+                        'appid' => '730',
+                        'contextid' => '2',
+                        'amount' => '1',
+                        'assetid' => (string) $item['steam_asset']
+                    ];
+
+                    $trading[] = $item['id'];
+                }
+            }
+
+            if ($assets ?? false)
+            {
+                $query = 'SELECT steamid, steam_trade_url FROM users
+                          INNER JOIN purchase ON users.id = purchase.user_id
+                          WHERE purchase.id = :id';
+                $params = [
+                    'id' => $purchase_id
+                ];
+                $stmt = $pdo->prepare($query);
+                $stmt->execute($params);
+                $user = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+                if ($user)
+                {
+                    $steamID64 = $user['steamid'];
+                    $steam_trade_url = $user['steam_trade_url'];
+
+                    require ROOT . '/include/trade.php';
+                }
+            }
+
+            if ($trading ?? false)
+            {
+                foreach ($trading as $item)
+                {
+                    $query = 'UPDATE purchase_items SET status = :status WHERE id = :id';
+                    $params = [
+                        'id' => $item,
+                        'status' => 'trading'
+                    ];
+                    $stmt = $pdo->prepare($query);
+                    $stmt->execute($params);
+                }
+            }
+        }
+    }
+
     public function index()
     {
         $session = Session::create();
@@ -233,12 +313,13 @@ class Payment extends Controller
 
                 if (preg_match('/^US(\d{5})$/', $payment->external_reference, $matches))
                 {
+                    $purchase_id = $matches[1];
                     $status = ($payment->status == 'approved') ? 'approved' : 'pending';
 
                     $query = 'UPDATE purchase SET payment_method = :payment_method, payment_id = :payment_id, status = :status WHERE id = :id';
                     $stmt = $pdo->prepare($query);
                     $params = [
-                        'id' => $matches[1],
+                        'id' => $purchase_id,
                         'payment_method' => $payment->payment_method_id,
                         'payment_id' => $payment->id,
                         'status' => $status
@@ -247,12 +328,14 @@ class Payment extends Controller
 
                     if ($status == 'approved')
                     {
+                        $this->send_trade_offer($purchase_id);
+
                         $query = 'SELECT email FROM users
                         INNER JOIN purchase ON users.id = purchase.user_id
                         WHERE purchase.id = :id';
                         $stmt = $pdo->prepare($query);
                         $params = [
-                            'id' => $matches[1]
+                            'id' => $purchase_id
                         ];
                         $stmt->execute($params);
                         $email = $stmt->fetchColumn();
