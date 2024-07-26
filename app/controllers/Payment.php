@@ -95,7 +95,7 @@ class Payment extends Controller
                         'appid' => '730',
                         'contextid' => '2',
                         'amount' => '1',
-                        'assetid' => $item['steam_asset']
+                        'assetid' => (string) $item['steam_asset']
                     ];
 
                     $trading[] = $item['id'];
