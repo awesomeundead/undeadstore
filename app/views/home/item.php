@@ -32,7 +32,13 @@
                     <div>Float</div>
                     <div><?= $item['pattern_float'] ?></div>
                 </div>
-                <div class="range"></div>
+                <div class="range">
+                    <div class="fn" title="Nova de Fábrica"></div>
+                    <div class="mw" title="Pouco Usada"></div>
+                    <div class="ft" title="Testada em Campo"></div>
+                    <div class="ww" title="Bem Desgastada"></div>
+                    <div class="bs" title="Veterana de Guerra"></div>
+                </div>
                 <div class="position">
                     <div class="indicator" style="left: calc(100% * <?= $item['pattern_float'] ?> - 8px)"></div>
                 </div>

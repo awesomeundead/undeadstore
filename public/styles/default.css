@@ -433,9 +433,50 @@ nav.listings .submenu
 
 .pattern .range
 {
+    /*
     background: linear-gradient(to right, #08F 7%, #0F8 7%, #0F8 15%, #FF5 15%, #FF5 38%, #F80 38%, #F80 45%, #F55 45%);
+    */
+    cursor: pointer;
+    display: flex;
     height: 10px;
     width: 100%;
+}
+
+/*
+.range *:active:after
+{
+    content:attr(title);
+}
+*/
+
+.pattern .fn
+{
+    background-color: #08F;
+    width: 7%;
+}
+
+.pattern .mw
+{
+    background-color: #0F8;
+    width: 8%;
+}
+
+.pattern .ft
+{
+    background-color: #FF5;
+    width: 23%;
+}
+
+.pattern .ww
+{
+    background-color: #F80;
+    width: 7%;
+}
+
+.pattern .bs
+{
+    background-color: #F55;
+    width: 55%;
 }
 
 .position

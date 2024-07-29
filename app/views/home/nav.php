@@ -83,9 +83,9 @@
 
 <script>
 
-list = document.querySelectorAll('nav.listings button');
+var clicked;
 
-for (let item of list)
+document.querySelectorAll('nav.listings button').forEach((item, index) =>
 {
     item.addEventListener('click', (e) =>
     {
@@ -99,8 +99,15 @@ for (let item of list)
             clicked = e.target;
         }
     });
-}
+});
 
-var clicked;
+document.querySelectorAll('nav.listings a').forEach((item, index) =>
+{
+    item.addEventListener('click', (e) =>
+    {
+        clicked = null;
+        e.target.blur();
+    });
+});
 
 </script>
