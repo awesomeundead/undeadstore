@@ -40,6 +40,8 @@ class Home extends Controller
         $stmt->execute($params);
         $item += $stmt->fetch(\PDO::FETCH_ASSOC);
 
+        $image_exterior = ['fn' => 'fn_mw', 'mw' => 'fn_mw', 'ft' => 'ft_ww', 'ww' => 'ft_ww', 'bs' => 'bs'];
+
         $exterior = [
             'fn' => ['en' => 'Factory New', 'br' => 'Nova de Fábrica'],
             'mw' => ['en' => 'Minimal Wear', 'br' => 'Pouca Usada'],
@@ -79,6 +81,7 @@ class Home extends Controller
 
         echo $this->templates->render('home/item', [
             'item' => $item,
+            'image_exterior' => $image_exterior,
             'exterior' => $exterior,
             'categories' => $categories,
             'rarities' => $rarities,

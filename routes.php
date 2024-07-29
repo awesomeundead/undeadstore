@@ -14,8 +14,6 @@ return function (App $app)
     
     $app->group('/auth', function ($group)
     {
-        //header('X-Robots-Tag: noindex, nofollow');
-
         $group->get('', [Auth::class, 'index']);
         $group->get('/login', [Auth::class, 'login']);
     });
@@ -51,8 +49,6 @@ return function (App $app)
 
     $app->group('/cart', function ($group)
     {
-        //header('X-Robots-Tag: noindex, nofollow');
-
         $group->get('', [Cart::class, 'index']);
         $group->get('/add', [Cart::class, 'add']);
         $group->get('/delete', [Cart::class, 'delete']);

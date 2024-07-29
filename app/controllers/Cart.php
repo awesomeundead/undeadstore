@@ -10,7 +10,7 @@ class Cart extends Controller
 {
     public function index()
     {
-        header('X-Robots-Tag: noindex, nofollow');
+        header('X-Robots-Tag: noindex');
         
         $session = Session::create();
         

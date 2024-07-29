@@ -132,7 +132,9 @@ function template(item, fragment, container)
     }
     else
     {
-        new_image.src = `/images/${item.image}_${item.exterior}.png`;
+        image_exterior = {'fn': 'fn_mw', 'mw': 'fn_mw', 'ft': 'ft_ww', 'ww': 'ft_ww', 'bs': 'bs'};
+
+        new_image.src = `/images/${item.image}_${image_exterior[item.exterior]}.png`;
     }
     
     container.appendChild(clone);
