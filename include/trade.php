@@ -1,6 +1,9 @@
 <?php
 
-require 'trade_config.php';
+$cookies = require 'trade_config.php';
+
+$sessionid = $cookies['sessionid'];
+$steamLoginSecure = $cookies['steamLoginSecure'];
 
 if (preg_match('#^https://steamcommunity.com/tradeoffer/new/\?partner=(\d+)&token=(\w+)$#', $steam_trade_url, $matches))
 {
@@ -64,5 +67,6 @@ $curl = curl_init();
 curl_setopt_array($curl, $options);
 
 $response = curl_exec($curl);
+$info = curl_getinfo($curl);
 
-file_put_contents(ROOT . '/log/trade_' . $purchase_id . '_' . time() . '.json', $response);
+file_put_contents(ROOT . '/log/trade_' . $info['http_code'] . '_' . $purchase_id . '_' . time() . '.json', $response);

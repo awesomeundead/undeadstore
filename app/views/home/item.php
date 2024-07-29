@@ -12,7 +12,7 @@
     <div class="image">
         <?php if ($item['exterior']): ?>
             <a href="">
-                <img alt="" src="/images/<?= $item['image'] ?>_<?= $item['exterior'] ?>.png" />
+                <img alt="" src="/images/<?= $item['image'] ?>_<?= $image_exterior[$item['exterior']] ?>.png" />
             </a>
         <?php else: ?>
             <img alt="" src="/images/<?= $item['image'] ?>.png" />
