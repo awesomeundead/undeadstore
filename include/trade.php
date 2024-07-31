@@ -1,5 +1,7 @@
 <?php
 
+require 'save_cookies.php';
+
 $cookies = require 'trade_config.php';
 
 $sessionid = $cookies['sessionid'];
