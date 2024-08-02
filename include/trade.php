@@ -1,8 +1,8 @@
 <?php
 
-require 'save_cookies.php';
+require __DIR__ . '/save_cookies.php';
 
-$cookies = require 'trade_config.php';
+$cookies = require __DIR__ . '/trade_config.php';
 
 $sessionid = $cookies['sessionid'];
 $steamLoginSecure = $cookies['steamLoginSecure'];
