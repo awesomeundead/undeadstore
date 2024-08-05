@@ -96,8 +96,10 @@ class Cart extends Controller
                             'bs' => ['en' => 'Battle-Scarred', 'br' => 'Veterana de Guerra']
                         ];
 
+                        $image_exterior = ['fn'=> 'fn_mw', 'mw'=> 'fn_mw', 'ft'=> 'ft_ww', 'ww'=> 'ft_ww', 'bs'=> 'bs'];
+
                         $item['full_name_br'] = "{$item['name_br']}{$category} | {$item['family_br']} ({$exterior[$item['exterior']]['br']})";
-                        $item['image'] = "{$item['image']}_{$item['exterior']}";
+                        $item['image'] = "{$item['image']}_{$image_exterior[$item['exterior']]}";
                     }
 
                     $cart = $session->get('cart');
