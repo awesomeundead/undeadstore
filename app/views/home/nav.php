@@ -79,6 +79,9 @@
             <a class="rarity ancient_character" href="/listings?rarity=ancient_character">Mestre</a>
         </div>
     </div>
+    <div class="menu">
+        <a href="/cases">UNDEADCASE</a>
+    </div>
 </nav>
 
 <script>

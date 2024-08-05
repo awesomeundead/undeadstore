@@ -88,6 +88,11 @@ button:hover
     width: 100%;
 }
 
+.box select
+{
+    padding: 10px;
+}
+
 .box.notification
 {
     background-color: #394;
@@ -345,6 +350,199 @@ nav.listings .submenu
 }
 
 /**
+  * Products
+  */
+
+.banner img
+{
+    width: 100%;
+}
+
+#container .coming,
+#container .items
+{
+    display: grid;
+    gap: 10px;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+#container .coming
+{
+    margin-bottom: 10px;
+}
+
+.products .item
+{
+    background-image: linear-gradient(to right, #444, #555);
+    border-radius: 5px;
+    color: #FFF;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 5px;    
+    text-align: center;
+}
+
+.products .item .title
+{
+    font-size: 18px;
+}
+
+.products .item .title a
+{
+    color: #FFF;
+}
+
+.products .item .title .family
+{
+    display: block;
+}
+
+.products .item .image
+{
+    position: relative;
+}
+
+.products .item .offer
+{
+    background-color: #F33;
+    border-radius: 5px;
+    color: #FFF;
+    font-weight: bold;
+    padding: 5px;
+    position: absolute;
+    right: 0;
+}
+
+.products .item .image a
+{
+    display: flex;
+}
+
+.products .item img
+{
+    width: 100%;
+}
+
+.products .item .attribute-1,
+.products .item .attribute-2,
+.products .item .availability
+{
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.products .item .attribute-1
+{
+    background-color: #333;
+}
+
+.products .item .attribute-2
+{
+    background-color: #333;
+}
+
+.market a
+{
+    background-color: #136;
+    border-radius: 5px;
+    color: #F90;
+    display: inline-block;
+    padding: 5px;
+    text-decoration: none;
+}
+
+.market a:hover
+{
+    background-color: #247;
+}
+
+.products .item .market a
+{
+    display: block;
+}
+
+.availability
+{
+    background-color: #333;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.availability.soon
+{
+    background-color: #F93;
+    color: rgba(0, 0, 0, 0.8);
+}
+
+.button_buy
+{
+    background-color: #294;
+    border-radius: 5px;
+    color: #FFF;
+    display: inline-block;
+    padding: 10px;
+    text-decoration: none;
+}
+
+.button_buy:hover
+{
+    background-color: #3A5;
+    color: #FFF;
+}
+
+.products .item .button_buy
+{
+    display: block;
+}
+
+.products .item .buy
+{
+    align-items: end;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: end;
+}
+
+.products .item .price
+{
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.products .item .old_price
+{
+    color: #CCC;
+    text-decoration: line-through;
+}
+
+#expanded
+{
+    background-color: #444;
+    background-image: url('close.png');
+    background-position: right top;
+    background-repeat: no-repeat;
+    height: 100%;    
+    position: fixed;
+    top: 0;
+    width: 1200px;
+    z-index: 1;
+}
+
+#expanded .image
+{
+    display: flex;
+    align-items: center;
+    height: 100%;
+    justify-content: center;
+}
+
+#expanded img
+{
+    width: 100%;
+}
+
+/**
   * home item
   **/
 
@@ -485,7 +683,7 @@ nav.listings .submenu
     position: relative;
 }
 
-.indicator
+.pattern .indicator
 {
     background-image: url('indicator.png');
     background-size: 16px 16px;
@@ -537,6 +735,109 @@ label.icon
 label.icon img
 {
     height: 48px;
+}
+
+/**
+  * inventory
+  */
+
+.inventory
+{
+    display: flex;
+    gap: 5px;
+}
+
+.inventory .item
+{
+    align-items: center;
+    background-color: #333;
+    border: 1px solid #CCC;
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    width: 200px;
+}
+
+.inventory .item .title
+{
+    text-align: center;
+}
+
+.inventory .item .title .family
+{
+    display: block;
+}
+
+#carousel
+{
+    position: relative;
+    margin: auto;
+    width: 1200px;
+}
+
+#carousel .layer
+{    
+    background: linear-gradient(to right, #222 0%, #22222200 10%), linear-gradient(to left, #222 0%, #22222200 10%);
+    height: 100%;
+    position: absolute;
+    width: 100%;
+    z-index: 1;
+}
+
+#carousel .indicator
+{
+    background: url('indicator.png') no-repeat center/64px;
+    height: 84px;
+}
+
+#carousel .glide img
+{
+    width: 192px;
+}
+
+#carousel .rarity
+{
+    display: flex;
+    justify-content: center;
+}
+
+.glide .rarity
+{
+    border-bottom-style: solid;
+    border-bottom-width: 5px;
+    border-radius: 10px;
+}
+
+.glide .rarity.rare,
+.glide .rarity.rare_character,
+.glide .rarity.rare_weapon
+{
+    background: linear-gradient(to bottom, #222, #4b69ff88);
+    border-color: #4b69ff;
+}
+
+.glide .rarity.mythical,
+.glide .rarity.mythical_character,
+.glide .rarity.mythical_weapon
+{
+    background: linear-gradient(to bottom, #222, #8847ff88);
+    border-color: #8847ff;
+}
+
+.glide .rarity.legendary,
+.glide .rarity.legendary_character,
+.glide .rarity.legendary_weapon
+{
+    background: linear-gradient(to bottom, #222, #d32ce688);
+    border-color: #d32ce6;
+}
+
+.glide .rarity.ancient,
+.glide .rarity.ancient_character,
+.glide .rarity.ancient_weapon
+{
+    background: linear-gradient(to bottom, #222, #eb4b4b88);
+    border-color: #eb4b4b;
 }
 
 /**
@@ -614,4 +915,48 @@ label.icon img
     border-bottom: 2px solid #222;
     font-size: 14px;
     padding: 5px 0;
+}
+
+/**
+  * weaponcases
+  */
+
+.weaponcases .product .image img
+{
+    width: 448px;
+}
+
+.weaponcases .product .rarity
+{
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+.weaponcases .weapons
+{
+    padding: 10px 0;
+}
+
+.weaponcases .weapons div
+{
+    display: flex;    
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.weaponcases .weapons a
+{
+    display: flex;
+    padding: 5px;
+}
+
+.weaponcases .weapons img
+{
+    width: 144px;
+}
+
+.weaponcases .weapons a:hover
+{
+    background-color: #333;
+    border-radius: 5px;
 }

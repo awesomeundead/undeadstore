@@ -3,7 +3,7 @@
 use Awesomeundead\Undeadstore\App;
 use App\Controllers\
 {
-    Auth, Cart, Checkout, Coins, Home, Listings, OrderHistory, Partners, Payment, Security, Settings, Support
+    Auth, Cart, Checkout, Home, Inventory, Listings, OrderHistory, Partners, Payment, Security, Settings, Support, WeaponCases
 };
 
 return function (App $app)
@@ -38,6 +38,10 @@ return function (App $app)
         redirect('/');
     });
 
+    $app->get('/cases', [WeaponCases::class, 'index']);
+    $app->get('/cases/buy', [WeaponCases::class, 'buy']);
+    $app->post('/cases/process', [WeaponCases::class, 'process']);
+
     /*
 
     $app->get('/cart', [Cart::class, 'index']);
@@ -59,6 +63,10 @@ return function (App $app)
     $app->get('/checkout/end', [Checkout::class, 'end']);
 
     $app->get('/data', [Home::class, 'data']);
+
+    $app->get('/inventory', [Inventory::class, 'index']);
+    $app->get('/inventory/item', [Inventory::class, 'item']);
+    $app->get('/inventory/opencase', [Inventory::class, 'opencase']);
    
     $app->get('/list/available', [Listings::class, 'available']);
     $app->get('/list/coming', [Listings::class, 'coming']);

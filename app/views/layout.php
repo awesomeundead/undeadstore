@@ -14,7 +14,6 @@
 <link rel="manifest" href="/site.webmanifest">
 <link href="/styles/layout.css?release=14" rel="stylesheet" />
 <link href="/styles/default.css?release=14" rel="stylesheet" />
-<link href="/styles/index.css?release=9" rel="stylesheet" />
 <link href="/styles/mobile.css?release=12" media="only screen and (max-width: 768px)" rel="stylesheet" />
 <title><?= $this->e($title) ?></title>
 </head>
@@ -62,6 +61,7 @@
                 <?php if ($session['loggedin']): ?>
                     <nav>
                         <a href="/settings">Configurações</a>
+                        <a href="/inventory">Inventário</a>
                         <a href="/order-history">Pedidos</a>
                         <a href="/support">Suporte</a>
                         <a href="/logout">Sair</a>

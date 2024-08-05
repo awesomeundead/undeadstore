@@ -128,3 +128,22 @@ CREATE TABLE IF NOT EXISTS coupon (
     expiration_date DATETIME NOT NULL
 );
 */
+
+CREATE TABLE IF NOT EXISTS inventory (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNSIGNED NOT NULL,
+    item_name VARCHAR(255) NOT NULL,
+    cs_item_variant_id INT UNSIGNED,
+    active TINYINT(1) NOT NULL,
+    created_date DATETIME NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS weaponcases (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNSIGNED NOT NULL,
+    item_name VARCHAR(255),
+    item_id INT UNSIGNED,
+    status enum('close', 'open', 'trading'),
+    opening_date DATETIME,
+    created_date DATETIME NOT NULL
+);
