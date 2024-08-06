@@ -103,29 +103,6 @@ class Inventory extends Controller
         $stmt = $pdo->prepare($query);
         $stmt->execute($params);
         $item = $stmt->fetch(\PDO::FETCH_ASSOC);
-        
-        $items_rarity = [
-            'rare_weapon' => [
-                'UMP-45 (StatTrak™) | Instrução (Pouco Usada)',
-                'MP5-SD (StatTrak™) | Liquefação (Pouco Usada)',
-                'Five-SeveN (StatTrak™) | Teste de Chamas (Pouco Usada)'
-            ],
-            'mythical_weapon' => [
-                'PP-Bizon (StatTrak™) | Gato Espacial (Pouco Usada)',
-                'P250 (StatTrak™) | Proteção Cibernética (Pouco Usada)',
-                'Galil AR (StatTrak™) | Conexão (Pouco Usada)'
-            ],
-            'legendary_weapon' => [
-                'USP-S | Córtex (Testada em Campo)',
-                'XM1014 (StatTrak™) | BJS (Testada em Campo)',
-                'AUG (StatTrak™) | Syd Mead (Testada em Campo)'
-            ],
-            'ancient_weapon' => [
-                'Glock-18 | Rainha do Chumbo (Testada em Campo)',
-                'M4A4 | Neo-Noir (Testada em Campo)',
-                'AWP (StatTrak™) | Aberração Cromática (Testada em Campo)'
-            ]
-        ];
 
         $items_rarity = [
             'rare_weapon'=> [
@@ -193,7 +170,70 @@ class Inventory extends Controller
         if (!$item)
         {
             redirect('/inventory');
-        }
+        }        
+        
+        $items = [
+            'ump_45' => [
+                'id' => 123,
+                'name' => 'UMP-45 (StatTrak™) | Instrução (Pouco Usada)',
+                'image' => 'ump_45_briefing_fn_mw'
+            ],
+            'mp5_sd' => [
+                'id' => 124,
+                'name' => 'MP5-SD (StatTrak™) | Liquefação (Pouco Usada)',
+                'image' => 'mp5_sd_liquidation_fn_mw'
+            ],
+            'five_seven' => [
+                'id' => 125,
+                'name' => 'Five-SeveN (StatTrak™) | Teste de Chamas (Pouco Usada)',
+                'image' => 'five_seven_flame_test_fn_mw'
+            ],
+            'pp_bizon' => [
+                'id' => 126,
+                'name' => 'PP-Bizon (StatTrak™) | Gato Espacial (Pouco Usada)',
+                'image' => 'pp_bizon_space_cat_fn_mw'
+            ],
+            'p250' => [
+                'id' => 111,
+                'name' => 'P250 (StatTrak™) | Proteção Cibernética (Pouco Usada)',
+                'image' => 'p250_cyber_shell_fn_mw'
+            ],
+            'galil_ar' => [
+                'id' => 127,
+                'name' => 'Galil AR (StatTrak™) | Conexão (Pouco Usada)',
+                'image' => 'galil_ar_connexion_fn_mw'
+            ],
+            'usp_s' => [
+                'id' => 129,
+                'name' => 'USP-S | Córtex (Testada em Campo)',
+                'image' => 'usp_s_cortex_ft_ww'
+            ],
+            'xm1014' => [
+                'id' => 130,
+                'name' => 'XM1014 (StatTrak™) | BJS (Testada em Campo)',
+                'image' => 'xm1014_xoxo_ft_ww'
+            ],
+            'aug' => [
+                'id' => 131,
+                'name' => 'AUG (StatTrak™) | Syd Mead (Testada em Campo)',
+                'image' => 'aug_syd_mead_ft_ww'
+            ],
+            'glock_18' => [
+                'id' => 133,
+                'name' => 'Glock-18 | Rainha do Chumbo',
+                'image' => 'glock_18_bullet_queen_ft_ww'
+            ],
+            'm4a4' => [
+                'id' => 132,
+                'name' => 'M4A4 | Neo-Noir (Testada em Campo)',
+                'image' => 'm4a4_neo_noir_ft_ww'
+            ],
+            'awp' => [
+                'id' => 42,
+                'name' => 'AWP (StatTrak™) | Aberração Cromática (Testada em Campo)',
+                'image' => 'awp_chromatic_aberration_ft_ww'
+            ]
+        ];
 
         $rarities = [
             'rare_weapon'      => 70,
@@ -204,24 +244,24 @@ class Inventory extends Controller
         
         $items_rarity = [
             'rare_weapon'=> [
-                'ump_45_briefing_fn_mw',
-                'mp5_sd_liquidation_fn_mw',
-                'five_seven_flame_test_fn_mw'
+                'ump_45',
+                'mp5_sd',
+                'five_seven'
             ],
             'mythical_weapon'=> [
-                'pp_bizon_space_cat_fn_mw',
-                'p250_cyber_shell_fn_mw',
-                'galil_ar_connexion_fn_mw'
+                'pp_bizon',
+                'p250',
+                'galil_ar'
             ],
             'legendary_weapon'=> [
-                'usp_s_cortex_ft_ww',
-                'xm1014_xoxo_ft_ww',
-                'aug_syd_mead_ft_ww'
+                'usp_s',
+                'xm1014',
+                'aug'
             ],
             'ancient_weapon'=> [
-                'glock_18_bullet_queen_ft_ww',
-                'm4a4_neo_noir_ft_ww',
-                'awp_chromatic_aberration_ft_ww'
+                'glock_18',
+                'm4a4',
+                'awp'
             ]
         ];
         
@@ -244,7 +284,7 @@ class Inventory extends Controller
         $item = $items_rarity[$rarity][$random]; // obtém o item
         
         header('Content-type: application/json; charset=utf-8');
-        
-        echo json_encode(['item' => $item]);
+
+        echo json_encode(['name' => $items[$item]['name'], 'image' => $items[$item]['image']]);
     }
 }

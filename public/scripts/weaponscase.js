@@ -26,6 +26,14 @@ const preloadImage = (src) => new Promise((resolve, reject) =>
     image.src = src;
 });
 
+const preloadAudio = (src) => new Promise((resolve, reject) =>
+{
+    const audio = new Audio();
+    audio.oncanplay = resolve;
+    audio.onerror = reject;
+    audio.src = src;
+});
+
 const request = async (url) =>
 {
     const response = await fetch(url);
@@ -43,23 +51,22 @@ const request = async (url) =>
 
 const main = async () =>
 {
+    for (i = 0; i < preload.length; i++)
+    {
+        await preloadImage(`../images/${preload[i]}.png`);
+    }
+
+    await preloadAudio('/wheel_spin.ogg');
+
+    const sound = new Audio('/wheel_spin.ogg');
+
+    document.querySelector('.loading').remove();
+    document.querySelector('.recipient').hidden = false;
+
     document.querySelector('#start').addEventListener('click', async () =>
     {
-        var pause = true;
-
-        document.querySelector('.sem_nome').hidden = true;
+        document.querySelector('.recipient').remove();
         document.querySelector('#carousel').hidden = false;
-
-        for (i = 0; i < preload.length; i++)
-        {
-            await preloadImage(`../images/${preload[i]}.png`);
-        }
-
-        //await preloadAudio('wheel_spin.mp3');
-
-        //const sound = new Audio('wheel_spin.mp3');
-
-        document.querySelector('.loading').remove();
 
         ul = document.querySelector('ul.glide__slides');
         li = document.querySelector('li.glide__slide');
@@ -87,16 +94,26 @@ const main = async () =>
 
         glide.on('move', () =>
         {
-            if (pause && array[glide.index].img == data.item)
+            if (pause && array[glide.index].img == data.image)
             {
                 glide.pause();
+                sound.pause();
+
+                setTimeout(() =>
+                {
+                    document.querySelector('#carousel').remove();
+                    document.querySelector('.prize').hidden = false;
+                    
+                    document.querySelector('.prize .rarity img').src = `../images/${array[glide.index].img}.png`;
+                    document.querySelector('.prize .rarity').classList.add(array[glide.index].rarity);
+                    document.querySelector('.prize .description').innerHTML = data.name;
+                }, 1500);
             }
         });
-
-        //document.querySelector('#carousel .container').hidden = false;
         
         data = await request('/inventory/opencase?id=' + item_id);
 
+        sound.play();
         glide.update({ animationDuration: 100 });
         glide.play(1);
 
@@ -111,9 +128,10 @@ const main = async () =>
         }, 4000);
 
         pause = false;
-
-        document.querySelector('#start').hidden = true;
     });
 };
+
+
+var pause = true;
 
 document.addEventListener('DOMContentLoaded', main);

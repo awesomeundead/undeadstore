@@ -268,6 +268,46 @@ button:hover
     color: #e4ae39;
 }
 
+._bottom .rarity.rare_weapon
+{
+    background: linear-gradient(to bottom, #222, #4b69ff88);
+}
+
+._bottom .rarity.mythical_weapon
+{
+    background: linear-gradient(to bottom, #222, #8847ff88);
+}
+
+._bottom .rarity.legendary_weapon
+{
+    background: linear-gradient(to bottom, #222, #d32ce688);
+}
+
+._bottom .rarity.ancient_weapon
+{
+    background: linear-gradient(to bottom, #222, #eb4b4b88);
+}
+
+._right .rarity.rare_weapon
+{
+    background: linear-gradient(to right, #222, #4b69ff88);
+ }
+
+._right .rarity.mythical_weapon
+{
+    background: linear-gradient(to right, #222, #8847ff88);
+}
+
+._right .rarity.legendary_weapon
+{
+    background: linear-gradient(to right, #222, #d32ce688);
+}
+
+._right .rarity.ancient_weapon
+{
+    background: linear-gradient(to right, #222, #eb4b4b88);
+}
+
 /**
   * listings
   **/
@@ -768,6 +808,47 @@ label.icon img
     display: block;
 }
 
+.recipient img
+{
+    width: 256px;
+}
+
+.recipient .rarity
+{
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+.recipient .weapons
+{
+    display: grid;
+    gap: 5px;
+    grid-template-columns: repeat(12, 1fr);
+}
+
+.recipient .weapons div
+{
+    display: flex;
+    padding: 5px;
+}
+
+.recipient .weapons img
+{
+    width: 100%;
+}
+
+.recipient .weapons div:hover
+{
+    background-color: #333;
+}
+
+.recipient .rarity
+{
+    border-left-style: solid;
+    border-left-width: 2px;
+    border-radius: 10px;
+}
+
 #carousel
 {
     position: relative;
@@ -808,36 +889,34 @@ label.icon img
     border-radius: 10px;
 }
 
-.glide .rarity.rare,
-.glide .rarity.rare_character,
-.glide .rarity.rare_weapon
+.prize
 {
-    background: linear-gradient(to bottom, #222, #4b69ff88);
-    border-color: #4b69ff;
+    text-align: center;
 }
 
-.glide .rarity.mythical,
-.glide .rarity.mythical_character,
-.glide .rarity.mythical_weapon
+.prize .description
 {
-    background: linear-gradient(to bottom, #222, #8847ff88);
-    border-color: #8847ff;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 10px 0;
 }
 
-.glide .rarity.legendary,
-.glide .rarity.legendary_character,
-.glide .rarity.legendary_weapon
+.prize .rarity
 {
-    background: linear-gradient(to bottom, #222, #d32ce688);
-    border-color: #d32ce6;
+    border-top-style: solid;
+    border-top-width: 10px;
 }
 
-.glide .rarity.ancient,
-.glide .rarity.ancient_character,
-.glide .rarity.ancient_weapon
+.prize img
 {
-    background: linear-gradient(to bottom, #222, #eb4b4b88);
-    border-color: #eb4b4b;
+    width: 384px;
+}
+
+.prize a
+{
+    background-color: #333;
+    margin: 10px;
+    padding: 10px;
 }
 
 /**
