@@ -161,6 +161,11 @@ button:hover
     justify-content: space-between;
 }
 
+.flex.space-around
+{
+    justify-content: space-around;
+}
+
 .flex.wrap
 {
     flex-wrap: wrap;
@@ -783,29 +788,73 @@ label.icon img
 
 .inventory
 {
-    display: flex;
+    display: grid;
     gap: 5px;
+    grid-template-columns: repeat(6, 1fr);
 }
 
 .inventory .item
 {
-    align-items: center;
     background-color: #333;
     border: 1px solid #CCC;
     display: flex;
     flex-direction: column;
+    gap: 5px;
     padding: 5px;
-    width: 200px;
+    text-align: center;
 }
 
-.inventory .item .title
+.inventory .image,
+.inventory .image a
 {
-    text-align: center;
+    display: flex;
+}
+
+.inventory .rarity
+{
+    border-top-style: solid;
+    border-top-width: 5px;
+}
+
+.inventory .image a
+{
+    border-top-color: #FFF;
+    border-top-style: solid;
+    border-top-width: 5px;
+}
+
+.inventory img
+{
+    padding: 0 5px;
+    width: 100%;
 }
 
 .inventory .item .title .family
 {
     display: block;
+}
+
+.inventory .item .coins
+{
+    color: #ffae00;
+}
+
+.inventory .button a
+{
+    background-color: #222;
+    border-radius: 5px;
+    display: inline-block;
+    padding: 5px 10px;
+}
+
+dialog.confirm .container
+{
+    text-align: center;
+}
+
+dialog.confirm .container div
+{
+    padding: 20px;
 }
 
 .recipient img

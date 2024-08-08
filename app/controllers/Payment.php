@@ -116,6 +116,7 @@ class Payment extends Controller
 
                 if ($user)
                 {
+                    $description = $purchase_id;
                     $steamID64 = $user['steamid'];
                     $steam_trade_url = $user['steam_trade_url'];
 
@@ -345,6 +346,10 @@ class Payment extends Controller
                             $this->_send_email($email);
                         }
                     }
+                }
+                elseif (preg_match('/^UCASE(\d{5})$/', $payment->external_reference, $matches))
+                {
+
                 }
             }
         }

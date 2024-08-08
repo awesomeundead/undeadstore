@@ -2,7 +2,11 @@
 <nav>
     <?php $this->insert('home/nav') ?>
 </nav>
-
+<?php if ($balance >= 5): ?>
+    <div class="flex center">
+        <a href="/cases/buy/coins">Comprar com Moedas</a>
+    </div>
+<?php endif ?>
 <div class="flex column">
     <div class="box white" hidden="hidden" id="mercadopago_alert">Erro interno, tente novamente mais tarde.</div>
     <div id="statusScreenBrick_container"></div>
@@ -20,7 +24,6 @@
     </div>
     <div id="paymentBrick_container"></div>
 </div>
-
 <script>
 
 const MP_PUBLIC_KEY = '<?= $mercadopago['public_key'] ?>';

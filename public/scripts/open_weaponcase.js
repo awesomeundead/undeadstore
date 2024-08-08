@@ -1,5 +1,6 @@
 var array = [];
 var preload = [];
+var pause = false;
 
 Object.entries(rarities).forEach(entry =>
 {
@@ -110,28 +111,35 @@ const main = async () =>
                 }, 1500);
             }
         });
-        
-        data = await request('/inventory/opencase?id=' + item_id);
 
-        sound.play();
-        glide.update({ animationDuration: 100 });
-        glide.play(1);
+        try
+        {        
+            data = await request('/inventory/weaponcase/open?id=' + item_id);
 
-        setTimeout(() =>
-        {
-            glide.update({ animationDuration: 200 });
+            if (data.hasOwnProperty('error'))
+            {
+                throw new Error('ERROR FOUND');
+            }
+
+            sound.play();
+            glide.update({ animationDuration: 100 });
+            glide.play(1);
 
             setTimeout(() =>
             {
-                pause = true;
-            }, 1000);
-        }, 4000);
+                glide.update({ animationDuration: 200 });
 
-        pause = false;
+                setTimeout(() =>
+                {
+                    pause = true;
+                }, 1000);
+            }, 4000);
+        }
+        catch (error)
+        {
+            document.querySelector('.opencase').innerHTML = 'Estamos com problemas, tente novamente mais tarde.';
+        }
     });
 };
-
-
-var pause = true;
 
 document.addEventListener('DOMContentLoaded', main);

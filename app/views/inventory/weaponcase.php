@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="/styles/glide.core.min.css" />
 <link rel="preload" as="image" href="/styles/loading.svg">
 <div class="opencase">
-    <?php if ($item['item_name'] == 'UNDEADCASE'): ?>
+    <?php if ($item['item_name'] == 'undeadcase'): ?>
         <div class="flex center">
             <img alt="" class="loading" src="/styles/loading.svg" />
         </div>
@@ -93,4 +93,4 @@ const rarities = <?= $rarities ?>;
     
 </script>
 <script src="/scripts/glide.min.js"></script>
-<script src="/scripts/weaponscase.js"></script>
+<script src="/scripts/open_weaponcase.js"></script>

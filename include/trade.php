@@ -71,4 +71,4 @@ curl_setopt_array($curl, $options);
 $response = curl_exec($curl);
 $info = curl_getinfo($curl);
 
-file_put_contents(ROOT . '/log/trade_' . $info['http_code'] . '_' . $purchase_id . '_' . time() . '.json', $response);
+file_put_contents(ROOT . '/log/trade_' . $info['http_code'] . '_' . $description . '_' . time() . '.json', $response);
