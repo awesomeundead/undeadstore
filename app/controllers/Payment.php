@@ -116,6 +116,7 @@ class Payment extends Controller
 
                 if ($user)
                 {
+                    $description = $purchase_id;
                     $steamID64 = $user['steamid'];
                     $steam_trade_url = $user['steam_trade_url'];
 
@@ -310,11 +311,12 @@ class Payment extends Controller
 
                 $client = new PaymentClient();
                 $payment = $client->get($data_id);
+                $status = $payment->status;
 
                 if (preg_match('/^US(\d{5})$/', $payment->external_reference, $matches))
                 {
                     $purchase_id = $matches[1];
-                    $status = ($payment->status == 'approved') ? 'approved' : 'pending';
+                    $status = ($status == 'approved') ? 'approved' : 'pending';
 
                     $query = 'UPDATE purchase SET payment_method = :payment_method, payment_id = :payment_id, status = :status WHERE id = :id';
                     $stmt = $pdo->prepare($query);
@@ -343,6 +345,48 @@ class Payment extends Controller
                         if (filter_var($email, FILTER_VALIDATE_EMAIL))
                         {
                             $this->_send_email($email);
+                        }
+                    }
+                }
+                elseif (preg_match('/^UCASE_UID(\d{5})$/', $payment->external_reference, $matches))
+                {
+                    $user_id = $matches[1];
+                    $date = date('Y-m-d H:i:s');
+
+                    if ($status == 'approved')
+                    {
+                        $amount = $payment->transaction_amount;
+                        $quantity = $amount / 5;
+
+                        for ($i = 0; $i < $quantity; $i++)
+                        {
+                            $query = 'INSERT INTO inventory (user_id, item_name, tradable, marketable, created_date)
+                                    VALUES (:user_id, :item_name, :tradable, :marketable, :created_date)';
+                            $params = [
+                                'user_id' => $user_id,
+                                'item_name' => 'undeadcase',
+                                'tradable' => 0,
+                                'marketable' => 0,
+                                'created_date' => $date
+                            ];
+                            $stmt = $pdo->prepare($query);
+                            $stmt->execute($params);
+
+                            $historic_id = $pdo->lastInsertId();
+
+                            // histórico
+                            $query = 'INSERT INTO inventory_historic (historic_id, user_id, item_name, status, date)
+                                    VALUES (:historic_id, :user_id, :item_name, :status, :date)';
+                            $params = [
+                                'historic_id' => $historic_id,
+                                'user_id' => $user_id,
+                                'item_name' => 'undeadcase',
+                                'status' => 'purchased',
+                                'date' => $date
+                            ];
+
+                            $stmt = $pdo->prepare($query);
+                            $stmt->execute($params);
                         }
                     }
                 }

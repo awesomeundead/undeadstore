@@ -1,6 +1,6 @@
 <div id="container">
-    <div class="coming"></div>
-    <div class="items"></div>
+    <div class="coming products"></div>
+    <div class="items products"></div>
 </div>
 <template>
     <div class="item">

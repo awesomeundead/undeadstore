@@ -77,14 +77,17 @@ document.addEventListener('DOMContentLoaded', () =>
     {
         item.addEventListener('click', (e) =>
         {
-            e.preventDefault();
-
-            history.pushState(null, null, new URL(e.target.href));
-
-            main().catch((error) =>
+            if (e.target.attributes.href.value.startsWith('/listings'))
             {
-                console.log('Erro: ' + error.message);
-            });
+                e.preventDefault();
+
+                history.pushState(null, null, new URL(e.target.href));
+
+                main().catch((error) =>
+                {
+                    console.log('Erro: ' + error.message);
+                });
+            }
         });
     }
 

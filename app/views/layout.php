@@ -12,10 +12,15 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="manifest" href="/site.webmanifest">
-<link href="/styles/layout.css?release=14" rel="stylesheet" />
-<link href="/styles/default.css?release=14" rel="stylesheet" />
-<link href="/styles/index.css?release=9" rel="stylesheet" />
+<link as="image" href="/styles/loading.svg" rel="preload" />
+<link href="/styles/layout.css?release=15" rel="stylesheet" />
+<link href="/styles/default.css?release=16" rel="stylesheet" />
 <link href="/styles/mobile.css?release=12" media="only screen and (max-width: 768px)" rel="stylesheet" />
+<?php if (isset($styles)): ?>
+<?php foreach ($styles as $name): ?>
+<link href="/styles/<?= $name ?>" rel="stylesheet" />
+<?php endforeach ?>
+<?php endif ?>
 <title><?= $this->e($title) ?></title>
 </head>
 <body>
@@ -62,6 +67,7 @@
                 <?php if ($session['loggedin']): ?>
                     <nav>
                         <a href="/settings">Configurações</a>
+                        <a href="/inventory">Inventário</a>
                         <a href="/order-history">Pedidos</a>
                         <a href="/support">Suporte</a>
                         <a href="/logout">Sair</a>

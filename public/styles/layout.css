@@ -91,7 +91,7 @@ summary
 {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    height: 150px;
+    height: 170px;
 }
 
 #main_header .content a

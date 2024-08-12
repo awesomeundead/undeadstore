@@ -128,3 +128,51 @@ CREATE TABLE IF NOT EXISTS coupon (
     expiration_date DATETIME NOT NULL
 );
 */
+
+CREATE TABLE IF NOT EXISTS wallet (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNSIGNED NOT NULL,
+    balance DECIMAL(8,2) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS inventory (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNSIGNED NOT NULL,
+    item_name VARCHAR(255) NOT NULL,
+    cs_item_variant_id INT UNSIGNED,
+    marketable TINYINT(1),
+    price SMALLINT(5),
+    created_date DATETIME NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS inventory_historic (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNSIGNED NOT NULL,
+    item_name VARCHAR(255) NOT NULL,
+    cs_item_variant_id INT UNSIGNED,
+    steam_asset BIGINT UNSIGNED,
+    tradeofferid BIGINT UNSIGNED,
+    status ENUM('purchased', 'open', 'drop', 'sold', 'trading'),
+    date DATETIME NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS weaponcase (
+    id TINYINT(3) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    case_name VARCHAR(255) NOT NULL,
+    rarity VARCHAR(255) NOT NULL,
+    item_code VARCHAR(255) NOT NULL,
+    chance TINYINT(3) UNSIGNED NOT NULL,
+    item_name VARCHAR(255) NOT NULL,
+    cs_item_variant_id INT UNSIGNED,
+    quantity TINYINT(3) UNSIGNED,
+    marketable TINYINT(1),
+    price SMALLINT(5),
+    image VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS weaponcase_stock (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    cs_item_variant_id INT UNSIGNED NOT NULL,
+    steam_asset BIGINT UNSIGNED NOT NULL,
+    status ENUM('available', 'trading')
+);

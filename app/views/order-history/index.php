@@ -5,7 +5,9 @@
         <?= $notification['message'] ?>
     </div>
 <?php endif ?>
-
+<div class="user">
+    <header>Pedidos</header>
+</div>
 <?php if ($list): ?>
     <?php foreach ($list as $item): ?>
         <div class="order-history box">
