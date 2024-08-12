@@ -59,9 +59,15 @@ return function (App $app)
     $app->get('/logout', function ()
     {
         session_start();
+
+        if (isset($_COOKIE['login']))
+        {
+            unset($_COOKIE['login']);
+            setcookie('login', '', -1);
+        }
+
         session_unset();
         session_destroy();
-        
         redirect();
     });
 

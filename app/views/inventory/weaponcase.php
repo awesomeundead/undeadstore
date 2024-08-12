@@ -95,4 +95,4 @@ const rarities = <?= $rarities ?>;
     
 </script>
 <script src="/scripts/glide.min.js"></script>
-<script src="/scripts/open_weaponcase.js?release=2"></script>
+<script src="/scripts/open_weaponcase.js?release=3"></script>

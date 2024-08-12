@@ -35,21 +35,6 @@ const preloadAudio = (src) => new Promise((resolve, reject) =>
     audio.src = src;
 });
 
-const request = async (url) =>
-{
-    const response = await fetch(url);
-
-    if (response.ok)
-    {
-        if (response.headers.get('Content-Type').includes('application/json'))
-        {   
-            return await response.json();
-        }
-    }
-
-    throw new Error('NOT FOUND');
-}
-
 const main = async () =>
 {
     for (i = 0; i < preload.length; i++)

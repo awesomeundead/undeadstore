@@ -1,18 +1,3 @@
-request = async (url) =>
-{
-    const response = await fetch(url);
-
-    if (response.ok)
-    {
-        if (response.headers.get('Content-Type').includes('application/json'))
-        {   
-            return await response.json();
-        }
-    }
-
-    throw new Error('NOT FOUND');
-}
-
 create = (data, fragment, container) =>
 {
     container.innerHTML = '';

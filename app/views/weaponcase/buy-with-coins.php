@@ -24,35 +24,30 @@
 </div>
 <script>
 
-document.querySelector('form').addEventListener('submit', (e) =>
+document.querySelector('form').addEventListener('submit', async e =>
 {
     e.preventDefault();
 
-    fetch('/cases/buy/coins',
-    {
-        body: new FormData(e.target),
-        method: 'post'
-    })
-    //.then((response) => response.json())
-    .then(response =>
-        {
-            if (response.ok)
-            {
-                return response.text();
-            }
+    const submit = document.querySelector('form button[type="submit"]');
+    submit.disabled = true;
 
-            console.log(response.status);
-    })
-    .then(text => 
+    try
     {
-        if (text == '1')
+        const response = await request('/cases/buy/coins', { body: new FormData(e.target), method: 'post' });
+
+        if (response.hasOwnProperty('redirect'))
         {
-            window.location.replace('/inventory')
+            window.location.replace(response.redirect);
         }
         else
         {
-            console.log(text);
+            submit.disable = false;
         }
-    });
-})
+    }
+    catch (error)
+    {
+        console.log(error);
+    }
+});
+
 </script>

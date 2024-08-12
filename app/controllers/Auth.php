@@ -13,6 +13,56 @@ class Auth
 
         if (!$session->get('logged_in'))
         {
+            if (isset($_COOKIE['login']))
+            {
+                $token = htmlspecialchars($_COOKIE['login']);
+
+                $parts = explode(':', $token);
+
+                if ($parts && count($parts) == 2)
+                {
+                    [$selector, $validator] = $parts;
+                }
+
+                $pdo = Database::connect();
+
+                $query = 'SELECT * FROM login_log WHERE selector = :selector';
+                $stmt = $pdo->prepare($query);
+                $stmt->execute(['selector' => $selector]);
+                $login = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+                if (password_verify($validator, $login['hashed_validator']))
+                {
+                    if ($login['expire_date'] > date('Y-m-d H:i:s'))
+                    {
+                        $query = 'SELECT * FROM users WHERE id = :id';
+                        $stmt = $pdo->prepare($query);
+                        $stmt->execute(['id' => $login['user_id']]);
+                        $user = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+                        $steam_api_key = (require ROOT . '/config.php')['steam_api_key'];
+                        $steamID64 = $user['steamid'];
+
+                        $response = file_get_contents("https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={$steam_api_key}&steamids={$steamID64}");
+                        $response = json_decode($response, true);
+
+                        $userData = $response['response']['players'][0];
+                        $session->set('logged_in', true);
+                        $session->set('user_id', $login['user_id']);
+                        $session->set('steamid', $userData['steamid']);
+                        $session->set('steam_name', $userData['personaname']);
+                        $session->set('steam_avatar', $userData['avatar']);
+
+                        if (isset($_GET['redirect']))
+                        {
+                            redirect('/' . $_GET['redirect']);
+                        }
+
+                        redirect();
+                    }
+                }
+            }
+
             require ROOT . '/include/steam_openid.php';
 
             $params = [
@@ -105,6 +155,13 @@ class Auth
                 $session->set('notification', 'EMAIL_ADDRESS_NOT_VERIFIED');
             }
 
+            $selector = bin2hex(random_bytes(16));
+            $validator = bin2hex(random_bytes(32));
+            $token = $selector . ':' . $validator;
+
+            $hashed_validator = password_hash($validator, PASSWORD_DEFAULT);
+            $expire_date = strtotime('+1 week');
+
             $address = $_SERVER['HTTP_CLIENT_IP']
                     ?? $_SERVER['HTTP_X_FORWARDED_FOR']
                     ?? $_SERVER['HTTP_X_FORWARDED']
@@ -114,14 +171,23 @@ class Auth
                     ?? 'UNKNOWN';
 
             // NOVO REGISTRO DE LOGIN
-            $query = 'INSERT INTO login_log (user_id, login_date, user_ip) VALUES (:user_id, :login_date, :user_ip)';
+            $query = 'INSERT INTO login_log (user_id, selector, hashed_validator, login_date, expire_date, user_ip)
+                      VALUES (:user_id, :selector, :hashed_validator, :login_date, :expire_date, :user_ip)';
             $stmt = $pdo->prepare($query);
             $params = [
                 'user_id' => $session->get('user_id'),
+                'selector' => $selector,
+                'hashed_validator' => $hashed_validator,
                 'login_date' => date('Y-m-d H:i:s'),
+                'expire_date' => date('Y-m-d H:i:s', $expire_date),
                 'user_ip' => $address
             ];
-            $stmt->execute($params);
+            $result = $stmt->execute($params);
+
+            if ($result)
+            {
+                setcookie('login', $token, ['expires' => $expire_date, 'path' => '/', 'httponly' => true]);
+            }
 
             if (isset($_GET['redirect']))
             {

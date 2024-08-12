@@ -21,6 +21,7 @@
 <link href="/styles/<?= $name ?>" rel="stylesheet" />
 <?php endforeach ?>
 <?php endif ?>
+<script src="/scripts/default.js"></script>
 <title><?= $this->e($title) ?></title>
 </head>
 <body>

@@ -180,6 +180,8 @@ class Weaponcase extends Controller
             redirect('/auth?redirect=cases');
         }
 
+        header('Content-type: application/json; charset=utf-8');
+
         $quantity = filter_var($_POST['quantity'] ?? 1, FILTER_VALIDATE_INT);
 
         if ($quantity == false)
@@ -246,12 +248,12 @@ class Weaponcase extends Controller
                     $stmt->execute($params);
                 }
 
-                echo 1;
-                exit;
+                $json = ['redirect' => '/inventory'];
             }            
         }
 
-        echo 0;
-        exit;
+
+
+        echo json_encode($json ?? ['error' => true]);
     }
 }
