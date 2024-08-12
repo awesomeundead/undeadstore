@@ -1,5 +1,8 @@
 <?php $this->layout('layout', ['title' => 'Configurações | Undead Store', 'session' => $session]) ?>
 <div class="flex column">
+    <div class="user">
+        <header>Configurações</header>
+    </div>
     <div class="box">
         <form action="/settings" method="post">
             <input name="redirect" type="hidden" value="<?= $_GET['redirect'] ?? '' ?>" />

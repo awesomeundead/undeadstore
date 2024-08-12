@@ -132,7 +132,7 @@ const main = async () =>
                 setTimeout(() =>
                 {
                     pause = true;
-                }, 1000);
+                }, 200);
             }, 4000);
         }
         catch (error)

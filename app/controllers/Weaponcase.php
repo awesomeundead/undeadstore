@@ -107,7 +107,7 @@ class Weaponcase extends Controller
         }
 
         $request['description'] = 'UNDEAD STORE ITEM DIGITAL';
-        $request['external_reference'] = 'UNDEADCASE'. str_pad($user_id, 5, 0, STR_PAD_LEFT);
+        $request['external_reference'] = 'UCASE_UID'. str_pad($user_id, 5, 0, STR_PAD_LEFT);
         $idempotency_key = $request['external_reference'] . time();
        
         $config = (require ROOT . '/config.php')['mercadopago'];
@@ -115,8 +115,7 @@ class Weaponcase extends Controller
         try
         {
             MercadoPagoConfig::setAccessToken($config['access_token']);
-            // REMOVER
-            MercadoPagoConfig::setRuntimeEnviroment(MercadoPagoConfig::LOCAL);
+            //MercadoPagoConfig::setRuntimeEnviroment(MercadoPagoConfig::LOCAL);
 
             $client = new PaymentClient();
             $options = new RequestOptions();
@@ -155,9 +154,16 @@ class Weaponcase extends Controller
         $stmt->execute($params);
         $balance = $stmt->fetchColumn();
 
+        $quantity = floor($balance / 5);
+
+        if ($quantity > 8)
+        {
+            $quantity = 8;
+        }
+
         echo $this->templates->render('weaponcase/buy-with-coins', [
             'balance' => $balance,
-            'quantity' => floor($balance / 5)
+            'quantity' => $quantity
         ]);
     }
 
@@ -211,20 +217,25 @@ class Weaponcase extends Controller
             {
                 for ($i = 0; $i < $quantity; $i++)
                 {
-                    $query = 'INSERT INTO inventory (user_id, item_name, created_date)
-                              VALUES (:user_id, :item_name, :created_date)';
+                    $query = 'INSERT INTO inventory (user_id, item_name, tradable, marketable, created_date)
+                              VALUES (:user_id, :item_name, :tradable, :marketable, :created_date)';
                     $params = [
                         'user_id' => $user_id,
                         'item_name' => 'undeadcase',
+                        'tradable' => 0,
+                        'marketable' => 0,
                         'created_date' => $date
                     ];
                     $stmt = $pdo->prepare($query);
                     $stmt->execute($params);
 
+                    $historic_id = $pdo->lastInsertId();
+
                     // histórico
-                    $query = 'INSERT INTO inventory_historic (user_id, item_name, status, date)
-                              VALUES (:user_id, :item_name, :status, :date)';
+                    $query = 'INSERT INTO inventory_historic (historic_id, user_id, item_name, status, date)
+                              VALUES (:historic_id, :user_id, :item_name, :status, :date)';
                     $params = [
+                        'historic_id' => $historic_id,
                         'user_id' => $user_id,
                         'item_name' => 'undeadcase',
                         'status' => 'purchased',

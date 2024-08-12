@@ -4,9 +4,15 @@
 </nav>
 <?php if ($balance >= 5): ?>
     <div class="flex center">
-        <a href="/cases/buy/coins">Comprar com Moedas</a>
+        <a class="button" href="/cases/buy/coins">Comprar com Moedas da Loja</a>
     </div>
 <?php endif ?>
+<div class="box flex column">
+    <div class="alert warning">
+        <div>Após a confirmação do pagamento, as caixas ficaram no seu <a href="/inventory">Inventário</a>.</div>
+        <div>Qualquer dúvida, deixe sua mensagem em <a href="/support">Suporte</a> ou entre no nosso <a href="https://discord.gg/xAe6QYfsCJ" target="_blank">Discord</a>.</div>
+    </div>
+</div>
 <div class="flex column">
     <div class="box white" hidden="hidden" id="mercadopago_alert">Erro interno, tente novamente mais tarde.</div>
     <div id="statusScreenBrick_container"></div>
@@ -18,6 +24,9 @@
             <option>3</option>
             <option>4</option>
             <option>5</option>
+            <option>6</option>
+            <option>7</option>
+            <option>8</option>
         </select>
         <div>Total</div>
         <div id="amount">R$ 5,00</div>

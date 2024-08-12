@@ -136,6 +136,11 @@ button:hover
     justify-content: center;
 }
 
+.flex.right
+{
+    justify-content: right;
+}
+
 .flex.column
 {
     flex-direction: column;
@@ -786,6 +791,24 @@ label.icon img
   * inventory
   */
 
+.user header
+{
+    background: linear-gradient(to right, #444, #222);
+    font-size: 18px;
+    padding: 20px 10px;
+}
+
+.user .coins
+{
+    padding: 10px;
+    text-align: right;
+}
+
+.user .coins span
+{
+    color: #FB0;
+}
+
 .inventory
 {
     display: grid;
@@ -801,50 +824,128 @@ label.icon img
     flex-direction: column;
     gap: 5px;
     padding: 5px;
-    text-align: center;
 }
 
-.inventory .image,
-.inventory .image a
+.inventory .item .image a
 {
     display: flex;
 }
 
-.inventory .rarity
+.inventory .item:has(a:hover)
 {
-    border-top-style: solid;
-    border-top-width: 5px;
+    background-color: #444;
 }
 
-.inventory .image a
+.inventory .item .image 
 {
     border-top-color: #FFF;
     border-top-style: solid;
     border-top-width: 5px;
 }
 
-.inventory img
+.inventory .item .rarity .image
+{
+    border-top-color: inherit;
+}
+
+.inventory .item img
 {
     padding: 0 5px;
     width: 100%;
 }
 
-.inventory .item .title .family
+.inventory .item .name
 {
-    display: block;
+    text-align: center;
 }
 
-.inventory .item .coins
+.inventory .item .name.weaponcase
 {
-    color: #ffae00;
+    text-transform: uppercase
 }
 
-.inventory .button a
+.inventory .coins
+{
+    color: #FB0;
+}
+
+.inventory dialog
 {
     background-color: #222;
+    border-color: #FFF;
+    color: #FFF;
+}
+
+.inventory dialog .container
+{
+    width: 384px;
+}
+
+.inventory dialog .dialog_close
+{
+    background-color: transparent;
+    background: url('close.png') no-repeat center/48px;
     border-radius: 5px;
+    height: 48px;
+    padding: 0;
+    width: 48px;
+}
+
+.inventory dialog .dialog_close:hover
+{
+    background-color: #333;
+}
+
+.inventory dialog .image
+{
+    display: flex;
+    justify-content: center;
+}
+
+.inventory dialog .image img
+{
+    width: 320px;
+}
+
+.inventory dialog .title
+{
+    font-size: 18px;
+    text-align: center;
+}
+
+.inventory dialog .attribute
+{
+    background-color: #333;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+/* .market */
+.inventory dialog .button a
+{
+    background-color: #136;
+    border-radius: 5px;
+    color: #F90;
     display: inline-block;
-    padding: 5px 10px;
+    padding: 10px;
+    text-decoration: none;
+}
+
+.inventory dialog .button a:hover
+{
+    background-color: #247;
+}
+
+.inventory dialog .button a.sell
+{
+    background-color: #394;
+    color: #FFF;
+}
+
+.inventory dialog .button a.sell:hover
+{
+    background-color: #3A5;
+    color: #FFF;
 }
 
 dialog.confirm .container

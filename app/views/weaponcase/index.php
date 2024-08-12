@@ -6,7 +6,7 @@
 <div class="weaponcases">
     <div class="product">
         <div class="image">
-            <img alt="" src="undeadcase.png" />
+            <img alt="" src="/undeadcase.png" />
         </div>
         <div class="description">
             <div class="title">UNDEADCASE</div>

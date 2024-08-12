@@ -54,12 +54,33 @@ class Inventory extends Controller
             'unusual_strange' => ['en' => '★ StatTrak™', 'br' => '★ StatTrak™']
         ];
 
+        $rarities = [
+            'common' => ['en' => 'Base Grade', 'br' => ''],
+            'rare' => ['en' => 'High Grade', 'br' => ''],
+            'mythical' => ['en' => 'Remarkable', 'br' => ''],
+            'legendary' => ['en' => 'Exotic', 'br' => ''],
+            'ancient' => ['en' => 'Extraordinary', 'br' => ''],
+            'contraband' => ['en' => 'Contraband', 'br' => 'Contrabando'],
+            'common_weapon' => ['en' => 'Consumer Grade', 'br' => 'Nível Consumidor'],
+            'uncommon_weapon' => ['en' => 'Industrial Grade', 'br' => 'Nível Industrial'],
+            'rare_weapon' => ['en' => 'Mil-Spec', 'br' => 'Nível Militar'],
+            'mythical_weapon' => ['en' => 'Restricted', 'br' => 'Restrito'],
+            'legendary_weapon' => ['en' => 'Classified', 'br' => 'Secreto'],
+            'ancient_weapon' => ['en' => 'Covert', 'br' => 'Oculto'],
+            'rare_character' => ['en' => 'Distinguished', 'br' => 'Distinto'],
+            'mythical_character' => ['en' => 'Exceptional', 'br' => 'Excepcional'],
+            'legendary_character' => ['en' => 'Superior', 'br' => 'Superior'],
+            'ancient_character' => ['en' => 'Master', 'br' => 'Mestre']
+        ];
+
         echo $this->templates->render('inventory/index', [
+            'notification' => $session->flash('trade'),
             'balance' => $balance,
             'listing' => $listing,
             'image_exterior' => $image_exterior,
             'exterior' => $exterior,
-            'categories' => $categories
+            'categories' => $categories,
+            'rarities' => $rarities
         ]);
     }
 
@@ -136,18 +157,18 @@ class Inventory extends Controller
             if ($stmt->rowCount())
             {
                 $query = 'UPDATE weaponcase SET quantity = quantity + 1
-                          WHERE case_name = :case_name AND item_code = :item_code';
+                          WHERE item_name = :item_name';
                 $params = [
-                    'case_name' => $item['case_name'],
-                    'item_code' => $item['item_code']
+                    'item_name' => $item['item_name']
                 ];
                 $stmt = $pdo->prepare($query);
                 $stmt->execute($params);
 
                 // histórico
-                $query = 'INSERT INTO inventory_historic (user_id, item_name, cs_item_variant_id, status, date)
-                          VALUES (:user_id, :item_name, :cs_item_variant_id, :status, :date)';
+                $query = 'INSERT INTO inventory_historic (historic_id, user_id, item_name, cs_item_variant_id, status, date)
+                          VALUES (:historic_id, :user_id, :item_name, :cs_item_variant_id, :status, :date)';
                 $params = [
+                    'historic_id' => $item['historic_id'],
                     'user_id' => $user_id,
                     'item_name' => $item['item_name'],
                     'cs_item_variant_id' => $item['cs_item_variant_id'],
@@ -177,7 +198,7 @@ class Inventory extends Controller
         $user_id = $session->get('user_id');
         $date = date('Y-m-d H:i:s');
 
-        $query = 'SELECT * FROM inventory WHERE id = :id AND user_id = :user_id';
+        $query = 'SELECT * FROM inventory WHERE id = :id AND user_id = :user_id AND tradable = 1';
         $params = [
             'id' => $id,
             'user_id' => $user_id
@@ -213,8 +234,6 @@ class Inventory extends Controller
 
         if ($user)
         {
-            //remover
-            /*
             $assets[] = [
                 'appid' => '730',
                 'contextid' => '2',
@@ -222,12 +241,11 @@ class Inventory extends Controller
                 'assetid' => (string) $stock['steam_asset']
             ];
 
-            $description = $purchase_id;
+            $description = 'withdraw';
             $steamID64 = $user['steamid'];
             $steam_trade_url = $user['steam_trade_url'];
 
             require ROOT . '/include/trade.php';
-            */
 
             if (isset($response))
             {
@@ -253,9 +271,10 @@ class Inventory extends Controller
                     $stmt->execute($params);
 
                     // histórico
-                    $query = 'INSERT INTO inventory_historic (user_id, item_name, cs_item_variant_id, steam_asset, tradeofferid, status, date)
-                              VALUES (:user_id, :item_name, :cs_item_variant_id, :steam_asset, :tradeofferid, :status, :date)';
+                    $query = 'INSERT INTO inventory_historic (historic_id, user_id, item_name, cs_item_variant_id, steam_asset, tradeofferid, status, date)
+                              VALUES (:historic_id, :user_id, :item_name, :cs_item_variant_id, :steam_asset, :tradeofferid, :status, :date)';
                     $params = [
+                        'historic_id' => $item['historic_id'],
                         'user_id' => $user_id,
                         'item_name' => $item['item_name'],
                         'cs_item_variant_id' => $item['cs_item_variant_id'],
@@ -267,9 +286,15 @@ class Inventory extends Controller
 
                     $stmt = $pdo->prepare($query);
                     $stmt->execute($params);
+
+                    $session->flash('trade', ['message' => 'Proposta de troca enviada.', 'type' => 'success']);
+
+                    redirect('/inventory');
                 }
             }
         }
+
+        $session->flash('trade', ['message' => 'Não foi possível enviar uma proposta de troca.', 'type' => 'failure']);
 
         redirect('/inventory');
     }
@@ -460,12 +485,14 @@ class Inventory extends Controller
         $stmt = $pdo->prepare($query);
         $stmt->execute($params);
 
-        $query = 'INSERT INTO inventory (user_id, item_name, cs_item_variant_id, marketable, price, created_date)
-                  VALUES (:user_id, :item_name, :cs_item_variant_id, :marketable, :price, :created_date)';
+        $query = 'INSERT INTO inventory (historic_id, user_id, item_name, cs_item_variant_id, tradable, marketable, price, created_date)
+                  VALUES (:historic_id, :user_id, :item_name, :cs_item_variant_id, :tradable, :marketable, :price, :created_date)';
         $params = [
+            'historic_id' => $id,
             'user_id' => $user_id,
             'item_name' => $item['item_name'],
             'cs_item_variant_id' => $item['cs_item_variant_id'],
+            'tradable' => $item['tradable'],
             'marketable' => $item['marketable'],
             'price' => $item['price'],
             'created_date' => $date
@@ -475,9 +502,10 @@ class Inventory extends Controller
         $stmt->execute($params);
 
         // histórico
-        $query = 'INSERT INTO inventory_historic (user_id, item_name, status, date)
-                  VALUES (:user_id, :item_name, :status, :date)';
+        $query = 'INSERT INTO inventory_historic (historic_id, user_id, item_name, status, date)
+                  VALUES (:historic_id, :user_id, :item_name, :status, :date)';
         $params = [
+            'historic_id' => $id,
             'user_id' => $user_id,
             'item_name' => 'undeadcase',
             'status' => 'open',
@@ -488,9 +516,10 @@ class Inventory extends Controller
         $stmt->execute($params);
 
         // histórico
-        $query = 'INSERT INTO inventory_historic (user_id, item_name, cs_item_variant_id, status, date)
-                  VALUES (:user_id, :item_name, :cs_item_variant_id, :status, :date)';
+        $query = 'INSERT INTO inventory_historic (historic_id, user_id, item_name, cs_item_variant_id, status, date)
+                  VALUES (:historic_id, :user_id, :item_name, :cs_item_variant_id, :status, :date)';
         $params = [
+            'historic_id' => $id,
             'user_id' => $user_id,
             'item_name' => $item['item_name'],
             'cs_item_variant_id' => $item['cs_item_variant_id'],

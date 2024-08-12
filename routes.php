@@ -18,26 +18,6 @@ return function (App $app)
         $group->get('/login', [Auth::class, 'login']);
     });
 
-    $app->get('/cs2', function ()
-    {
-        redirect('/');
-    });
-
-    $app->get('/cs2/', function ()
-    {
-        redirect('/');
-    });
-
-    $app->get('/skins', function ()
-    {
-        redirect('/');
-    });
-
-    $app->get('/skins/', function ()
-    {
-        redirect('/');
-    });
-
     $app->get('/cases', [Weaponcase::class, 'index']);
     $app->get('/cases/buy', [Weaponcase::class, 'buy']);
     $app->post('/cases/process', [Weaponcase::class, 'process']);

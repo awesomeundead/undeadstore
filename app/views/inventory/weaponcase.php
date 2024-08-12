@@ -1,9 +1,11 @@
-<?php $this->layout('layout', ['title' => 'Inventário | Undead Store', 'session' => $session]) ?>
+<?php $this->layout('layout', [
+    'title' => 'Inventário | Undead Store',
+    'session' => $session,
+    'styles' => ['glide.core.min.css']
+]) ?>
 <nav>
     <?php $this->insert('home/nav') ?>
 </nav>
-<link rel="stylesheet" href="/styles/glide.core.min.css" />
-<link rel="preload" as="image" href="/styles/loading.svg">
 <div class="opencase">
     <?php if ($item['item_name'] == 'undeadcase'): ?>
         <div class="flex center">
@@ -93,4 +95,4 @@ const rarities = <?= $rarities ?>;
     
 </script>
 <script src="/scripts/glide.min.js"></script>
-<script src="/scripts/open_weaponcase.js"></script>
+<script src="/scripts/open_weaponcase.js?release=2"></script>

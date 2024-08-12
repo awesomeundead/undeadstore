@@ -8,4 +8,4 @@
 </nav>
 <?php $this->insert('home/template') ?>
 <script src="/scripts/library.js?release=6"></script>
-<script src="/scripts/listings.js?release=7"></script>
+<script src="/scripts/listings.js?release=8"></script>
