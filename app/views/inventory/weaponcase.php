@@ -1,8 +1,14 @@
-<?php $this->layout('layout', [
+<?php
+
+$this->layout('layout', [
     'title' => 'Inventário | Undead Store',
+    'description' => 'Skins de Counter-Strike 2 com os melhores preços.',
+    'image' => 'https://undeadstore.com.br/styles/undeadstore.png',
     'session' => $session,
     'styles' => ['glide.core.min.css']
-]) ?>
+]);
+
+?>
 <nav>
     <?php $this->insert('home/nav') ?>
 </nav>

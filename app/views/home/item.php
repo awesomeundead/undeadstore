@@ -1,4 +1,38 @@
-<?php $this->layout('layout', ['title' => 'Undead Store', 'session' => $session]) ?>
+<?php
+
+if ($item['category'])
+{
+    if ($item['category'] == 'normal')
+    {
+        $title = "{$item['name_br']} | {$item['family_br']} ({$exterior[$item['exterior']]['br']})";
+    }
+    else
+    {
+        $title = "{$item['name_br']} {$categories[$item['category']]['br']} | {$item['family_br']} ({$exterior[$item['exterior']]['br']})";
+    }
+}
+else
+{
+    $title = "{$item['name_br']} | {$item['family_br']}";
+}
+
+if ($item['exterior'])
+{
+    $image = "{$item['image']}_{$image_exterior[$item['exterior']]}.png";
+}
+else
+{
+    $image = "{$item['image']}.png";
+}
+
+$this->layout('layout', [
+    'title' => "{$title} | Undead Store",
+    'description' => 'Skins de Counter-Strike 2 com os melhores preços.',
+    'image' => "https://undeadstore.com.br/images/{$image}",
+    'session' => $session
+]);
+
+?>
 <nav>
     <?php $this->insert('home/nav') ?>
 </nav>

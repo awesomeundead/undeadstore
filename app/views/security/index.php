@@ -1,4 +1,13 @@
-<?php $this->layout('layout', ['title' => 'Segurança | Undead Store', 'session' => $session]) ?>
+<?php
+
+$this->layout('layout', [
+    'title' => 'Segurança | Undead Store',
+    'description' => 'Skins de Counter-Strike 2 com os melhores preços.',
+    'image' => 'https://undeadstore.com.br/styles/undeadstore.png',
+    'session' => $session
+]);
+
+?>
 <style>
 figure img
 {

@@ -1,4 +1,13 @@
-<?php $this->layout('layout', ['title' => 'UNDEADCASE | Undead Store', 'session' => $session]) ?>
+<?php
+
+$this->layout('layout', [
+    'title' => 'UNDEADCASE | Undead Store',
+    'description' => 'Teste a sua sorte abrindo uma caixa e ganhe uma linda skin de CS, não precisa de chave.',
+    'image' => 'https://undeadstore.com.br/undeadcase.png',
+    'session' => $session
+]);
+
+?>
 <nav>
     <?php $this->insert('home/nav') ?>
 </nav>
@@ -19,8 +28,8 @@
                 <div class="rarity mythical_weapon">P250 (StatTrak™) | Proteção Cibernética (Pouco Usada)</div>
                 <div class="rarity mythical_weapon">Galil AR (StatTrak™) | Conexão (Pouco Usada)</div>
                 <div class="rarity legendary_weapon">USP-S | Córtex (Testada em Campo)</div>
-                <div class="rarity legendary_weapon">XM1014 (StatTrak™) | BJS (Testada em Campo)</div>
-                <div class="rarity legendary_weapon">AUG (StatTrak™) | Syd Mead (Testada em Campo)</div>
+                <div class="rarity legendary_weapon">XM1014 | BJS (Testada em Campo)</div>
+                <div class="rarity legendary_weapon">AUG | Syd Mead (Testada em Campo)</div>
                 <div class="rarity ancient_weapon">Glock-18 | Rainha do Chumbo (Testada em Campo)</div>
                 <div class="rarity ancient_weapon">M4A4 | Neo-Noir (Testada em Campo)</div>
                 <div class="rarity ancient_weapon">AWP (StatTrak™) | Aberração Cromática (Testada em Campo)</div>

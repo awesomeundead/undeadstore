@@ -1,4 +1,13 @@
-<?php $this->layout('layout', ['title' => 'Pagamento | Undead Store', 'session' => $session]) ?>
+<?php
+
+$this->layout('layout', [
+    'title' => 'Pagamento | Undead Store',
+    'description' => 'Skins de Counter-Strike 2 com os melhores preços.',
+    'image' => 'https://undeadstore.com.br/styles/undeadstore.png',
+    'session' => $session
+]);
+
+?>
 
 <div class="flex column">
     <div class="box white" hidden="hidden" id="mercadopago_alert">Erro interno, tente novamente mais tarde.</div>

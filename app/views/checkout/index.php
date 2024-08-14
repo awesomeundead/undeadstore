@@ -1,4 +1,13 @@
-<?php $this->layout('layout', ['title' => 'Fechar Pedido | Undead Store', 'session' => $session]) ?>
+<?php
+
+$this->layout('layout', [
+    'title' => 'Fechar Pedido | Undead Store',
+    'description' => 'Skins de Counter-Strike 2 com os melhores preços.',
+    'image' => 'https://undeadstore.com.br/styles/undeadstore.png',
+    'session' => $session
+]);
+
+?>
 <nav>
     <?php $this->insert('home/nav') ?>
 </nav>

@@ -14,6 +14,15 @@ class Weaponcase extends Controller
 {
     public function index()
     {
+        /*
+        $pdo = Database::connect();
+
+        $query = 'SELECT * FROM weaponcase_winners';        
+        $stmt = $pdo->prepare($query);
+        $stmt->execute();
+        $listing = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        */
+
         echo $this->templates->render('weaponcase/index');
     }
 

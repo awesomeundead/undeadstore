@@ -1,4 +1,11 @@
-<?php $this->layout('layout', ['title' => 'Parceiros | Undead Store', 'session' => $session]) ?>
+<?php
+
+$this->layout('layout', [
+    'title' => 'Parceiros | Undead Store',
+    'session' => $session
+]);
+
+?>
 <div class="box header">
     <div>Parceiros</div>
 </div>
