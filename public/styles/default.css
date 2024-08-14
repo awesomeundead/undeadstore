@@ -1163,14 +1163,17 @@ dialog.confirm .container div
 
 .weaponcases .weapons
 {
+    display: grid;
+    gap: 5px;
+    grid-template-columns: repeat(12, 1fr);
     padding: 10px 0;
 }
 
-.weaponcases .weapons div
+.weaponcases .weapons .rarity
 {
-    display: flex;    
-    flex-wrap: wrap;
-    justify-content: space-between;
+    border-left-style: solid;
+    border-left-width: 2px;
+    border-radius: 10px;
 }
 
 .weaponcases .weapons a
@@ -1181,11 +1184,10 @@ dialog.confirm .container div
 
 .weaponcases .weapons img
 {
-    width: 144px;
+    width: 100%;
 }
 
 .weaponcases .weapons a:hover
 {
     background-color: #333;
-    border-radius: 5px;
 }

@@ -5,6 +5,8 @@ namespace App\Controllers;
 use Awesomeundead\Undeadstore\Controller;
 use Awesomeundead\Undeadstore\Database;
 use Awesomeundead\Undeadstore\Session;
+use Awesomeundead\Undeadstore\TradeOffer;
+use Awesomeundead\Undeadstore\TradeOfferException;
 use MercadoPago\Client\Common\RequestOptions;
 use MercadoPago\Client\Payment\PaymentClient;
 use MercadoPago\Exceptions\MPApiException;
@@ -117,10 +119,25 @@ class Payment extends Controller
                 if ($user)
                 {
                     $description = $purchase_id;
-                    $steamID64 = $user['steamid'];
-                    $steam_trade_url = $user['steam_trade_url'];
 
-                    require ROOT . '/include/trade.php';
+                    try
+                    {
+                        $trade = TradeOffer::sendOffer($user['steam_trade_url'], $user['steamid'], $assets);
+
+                        $response = $trade['response'];
+                        $info = $trade['info'];
+                    }
+                    catch (TradeOfferException $e)
+                    {
+                        require ROOT . '/include/mail.php';
+
+                        $params['subject'] = 'Problemas com Trade';
+                        $params['message'] = $e->getMessage();
+                        
+                        send_mail($params);
+                    }
+
+                    file_put_contents(ROOT . '/log/trade_' . $info['http_code'] . '_' . $description . '_' . time() . '.json', $response);
                 }
             }
 

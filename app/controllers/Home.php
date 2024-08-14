@@ -42,40 +42,9 @@ class Home extends Controller
 
         $image_exterior = ['fn' => 'fn_mw', 'mw' => 'fn_mw', 'ft' => 'ft_ww', 'ww' => 'ft_ww', 'bs' => 'bs'];
 
-        $exterior = [
-            'fn' => ['en' => 'Factory New', 'br' => 'Nova de Fábrica'],
-            'mw' => ['en' => 'Minimal Wear', 'br' => 'Pouca Usada'],
-            'ft' => ['en' => 'Field-Tested', 'br' => 'Testada em Campo'],
-            'ww' => ['en' => 'Well Worm', 'br' => 'Bem Desgastada'],
-            'bs' => ['en' => 'Battle-Scarred', 'br' => 'Veterana de Guerra']
-        ];
-
-        $categories = [
-            'normal' => ['en' => 'Normal', 'br' => 'Normal'],
-            'tournament' => ['en' => 'Souvenir', 'br' => 'Lembrança'],
-            'strange' => ['en' => 'StatTrak™', 'br' => 'StatTrak™'],
-            'unusual' => ['en' => '★', 'br' => '★'],
-            'unusual_strange' => ['en' => '★ StatTrak™', 'br' => '★ StatTrak™']
-        ];
-
-        $rarities = [
-            'common' => ['en' => 'Base Grade', 'br' => ''],
-            'rare' => ['en' => 'High Grade', 'br' => ''],
-            'mythical' => ['en' => 'Remarkable', 'br' => ''],
-            'legendary' => ['en' => 'Exotic', 'br' => ''],
-            'ancient' => ['en' => 'Extraordinary', 'br' => ''],
-            'contraband' => ['en' => 'Contraband', 'br' => 'Contrabando'],
-            'common_weapon' => ['en' => 'Consumer Grade', 'br' => 'Nível Consumidor'],
-            'uncommon_weapon' => ['en' => 'Industrial Grade', 'br' => 'Nível Industrial'],
-            'rare_weapon' => ['en' => 'Mil-Spec', 'br' => 'Nível Militar'],
-            'mythical_weapon' => ['en' => 'Restricted', 'br' => 'Restrito'],
-            'legendary_weapon' => ['en' => 'Classified', 'br' => 'Secreto'],
-            'ancient_weapon' => ['en' => 'Covert', 'br' => 'Oculto'],
-            'rare_character' => ['en' => 'Distinguished', 'br' => 'Distinto'],
-            'mythical_character' => ['en' => 'Exceptional', 'br' => 'Excepcional'],
-            'legendary_character' => ['en' => 'Superior', 'br' => 'Superior'],
-            'ancient_character' => ['en' => 'Master', 'br' => 'Mestre']
-        ];
+        $exterior = Data::exterior();
+        $categories = Data::categories();
+        $rarities = Data::rarities();
 
         $availability = [1 => 'Disponível', 'Sob encomenda', 'Disponível em breve'];
 

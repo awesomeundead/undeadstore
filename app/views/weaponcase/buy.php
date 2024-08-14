@@ -2,21 +2,19 @@
 <nav>
     <?php $this->insert('home/nav') ?>
 </nav>
-<?php if ($balance >= 5): ?>
-    <div class="flex center">
-        <a class="button" href="/cases/buy/coins">Comprar com Moedas da Loja</a>
-    </div>
-<?php endif ?>
-<div class="box flex column">
-    <div class="alert warning">
-        <div>Após a confirmação do pagamento, as caixas ficaram no seu <a href="/inventory">Inventário</a>.</div>
-        <div>Qualquer dúvida, deixe sua mensagem em <a href="/support">Suporte</a> ou entre no nosso <a href="https://discord.gg/xAe6QYfsCJ" target="_blank">Discord</a>.</div>
-    </div>
-</div>
 <div class="flex column">
-    <div class="box white" hidden="hidden" id="mercadopago_alert">Erro interno, tente novamente mais tarde.</div>
-    <div id="statusScreenBrick_container"></div>
-    <div class="box flex align-center">
+    <?php if ($balance >= 5): ?>
+        <div class="flex center">
+            <a class="button" href="/cases/buy/coins">Comprar com Moedas da Loja</a>
+        </div>
+    <?php endif ?>
+    <div class="box flex column">
+        <div class="alert warning">
+            <div>Após a confirmação do pagamento, as caixas ficaram no seu <a href="/inventory">Inventário</a>.</div>
+            <div>Qualquer dúvida, deixe sua mensagem em <a href="/support">Suporte</a> ou entre no nosso <a href="https://discord.gg/xAe6QYfsCJ" target="_blank">Discord</a>.</div>
+        </div>
+    </div>
+    <div class="box flex align-center" id="quantity_container">
         <label for="quantity">Quantidade</label>
         <select id="quantity">
             <option selected="selected">1</option>
@@ -30,7 +28,9 @@
         </select>
         <div>Total</div>
         <div id="amount">R$ 5,00</div>
-    </div>
+    </div>    
+    <div class="box white" hidden="hidden" id="mercadopago_alert">Erro interno, tente novamente mais tarde.</div>
+    <div id="statusScreenBrick_container"></div>
     <div id="paymentBrick_container"></div>
 </div>
 <script>
@@ -54,4 +54,4 @@ quantity.addEventListener('change', () =>
 
 </script>
 <script src="https://sdk.mercadopago.com/js/v2"></script>
-<script src="/scripts/mp_weaponcases.js"></script>
+<script src="/scripts/mp_weaponcases.js?release=2"></script>

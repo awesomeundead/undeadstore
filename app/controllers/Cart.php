@@ -78,23 +78,11 @@ class Cart extends Controller
                     }
                     else
                     {
-                        $categories = [
-                            'normal' => ['en' => 'Normal', 'br' => 'Normal'],
-                            'tournament' => ['en' => 'Souvenir', 'br' => 'Lembrança'],
-                            'strange' => ['en' => 'StatTrak™', 'br' => 'StatTrak™'],
-                            'unusual' => ['en' => '★', 'br' => '★'],
-                            'unusual_strange' => ['en' => '★ StatTrak™', 'br' => '★ StatTrak™']
-                        ];
+                        $categories = Data::categories();
 
                         $category = $item['category'] == 'normal' ? '' : " {$categories[$item['category']]['br']}";
 
-                        $exterior = [
-                            'fn' => ['en' => 'Factory New', 'br' => 'Nova de Fábrica'],
-                            'mw' => ['en' => 'Minimal Wear', 'br' => 'Pouca Usada'],
-                            'ft' => ['en' => 'Field-Tested', 'br' => 'Testada em Campo'],
-                            'ww' => ['en' => 'Well Worm', 'br' => 'Bem Desgastada'],
-                            'bs' => ['en' => 'Battle-Scarred', 'br' => 'Veterana de Guerra']
-                        ];
+                        $exterior = Data::exterior();
 
                         $image_exterior = ['fn'=> 'fn_mw', 'mw'=> 'fn_mw', 'ft'=> 'ft_ww', 'ww'=> 'ft_ww', 'bs'=> 'bs'];
 

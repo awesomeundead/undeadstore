@@ -14,7 +14,7 @@
 <link rel="manifest" href="/site.webmanifest">
 <link as="image" href="/styles/loading.svg" rel="preload" />
 <link href="/styles/layout.css?release=15" rel="stylesheet" />
-<link href="/styles/default.css?release=16" rel="stylesheet" />
+<link href="/styles/default.css?release=17" rel="stylesheet" />
 <link href="/styles/mobile.css?release=12" media="only screen and (max-width: 768px)" rel="stylesheet" />
 <?php if (isset($styles)): ?>
 <?php foreach ($styles as $name): ?>

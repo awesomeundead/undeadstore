@@ -79,6 +79,7 @@ const renderStatusScreenBrick = async (bricksBuilder, response) =>
             onReady: () =>
             {
                 document.getElementById('paymentBrick_container').hidden = true;
+                document.getElementById('quantity_container').remove();
             },
             onError: (error) =>
             {
