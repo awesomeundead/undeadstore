@@ -14,4 +14,4 @@ $this->layout('layout', [
 <?php $this->insert('home/banner') ?>
 <?php $this->insert('home/template') ?>
 <script src="/scripts/library.js?release=7"></script>
-<script src="/scripts/index.js?release=7"></script>
+<script src="/scripts/index.js?release=8"></script>

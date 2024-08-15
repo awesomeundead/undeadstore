@@ -11,6 +11,8 @@ return function (App $app)
     $app->get('/', [Home::class, 'index']);
     $app->get('/listings', [Home::class, 'listings']);
     $app->get('/item/{id:\d+}/{name}', [Home::class, 'item']);
+
+    $app->get('/listings/{type:[\w-]+}[/{name:[\w-]+}]', [Home::class, 'listings']);
     
     $app->group('/auth', function ($group)
     {

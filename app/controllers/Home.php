@@ -4,7 +4,6 @@ namespace App\Controllers;
 
 use Awesomeundead\Undeadstore\Controller;
 use Awesomeundead\Undeadstore\Database;
-use Awesomeundead\Undeadstore\Session;
 
 class Home extends Controller
 {
@@ -13,7 +12,7 @@ class Home extends Controller
         echo $this->templates->render('home/index');
     }
 
-    public function listings()
+    public function listings($type = null, $name = null)
     {
         echo $this->templates->render('home/listings');
     }

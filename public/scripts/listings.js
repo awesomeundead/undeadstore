@@ -1,26 +1,50 @@
 async function main()
 {
-    let query = new URLSearchParams(window.location.search);
+    pathname = window.location.pathname.split('/');
 
-    if (query.has('family'))
+    if (pathname[1] == 'listings')
     {
-        url = `/list/item?family=${query.get('family')}`;
-    }
-    else if (query.has('name'))
-    {
-        url = `/list/item?name=${query.get('name')}`;
-    }    
-    else if (query.has('rarity'))
-    {
-        url = `/list/item?rarity=${query.get('rarity')}`;
-    }
-    else if (query.has('type'))
-    {
-        url = `/list/item?type=${query.get('type')}`;
-    }
-    else if (query.has('collection'))
-    {
-        url = `/list/item?collection=${query.get('collection')}`;
+        if (pathname.length > 2)
+        {
+            let weapons = ['machinegun', 'pistol', 'rifle', 'shotgun', 'smg', 'sniper-rifle'];
+
+            if (weapons.indexOf(pathname[2]))
+            {
+                if (pathname.length == 3)
+                {
+                    url = `/list/item?type=${pathname[2]}`;
+                }
+                else if (pathname.length == 4)
+                {
+                    url = `/list/item?name=${pathname[3]}`;
+                }
+            }
+        }
+        else
+        {
+            let query = new URLSearchParams(window.location.search);
+
+            if (query.has('family'))
+            {
+                url = `/list/item?family=${query.get('family')}`;
+            }
+            else if (query.has('name'))
+            {
+                url = `/list/item?name=${query.get('name')}`;
+            }    
+            else if (query.has('rarity'))
+            {
+                url = `/list/item?rarity=${query.get('rarity')}`;
+            }
+            else if (query.has('type'))
+            {
+                url = `/list/item?type=${query.get('type')}`;
+            }
+            else if (query.has('collection'))
+            {
+                url = `/list/item?collection=${query.get('collection')}`;
+            }
+        }
     }
 
     data = await request(url);

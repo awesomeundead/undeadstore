@@ -17,4 +17,4 @@ $this->layout('layout', [
 </nav>
 <?php $this->insert('home/template') ?>
 <script src="/scripts/library.js?release=7"></script>
-<script src="/scripts/listings.js?release=8"></script>
+<script src="/scripts/listings.js?release=9"></script>

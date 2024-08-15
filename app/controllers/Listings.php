@@ -25,12 +25,10 @@ class Listings
         FROM products AS p
         LEFT JOIN cs_item_variant ON p.cs_item_variant_id = cs_item_variant.id
         LEFT JOIN cs_item ON cs_item_variant.cs_item_id = cs_item.id
-        WHERE availability = :availability
-        ORDER BY price DESC';
+        WHERE availability = 1
+        ORDER BY RAND()';
 
-        $params = ['availability' => '1'];
-
-        $this->_get($query, $params);
+        $this->_get($query);
     }
 
     public function coming()
@@ -65,6 +63,7 @@ class Listings
         elseif ($name)
         {
             $index = 'name';
+            $name = str_replace('-', '_', $name);
             $params = ['value' => $name];
         }
         elseif ($rarity)
@@ -75,6 +74,7 @@ class Listings
         elseif ($type)
         {
             $index = 'type';
+            $type = str_replace('-', '_', $type);
             $params = ['value' => $type];
         }
         elseif ($collection)
@@ -84,8 +84,7 @@ class Listings
         }
         else
         {
-            $index = 'type';
-            $params = ['value' => 'Rifle'];
+            return null;
         }
 
         $query = "SELECT cs_item_variant.*, cs_item.*, p.id, p.availability, p.price, p.offer_percentage,
@@ -93,7 +92,7 @@ class Listings
         FROM products AS p
         LEFT JOIN cs_item_variant ON p.cs_item_variant_id = cs_item_variant.id
         LEFT JOIN cs_item ON cs_item_variant.cs_item_id = cs_item.id
-        WHERE {$index} = :value
+        WHERE {$index} LIKE :value
         ORDER BY availability = 1 DESC, availability = 3 DESC";
         
         $this->_get($query, $params);

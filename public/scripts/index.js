@@ -2,6 +2,7 @@ async function main()
 {
     const fragment = document.querySelector('template');
 
+    /*
     data = await request('/list/coming');
 
     if (data.length > 3)
@@ -12,6 +13,7 @@ async function main()
     {
         document.querySelector('#container .coming').remove();
     }
+    */
 
     data = await request('/list/available');
     create(data, fragment, document.querySelector('#container .items')); 

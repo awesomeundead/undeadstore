@@ -5,63 +5,63 @@
     <div class="menu">
         <button>Escopeta</button>
         <div class="submenu">
-            <a href="/listings?type=Shotgun">Todos</a>
-            <a href="/listings?name=Sawed-Off">Cano Curto</a>
-            <a href="/listings?name=Nova">Nova</a>
-            <a href="/listings?name=XM1014">XM1014</a>
+            <a href="/listings/shotgun">Todos</a>
+            <a href="/listings/shotgun/sawed-off">Cano Curto</a>
+            <a href="/listings/shotgun/nova">Nova</a>
+            <a href="/listings/shotgun/xm1014">XM1014</a>
         </div>
     </div>
     <!--
     <div class="menu">
-        <a href="/listings?type=Machinegun">Metralhadora</a>
+        <a href="/listings/machinegun">Metralhadora</a>
     </div>
     -->
     <div class="menu">
         <button>Pistola</button>
         <div class="submenu">
-            <a href="/listings?type=Pistol">Todos</a>
-            <a href="/listings?name=CZ75-Auto">CZ75-Auto</a>
-            <a href="/listings?name=Desert Eagle">Desert Eagle</a>
-            <a href="/listings?name=Five-SeveN">Five-SeveN</a>
-            <a href="/listings?name=Glock-18">Glock-18</a>
-            <a href="/listings?name=P250">P250</a>
-            <a href="/listings?name=R8 Revolver">Revolvér R8</a>    
-            <a href="/listings?name=USP-S">USP-S</a>
-            <a href="/listings?name=Tec-9">Tec-9</a>
+            <a href="/listings/pistol">Todos</a>
+            <a href="/listings/pistol/cz75-auto">CZ75-Auto</a>
+            <a href="/listings/pistol/desert-eagle">Desert Eagle</a>
+            <a href="/listings/pistol/five-seven">Five-SeveN</a>
+            <a href="/listings/pistol/glock-18">Glock-18</a>
+            <a href="/listings/pistol/p250">P250</a>
+            <a href="/listings/pistol/r8-revolver">Revolvér R8</a>    
+            <a href="/listings/pistol/usp-s">USP-S</a>
+            <a href="/listings/pistol/tec-9">Tec-9</a>
         </div>
     </div>
     <div class="menu">
         <button>Rifle</button>
         <div class="submenu">
-            <a href="/listings?type=Rifle">Todos</a>
-            <a href="/listings?name=AK-47">AK-47</a>
-            <a href="/listings?name=AUG">AUG</a>
-            <a href="/listings?name=FAMAS">FAMAS</a>
-            <a href="/listings?name=Galil AR">Galil AR</a>
-            <a href="/listings?name=M4A1-S">M4A1-S</a>
-            <a href="/listings?name=M4A4">M4A4</a>
-            <a href="/listings?name=SG 553">SG 553</a>
+            <a href="/listings/rifle">Todos</a>
+            <a href="/listings/rifle/ak-47">AK-47</a>
+            <a href="/listings/rifle/aug">AUG</a>
+            <a href="/listings/rifle/famas">FAMAS</a>
+            <a href="/listings/rifle/galil-ar">Galil AR</a>
+            <a href="/listings/rifle/m4a1-s">M4A1-S</a>
+            <a href="/listings/rifle/m4a4">M4A4</a>
+            <a href="/listings/rifle/sg-553">SG 553</a>
         </div>
     </div>
     <div class="menu">
         <button>Rifle de Precisão</button>
         <div class="submenu">
-            <a href="/listings?type=Sniper Rifle">Todos</a>
-            <a href="/listings?name=AWP">AWP</a>
-            <a href="/listings?name=SSG 08">SSG 08</a>
+            <a href="/listings/sniper-rifle">Todos</a>
+            <a href="/listings/sniper-rifle/awp">AWP</a>
+            <a href="/listings/sniper-rifle/ssg-08">SSG 08</a>
         </div>
     </div>
     <div class="menu">
         <button>Submetralhadora</button>
         <div class="submenu">
-            <a href="/listings?type=SMG">Todos</a>
-            <a href="/listings?name=MAC-10">MAC-10</a>
-            <a href="/listings?name=MP5-SD">MP5-SD</a>
-            <a href="/listings?name=MP7">MP7</a>
-            <a href="/listings?name=MP9">MP9</a>
-            <a href="/listings?name=PP-Bizon">PP-Bizon</a>
-            <a href="/listings?name=P90">P90</a>
-            <a href="/listings?name=UMP-45">UMP-45</a>
+            <a href="/listings/smg">Todos</a>
+            <a href="/listings/smg/mac-10">MAC-10</a>
+            <a href="/listings/smg/mp5-sd">MP5-SD</a>
+            <a href="/listings/smg/mp7">MP7</a>
+            <a href="/listings/smg/mp9">MP9</a>
+            <a href="/listings/smg/pp-bizon">PP-Bizon</a>
+            <a href="/listings/smg/p90">P90</a>
+            <a href="/listings/smg/ump-45">UMP-45</a>
         </div>
     </div>
     <div class="menu">
