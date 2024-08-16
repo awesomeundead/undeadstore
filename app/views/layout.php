@@ -13,15 +13,15 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="manifest" href="/site.webmanifest">
 <link as="image" href="/styles/loading.svg" rel="preload" />
-<link href="/styles/layout.css?release=15" rel="stylesheet" />
-<link href="/styles/default.css?release=17" rel="stylesheet" />
-<link href="/styles/mobile.css?release=12" media="only screen and (max-width: 768px)" rel="stylesheet" />
+<link href="<?= $this->asset('/styles/layout.css') ?>" rel="stylesheet" />
+<link href="<?= $this->asset('/styles/default.css') ?>" rel="stylesheet" />
+<link href="<?= $this->asset('/styles/mobile.css') ?>" media="only screen and (max-width: 768px)" rel="stylesheet" />
 <?php if (isset($styles)): ?>
 <?php foreach ($styles as $name): ?>
 <link href="/styles/<?= $name ?>" rel="stylesheet" />
 <?php endforeach ?>
 <?php endif ?>
-<script src="/scripts/default.js"></script>
+<script src="<?= $this->asset('/scripts/default.js') ?>"></script>
 <title><?= $this->e($title) ?></title>
 </head>
 <body>

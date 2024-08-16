@@ -51,7 +51,16 @@ class Auth
                         $session->set('user_id', $login['user_id']);
                         $session->set('steamid', $userData['steamid']);
                         $session->set('steam_name', $userData['personaname']);
-                        $session->set('steam_avatar', $userData['avatar']);
+                        $session->set('steam_avatar', $userData['avatar']);                       
+
+                        $query = 'UPDATE users SET personaname = :personaname, avatarhash = :avatarhash WHERE id = :id';
+                        $stmt = $pdo->prepare($query);
+                        $params = [
+                            'id' => $session->get('user_id'),
+                            'personaname' => $userData['personaname'],
+                            'avatarhash' => $userData['avatarhash']
+                        ];
+                        $stmt->execute($params);
 
                         if (isset($_GET['redirect']))
                         {
@@ -123,14 +132,25 @@ class Auth
                 {
                     $verified_email = true;
                 }
+
+                $query = 'UPDATE users SET personaname = :personaname, avatarhash = :avatarhash WHERE id = :id';
+                $stmt = $pdo->prepare($query);
+                $params = [
+                    'id' => $session->get('user_id'),
+                    'personaname' => $userData['personaname'],
+                    'avatarhash' => $userData['avatarhash']
+                ];
+                $result = $stmt->execute($params);
             }
             else
             {
                 // NOVO REGISTRO DE USUÁRIO
-                $query = 'INSERT INTO users (steamid, created_date) VALUES (:steamid, :created_date)';
+                $query = 'INSERT INTO users (steamid, personaname, avatarhash, created_date) VALUES (:steamid, :personaname, :avatarhash, :created_date)';
                 $stmt = $pdo->prepare($query);
                 $params = [
                     'steamid' => $session->get('steamid'),
+                    'personaname' => $userData['personaname'],
+                    'avatarhash' => $userData['avatarhash'],
                     'created_date' => date('Y-m-d')
                 ];
                 $result = $stmt->execute($params);

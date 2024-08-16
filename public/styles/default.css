@@ -278,6 +278,26 @@ button:hover
     color: #e4ae39;
 }
 
+._back .rarity.rare_weapon
+{
+    background: #4b69ff;
+}
+
+._back .rarity.mythical_weapon
+{
+    background: #8847ff;
+}
+
+._back .rarity.legendary_weapon
+{
+    background: #d32ce6;
+}
+
+._back .rarity.ancient_weapon
+{
+    background: #eb4b4b;
+}
+
 ._bottom .rarity.rare_weapon
 {
     background: linear-gradient(to bottom, #222, #4b69ff88);
@@ -1161,6 +1181,20 @@ dialog.confirm .container div
     margin: 5px 0;
 }
 
+.weaponcases .probability
+{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    padding: 10px 0;
+}
+
+.weaponcases .probability div
+{
+    color: #FFF;
+    padding: 5px;
+    text-align: center;
+}
+
 .weaponcases .weapons
 {
     display: grid;
@@ -1190,4 +1224,49 @@ dialog.confirm .container div
 .weaponcases .weapons a:hover
 {
     background-color: #333;
+}
+
+.winners
+{
+    margin-top: 50px;
+}
+
+.winners .item
+{
+    background-color: #333;
+    border-radius: 10px;
+    border-top-style: solid;
+    border-top-width: 5px;
+    display: grid;
+    grid-template-columns: 200px auto;
+    padding: 5px;
+}
+
+.winners .item div
+{
+    color: #FFF;
+}
+
+.winners .item .avatar
+{
+    border: 2px solid #999;
+    border-radius: 5px;
+    display: flex;
+}
+
+.winners .item .avatar img
+{
+    border-radius: 5px;
+    width: 48px;
+}
+
+.winners .item .image
+{
+    padding: 10px;
+    width: 160px;
+}
+
+.winners .item .image img
+{
+    width: 100%;
 }

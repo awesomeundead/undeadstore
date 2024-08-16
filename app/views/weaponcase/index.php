@@ -80,4 +80,44 @@ $this->layout('layout', [
             <img alt="" src="/images/awp_chromatic_aberration_ft_ww.png" />
         </a>
     </div>
+
+    <div>Probabilidade: Nossa caixa</div>
+
+    <div class="probability _back">
+        <div class="rarity rare_weapon" title="Nível Militar">70%</div>
+        <div class="rarity mythical_weapon" title="Restrito">20%</div>
+        <div class="rarity legendary_weapon" title="Secreto">8%</div>
+        <div class="rarity ancient_weapon" title="Oculto">2%</div>
+    </div>
+
+    <div>Probabilidade: Caixas no CS 2</div>
+
+    <div class="probability _back">
+        <div class="rarity rare_weapon" title="Nível Militar">79,9%</div>
+        <div class="rarity mythical_weapon" title="Restrito">15,9%</div>
+        <div class="rarity legendary_weapon" title="Secreto">3,2%</div>
+        <div class="rarity ancient_weapon" title="Oculto">0,6%</div>
+    </div>
+
+    <div class="winners flex column gap-10">
+        <div class="user">
+            <header>Últimos Drops</header>
+        </div>
+        <?php foreach ($winners as $item): ?>
+        <div class="item rarity <?= $item['rarity'] ?>">
+            <div class="flex column center align-center">
+                <div class="avatar">
+                    <img alt="" src="https://avatars.steamstatic.com/<?= $item['avatarhash'] ?>_medium.jpg" />
+                </div>
+                <div class="nickname"><?= $item['personaname'] ?></div>
+            </div>
+            <div class="flex align-center">
+                <div class="image">
+                    <img alt="" src="/images/<?= $item['image'] ?>.png" />
+                </div>
+                <div><?= $item['item_name'] ?></div> 
+            </div>           
+        </div>
+        <?php endforeach ?>
+    <div>
 </div>

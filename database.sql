@@ -1,6 +1,8 @@
 CREATE TABLE IF NOT EXISTS users (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     steamid BIGINT UNSIGNED NOT NULL,
+    personaname VARCHAR(255) NOT NULL,
+    avatarhash VARCHAR(255) NOT NULL,
     steam_trade_url VARCHAR(255),
     name VARCHAR(255),
     email VARCHAR(255),

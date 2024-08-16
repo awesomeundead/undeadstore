@@ -3,6 +3,7 @@
 namespace Awesomeundead\Undeadstore;
 
 use League\Plates\Engine;
+use League\Plates\Extension\Asset;
 
 class Controller
 {
@@ -30,6 +31,7 @@ class Controller
             }
         }
         
+        $templates->loadExtension(new Asset(ROOT . '/public/'));
         $templates->setDirectory(ROOT . '/app/views');
         $templates->addData([
             'session' => [

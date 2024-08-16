@@ -101,4 +101,4 @@ const rarities = <?= $rarities ?>;
     
 </script>
 <script src="/scripts/glide.min.js"></script>
-<script src="/scripts/open_weaponcase.js?release=3"></script>
+<script src="<?= $this->asset('/scripts/open_weaponcase.js') ?>"></script>

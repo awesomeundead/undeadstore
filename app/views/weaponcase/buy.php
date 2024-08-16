@@ -63,4 +63,4 @@ quantity.addEventListener('change', () =>
 
 </script>
 <script src="https://sdk.mercadopago.com/js/v2"></script>
-<script src="/scripts/mp_weaponcases.js?release=2"></script>
+<script src="<?= $this->asset('/scripts/mp_weaponcases.js') ?>"></script>
