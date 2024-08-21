@@ -92,10 +92,10 @@
                 <div>Formas de pagamento</div>
                 <div class="flex icons">
                     <div>
-                        <img alt="Logo Pix" src="/styles/pix_icon.png" />
+                        <img alt="Logo Pix" src="/styles/logo_pix.png" />
                     </div>
                     <div>
-                        <img alt="Logo Mercado Pago" src="/styles/mercadopago_icon.png" />
+                        <img alt="Logo Mercado Pago" src="/styles/logo_mercadopago.png" />
                     </div>
                 </div>
                 <!--
@@ -132,13 +132,13 @@
                 <div>Redes sociais</div>
                 <div class="social">
                     <a href="https://discord.gg/xAe6QYfsCJ" target="_blank">
-                        <img alt="Discord logo" src="/styles/icon_discord.png" />
+                        <img alt="Discord logo" src="/styles/icon_discord_white.png" />
                     </a>
                     <a href="https://steamcommunity.com/groups/undeadstore" target="_blank">
-                        <img alt="Steam logo" src="/styles/icon_steam.png" />
+                        <img alt="Steam logo" src="/styles/icon_steam_white.png" />
                     </a>
                     <a href="https://instagram.com/undeadstore.com.br" target="_blank">
-                        <img alt="Instagram logo" src="/styles/icon_instagram.png" />
+                        <img alt="Instagram logo" src="/styles/icon_instagram_white.png" />
                     </a>
                 </div>
             </div>

@@ -87,3 +87,18 @@ body
 {
     grid-template-columns: 1fr;
 }
+
+.weaponcases .product .image img
+{
+    width: 100%;
+}
+
+.weaponcases .weapons
+{
+    grid-template-columns: repeat(6, 1fr);
+}
+
+.drop_columns
+{
+    display: block;
+}

@@ -9,8 +9,8 @@ $this->layout('layout', [
 
 ?>
 <div class="flex column">
-    <div class="box white">
-        <div>Suporte</div>
+    <div class="user">
+        <header>Suporte</header>
     </div>
     <div class="box">
         <form action="/support" method="post">

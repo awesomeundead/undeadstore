@@ -9,9 +9,6 @@ $this->layout('layout', [
 ]);
 
 ?>
-<nav>
-    <?php $this->insert('home/nav') ?>
-</nav>
 <div class="opencase">
     <?php if ($item['item_name'] == 'undeadcase'): ?>
         <div class="flex center">

@@ -15,8 +15,8 @@ figure img
 }
 </style>
 <div class="flex column gap-10">
-    <div class="box header">
-        <div>Segurança</div>
+    <div class="user">
+        <header>Segurança</header>
     </div>
     <div class="box">
         <div>Cuidado com sites falsos, nós nunca pedimos nome de usuário e senha do Steam.</div>

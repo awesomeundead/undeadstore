@@ -8,9 +8,6 @@ $this->layout('layout', [
 ]);
 
 ?>
-<nav>
-    <?php $this->insert('home/nav') ?>
-</nav>
 <div class="flex column">
 <?php if ($notification ?? false): ?>
     <div class="box notification <?= $notification['type'] ?>">

@@ -6,44 +6,50 @@ $this->layout('layout', [
 ]);
 
 ?>
-<div class="box header">
-    <div>Parceiros</div>
+<div class="user">
+    <header>Parceiros</header>
 </div>
 <div class="partners">
-    <div class="box">
-        <div class="icon">
-            <img alt="Twitch logo"src="/styles/twitch_icon.svg" />
+    <div class="item">
+        <div>fenixpistola</div>
+        <div class="image">
+            <img alt="" src="/detach/fenixpistola128.png" />
         </div>
-        <a href="https://www.twitch.tv/dgobode" target="_blank">
-            <img class="avatar" src="https://static-cdn.jtvnw.net/jtv_user_pictures/7d4120ad-8b73-42e9-87f9-83e42c403f03-profile_image-300x300.png" />
-        </a>
-        <a href="https://www.twitch.tv/dgobode" target="_blank">dgobode</a>
+        <div class="icons">
+            <a href="https://www.twitch.tv/fenixpistola" target="_blank">
+                <img alt="Twitch logo" src="/styles/icon_twitch.png" />
+            </a>
+        </div>
     </div>
-    <div class="box">
-        <div class="icon">
-            <img alt="YouTube logo"src="/styles/youtube_icon.svg" />
+    <div class="item">
+        <div>dgobode</div>
+        <div class="image">
+            <img alt="" src="/detach/dgobode128.png" />
         </div>
-        <a href="https://www.youtube.com/@dgobode" target="_blank">
-            <img class="avatar" src="https://yt3.googleusercontent.com/ytc/AIdro_kfFG5W31bowVbh5IzJGsRxmsy2Z8G7vEHuIWzJDSonSg=s900-c-k-c0x00ffffff-no-rj" />
-        </a>
-        <a href="https://www.youtube.com/@dgobode" target="_blank">@dgobode</a>
+        <div class="icons">
+            <a href="https://www.twitch.tv/dgobode" target="_blank">
+                <img alt="Twitch logo" src="/styles/icon_twitch.png" />
+            </a>
+            <a href="https://www.youtube.com/@dgobode" target="_blank">
+                <img alt="YouTube logo" src="/styles/icon_youtube.png" />
+            </a>
+            <a href="https://www.instagram.com/dgobode" target="_blank">
+                <img alt="Instagram logo" src="/styles/icon_instagram.png" />
+            </a>
+        </div>
     </div>
-    <div class="box">
-        <div class="icon">
-            <img alt="Twitch logo"src="/styles/twitch_icon.svg" />
+    <div class="item">
+        <div>undeadpistola</div>
+        <div class="image">
+            <img alt="" src="/detach/undeadpistola128.png" />
         </div>
-        <a href="https://www.twitch.tv/UndeadPistola" target="_blank">
-            <img class="avatar" src="https://static-cdn.jtvnw.net/jtv_user_pictures/ca3dfd95-15b1-4fe4-8ead-289fa8f70c5c-profile_image-300x300.png" />
-        </a>
-        <a href="https://www.twitch.tv/UndeadPistola" target="_blank">UndeadPistola</a>
-    </div>
-    <div class="box">
-        <div class="icon">
-            <img alt="YouTube logo"src="/styles/youtube_icon.svg" />
+        <div class="icons">
+            <a href="https://www.twitch.tv/undeadpistola" target="_blank">
+                <img alt="Twitch logo"src="/styles/icon_twitch.png" />
+            </a>
+            <a href="https://www.youtube.com/@awesomeundead9342" target="_blank">
+                <img alt="YouTube logo"src="/styles/icon_youtube.png" />
+            </a>
         </div>
-        <a href="https://www.youtube.com/@awesomeundead9342" target="_blank">
-            <img class="avatar" src="https://yt3.googleusercontent.com/XEmmC_yR7vhQNRdt5fzLYeqGELGFL9MmqKopr_XsZdhwlBiKyi_WEmASUea0XNlffOrss95J=s900-c-k-c0x00ffffff-no-rj" />
-        </a>
-        <a href="https://www.youtube.com/@awesomeundead9342" target="_blank">@awesomeundead9342</a>
     </div>
 </div>

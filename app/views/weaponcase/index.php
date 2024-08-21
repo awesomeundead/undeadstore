@@ -99,25 +99,52 @@ $this->layout('layout', [
         <div class="rarity ancient_weapon" title="Oculto">0,6%</div>
     </div>
 
-    <div class="winners flex column gap-10">
-        <div class="user">
-            <header>Últimos Drops</header>
-        </div>
-        <?php foreach ($winners as $item): ?>
-        <div class="item rarity <?= $item['rarity'] ?>">
-            <div class="flex column center align-center">
-                <div class="avatar">
-                    <img alt="" src="https://avatars.steamstatic.com/<?= $item['avatarhash'] ?>_medium.jpg" />
-                </div>
-                <div class="nickname"><?= $item['personaname'] ?></div>
+    <div class="drop_columns">
+        <div class="winners flex column gap-10">
+            <div class="user">
+                <header>Últimos Drops</header>
             </div>
-            <div class="flex align-center">
-                <div class="image">
-                    <img alt="" src="/images/<?= $item['image'] ?>.png" />
+            <?php foreach ($winners as $item): ?>
+            <div class="item">
+                <div class="_right">
+                    <div class="rarity <?= $item['rarity'] ?>">
+                        <img alt="" src="/images/<?= $item['image'] ?>.png" />
+                    </div>
                 </div>
-                <div><?= $item['item_name'] ?></div> 
-            </div>           
+                <div class="_left">
+                    <div class="name"><?= $item['item_name'] ?></div>
+                    <div class="flex align-center">
+                        <div class="avatar">
+                            <img alt="" src="https://avatars.steamstatic.com/<?= $item['avatarhash'] ?>_medium.jpg" />
+                        </div>
+                        <div class="nickname"><?= $item['personaname'] ?></div>
+                    </div>
+                </div>
+            </div>
+            <?php endforeach ?>
         </div>
-        <?php endforeach ?>
-    <div>
+        <div class="winners flex column gap-10">
+            <div class="user">
+                <header>Últimos Melhores Drops</header>
+            </div>
+            <?php foreach ($best as $item): ?>
+            <div class="item">
+                <div class="_right">
+                    <div class="rarity <?= $item['rarity'] ?>">
+                        <img alt="" src="/images/<?= $item['image'] ?>.png" />
+                    </div>
+                </div>
+                <div class="_left">
+                    <div class="name"><?= $item['item_name'] ?></div>
+                    <div class="flex align-center">
+                        <div class="avatar">
+                            <img alt="" src="https://avatars.steamstatic.com/<?= $item['avatarhash'] ?>_medium.jpg" />
+                        </div>
+                        <div class="nickname"><?= $item['personaname'] ?></div>
+                    </div>
+                </div>
+            </div>
+            <?php endforeach ?>
+        </div>
+    </div>
 </div>

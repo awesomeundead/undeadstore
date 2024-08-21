@@ -180,7 +180,7 @@ class Auth
             $token = $selector . ':' . $validator;
 
             $hashed_validator = password_hash($validator, PASSWORD_DEFAULT);
-            $expire_date = strtotime('+1 week');
+            $expire_date = strtotime('+1 month');
 
             $address = $_SERVER['HTTP_CLIENT_IP']
                     ?? $_SERVER['HTTP_X_FORWARDED_FOR']

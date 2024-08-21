@@ -813,7 +813,7 @@ label.icon img
 
 .user header
 {
-    background: linear-gradient(to right, #444, #222);
+    background: linear-gradient(to right, #136, #222);
     font-size: 18px;
     padding: 20px 10px;
 }
@@ -1101,27 +1101,33 @@ dialog.confirm .container div
     margin-top: 10px;
 }
 
-.partners div
+.partners .item
 {
+    align-items: center;
+    background: #333;
+    border-radius: 10px;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    padding: 10px;
 }
 
-.partners .icon
-{
-    align-self: end;
-}
-
-.partners .icon img
-{
-    height: 22px;
-}
-
-.partners img.avatar
+.partners .image img
 {
     border-radius: 50%;
     height: 128px;
+}
+
+.partners .icons
+{
+    display: flex;
+    gap: 10px;
+}
+
+.partners .icons img
+{
+    height: 32px;
 }
 
 .pay img
@@ -1226,6 +1232,13 @@ dialog.confirm .container div
     background-color: #333;
 }
 
+.drop_columns
+{
+    display: grid;
+    gap: 5px;
+    grid-template-columns: 1fr 1fr;
+}
+
 .winners
 {
     margin-top: 50px;
@@ -1235,38 +1248,47 @@ dialog.confirm .container div
 {
     background-color: #333;
     border-radius: 10px;
-    border-top-style: solid;
-    border-top-width: 5px;
-    display: grid;
-    grid-template-columns: 200px auto;
+    display: flex;
+    gap: 5px;
     padding: 5px;
 }
 
-.winners .item div
+.winners .item .rarity
 {
-    color: #FFF;
+    border-left-style: solid;
+    border-left-width: 2px;
+    border-radius: 5px;
+    display: flex;
+    padding: 10px;
+}
+.winners .item .rarity img
+{
+    width: 100%;
+    width: 120px;
+}
+
+.winners .item ._left
+{
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 5px;
+    justify-content: space-between;
+}
+
+.winners .item .name
+{
+    font-weight: bold;
 }
 
 .winners .item .avatar
 {
-    border: 2px solid #999;
-    border-radius: 5px;
     display: flex;
 }
 
 .winners .item .avatar img
 {
+    border: 2px solid #999;
     border-radius: 5px;
     width: 48px;
-}
-
-.winners .item .image
-{
-    padding: 10px;
-    width: 160px;
-}
-
-.winners .item .image img
-{
-    width: 100%;
 }

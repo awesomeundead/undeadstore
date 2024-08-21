@@ -26,7 +26,19 @@ class Weaponcase extends Controller
         $stmt->execute();
         $winners = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-        echo $this->templates->render('weaponcase/index', ['winners' => $winners]);
+        $query = "SELECT user_id, i.item_name, rarity, image, personaname, avatarhash FROM inventory_historic AS i
+                  INNER JOIN weaponcase ON weaponcase.cs_item_variant_id = i.cs_item_variant_id
+                  LEFT JOIN users ON users.id = i.user_id
+                  WHERE status = 'drop' AND rarity IN ('mythical_weapon', 'legendary_weapon', 'ancient_weapon')
+                  ORDER BY i.id DESC LIMIT 20";
+        $stmt = $pdo->prepare($query);
+        $stmt->execute();
+        $best = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        echo $this->templates->render('weaponcase/index', [
+            'winners' => $winners,
+            'best' => $best
+        ]);
     }
 
     public function buy()
