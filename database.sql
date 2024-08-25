@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS purchase_items (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     purchase_id INT UNSIGNED NOT NULL,
     product_id INT UNSIGNED NOT NULL,
+    trading_id INT UNSIGNED NOT NULL,
     status enum('pending', 'trading', 'canceled') NOT NULL,
     item_name TEXT NOT NULL,
     price DECIMAL(8,2) NOT NULL,
@@ -153,7 +154,7 @@ CREATE TABLE IF NOT EXISTS inventory_historic (
     item_name VARCHAR(255) NOT NULL,
     cs_item_variant_id INT UNSIGNED,
     steam_asset BIGINT UNSIGNED,
-    tradeofferid BIGINT UNSIGNED,
+    trading_id INT UNSIGNED,
     status ENUM('purchased', 'open', 'drop', 'sold', 'trading'),
     date DATETIME NOT NULL
 );
@@ -177,4 +178,14 @@ CREATE TABLE IF NOT EXISTS weaponcase_stock (
     cs_item_variant_id INT UNSIGNED NOT NULL,
     steam_asset BIGINT UNSIGNED NOT NULL,
     status ENUM('available', 'trading')
+);
+
+CREATE TABLE IF NOT EXISTS trading (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNSIGNED NOT NULL,
+    item_name VARCHAR(255) NOT NULL,
+    steam_asset BIGINT UNSIGNED NOT NULL,
+    tradeofferid BIGINT UNSIGNED,
+    status ENUM('pending', 'sent') NOT NULL,
+    created_date DATETIME NOT NULL
 );

@@ -169,6 +169,7 @@ class Inventory extends Controller
         $user_id = $session->get('user_id');
         $date = date('Y-m-d H:i:s');
 
+        // Verifica se o item é do usuário e se é trocável
         $query = 'SELECT * FROM inventory WHERE id = :id AND user_id = :user_id AND tradable = 1';
         $params = [
             'id' => $id,
@@ -185,7 +186,8 @@ class Inventory extends Controller
             redirect('/inventory');
         }
 
-        $query = 'SELECT * FROM weaponcase_stock WHERE cs_item_variant_id = :cs_item_variant_id AND status = :status';
+        // Procura o item no estoque
+        $query = 'SELECT * FROM weaponcase_stock WHERE cs_item_variant_id = :cs_item_variant_id AND status = :status LIMIT 1';
         $params = [
             'cs_item_variant_id' => $item['cs_item_variant_id'],
             'status' => 'available'
@@ -195,92 +197,59 @@ class Inventory extends Controller
         $stmt->execute($params);
         $stock = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-        $query = 'SELECT steamid, steam_trade_url FROM users WHERE id = :id';
+        // Adiciona o item na lista de trading
+        $query = 'INSERT INTO trading (user_id, item_name, steam_asset, status, created_date)
+                  VALUES (:user_id, :item_name, :steam_asset, :status, :created_date)';
         $params = [
-            'id' => $user_id
+            'user_id' => $user_id,
+            'item_name' => $item['item_name'],
+            'steam_asset' => $stock['steam_asset'],
+            'status' => 'pending',
+            'created_date' => $date
+        ];
+
+        $stmt = $pdo->prepare($query);
+        $stmt->execute($params);
+
+        $trading_id = $pdo->lastInsertId();
+
+        // Atualiza o estoque
+        $query = 'UPDATE weaponcase_stock SET status = :status WHERE id = :id';
+        $params = [
+            'id' => $stock['id'],
+            'status' => 'trading'
         ];
         $stmt = $pdo->prepare($query);
         $stmt->execute($params);
-        $user = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-        if ($user)
-        {
-            $assets[] = [
-                'appid' => '730',
-                'contextid' => '2',
-                'amount' => '1',
-                'assetid' => (string) $stock['steam_asset']
-            ];
+        // Apaga o item do inventário
+        $query = 'DELETE FROM inventory WHERE id = :id AND user_id = :user_id';
+        $params = [
+            'id' => $id,
+            'user_id' => $user_id
+        ];
 
-            $description = 'withdraw';
+        $stmt = $pdo->prepare($query);
+        $stmt->execute($params);
 
-            try
-            {
-                $trade = TradeOffer::sendOffer($user['steam_trade_url'], $user['steamid'], $assets);
+        // histórico
+        $query = 'INSERT INTO inventory_historic (historic_id, user_id, item_name, cs_item_variant_id, steam_asset, trading_id, status, date)
+                    VALUES (:historic_id, :user_id, :item_name, :cs_item_variant_id, :steam_asset, :trading_id, :status, :date)';
+        $params = [
+            'historic_id' => $item['historic_id'],
+            'user_id' => $user_id,
+            'item_name' => $item['item_name'],
+            'cs_item_variant_id' => $item['cs_item_variant_id'],
+            'steam_asset' => $stock['steam_asset'],
+            'trading_id' => $trading_id,
+            'status' => 'trading',
+            'date' => $date
+        ];
 
-                $response = $trade['response'];
-                $info = $trade['info'];
-            }
-            catch (TradeOfferException $e)
-            {
-                require ROOT . '/include/mail.php';
+        $stmt = $pdo->prepare($query);
+        $stmt->execute($params);
 
-                $params['subject'] = 'Problemas com Trade';
-                $params['message'] = $e->getMessage();
-                
-                send_mail($params);
-            }
-
-            file_put_contents(ROOT . '/log/trade_' . $info['http_code'] . '_' . $description . '_' . time() . '.json', $response);
-
-            if (isset($response))
-            {
-                $data = json_decode($response, true);
-
-                if (isset($data['tradeofferid']))
-                {
-                    $query = 'UPDATE weaponcase_stock SET status = :status WHERE id = :id';
-                    $params = [
-                        'id' => $stock['id'],
-                        'status' => 'trading'
-                    ];
-                    $stmt = $pdo->prepare($query);
-                    $stmt->execute($params);
-
-                    $query = 'DELETE FROM inventory WHERE id = :id AND user_id = :user_id';
-                    $params = [
-                        'id' => $id,
-                        'user_id' => $user_id
-                    ];
-
-                    $stmt = $pdo->prepare($query);
-                    $stmt->execute($params);
-
-                    // histórico
-                    $query = 'INSERT INTO inventory_historic (historic_id, user_id, item_name, cs_item_variant_id, steam_asset, tradeofferid, status, date)
-                              VALUES (:historic_id, :user_id, :item_name, :cs_item_variant_id, :steam_asset, :tradeofferid, :status, :date)';
-                    $params = [
-                        'historic_id' => $item['historic_id'],
-                        'user_id' => $user_id,
-                        'item_name' => $item['item_name'],
-                        'cs_item_variant_id' => $item['cs_item_variant_id'],
-                        'steam_asset' => $stock['steam_asset'],
-                        'tradeofferid' => $data['tradeofferid'],
-                        'status' => 'trading',
-                        'date' => $date
-                    ];
-
-                    $stmt = $pdo->prepare($query);
-                    $stmt->execute($params);
-
-                    $session->flash('trade', ['message' => 'Proposta de troca enviada.', 'type' => 'success']);
-
-                    redirect('/inventory');
-                }
-            }
-        }
-
-        $session->flash('trade', ['message' => 'Não foi possível enviar uma proposta de troca.', 'type' => 'failure']);
+        $session->flash('trade', ['message' => 'Em breve uma proposta de troca será enviada.', 'type' => 'success']);
 
         redirect('/inventory');
     }

@@ -5,8 +5,6 @@ namespace App\Controllers;
 use Awesomeundead\Undeadstore\Controller;
 use Awesomeundead\Undeadstore\Database;
 use Awesomeundead\Undeadstore\Session;
-use Awesomeundead\Undeadstore\TradeOffer;
-use Awesomeundead\Undeadstore\TradeOfferException;
 use MercadoPago\Client\Common\RequestOptions;
 use MercadoPago\Client\Payment\PaymentClient;
 use MercadoPago\Exceptions\MPApiException;
@@ -61,11 +59,11 @@ class Payment extends Controller
         $mail->send();
     }
 
-    private function send_trade_offer($purchase_id)
+    private function trading($purchase_id)
     {
         $pdo = Database::connect();
 
-        $query = 'SELECT id FROM purchase WHERE id = :id AND status = :status';
+        $query = 'SELECT user_id FROM purchase WHERE id = :id AND status = :status';
         $params = [
             'id' => $purchase_id,
             'status' => 'approved'
@@ -73,11 +71,12 @@ class Payment extends Controller
 
         $stmt = $pdo->prepare($query);
         $stmt->execute($params);
-        $result = $stmt->fetchColumn();
+        $user_id = $stmt->fetchColumn();
+        $date = date('Y-m-d H:i:s');
 
-        if ($result)
+        if ($user_id)
         {
-            $query = 'SELECT purchase_items.id, steam_asset FROM purchase_items
+            $query = 'SELECT purchase_items.id, item_name, steam_asset FROM purchase_items
                       INNER JOIN products ON purchase_items.product_id = products.id
                       WHERE purchase_id = :purchase_id AND status = :status';
             $params = [
@@ -93,51 +92,26 @@ class Payment extends Controller
             {
                 if ($item['steam_asset'])
                 {
-                    $assets[] = [
-                        'appid' => '730',
-                        'contextid' => '2',
-                        'amount' => '1',
-                        'assetid' => (string) $item['steam_asset']
+                    // Adiciona o item na lista de trading
+                    $query = 'INSERT INTO trading (user_id, item_name, steam_asset, status, created_date)
+                              VALUES (:user_id, :item_name, :steam_asset, :status, :created_date)';
+                    $params = [
+                        'user_id' => $user_id,
+                        'item_name' => $item['item_name'],
+                        'steam_asset' => $item['steam_asset'],
+                        'status' => 'pending',
+                        'created_date' => $date
                     ];
 
-                    $trading[] = $item['id'];
-                }
-            }
+                    $stmt = $pdo->prepare($query);
+                    $stmt->execute($params);
 
-            if ($assets ?? false)
-            {
-                $query = 'SELECT steamid, steam_trade_url FROM users
-                          INNER JOIN purchase ON users.id = purchase.user_id
-                          WHERE purchase.id = :id';
-                $params = [
-                    'id' => $purchase_id
-                ];
-                $stmt = $pdo->prepare($query);
-                $stmt->execute($params);
-                $user = $stmt->fetch(\PDO::FETCH_ASSOC);
+                    $trading_id = $pdo->lastInsertId();
 
-                if ($user)
-                {
-                    $description = $purchase_id;
-
-                    try
-                    {
-                        $trade = TradeOffer::sendOffer($user['steam_trade_url'], $user['steamid'], $assets);
-
-                        $response = $trade['response'];
-                        $info = $trade['info'];
-                    }
-                    catch (TradeOfferException $e)
-                    {
-                        require ROOT . '/include/mail.php';
-
-                        $params['subject'] = 'Problemas com Trade';
-                        $params['message'] = $e->getMessage();
-                        
-                        send_mail($params);
-                    }
-
-                    file_put_contents(ROOT . '/log/trade_' . $info['http_code'] . '_' . $description . '_' . time() . '.json', $response);
+                    $trading[] = [
+                        'id' => $item['id'],
+                        'trading_id' => $trading_id
+                    ];
                 }
             }
 
@@ -145,9 +119,10 @@ class Payment extends Controller
             {
                 foreach ($trading as $item)
                 {
-                    $query = 'UPDATE purchase_items SET status = :status WHERE id = :id';
+                    $query = 'UPDATE purchase_items SET trading_id = :trading_id, status = :status WHERE id = :id';
                     $params = [
-                        'id' => $item,
+                        'id' => $item['id'],
+                        'trading_id' => $item['trading_id'],
                         'status' => 'trading'
                     ];
                     $stmt = $pdo->prepare($query);
@@ -347,7 +322,7 @@ class Payment extends Controller
 
                     if ($status == 'approved')
                     {
-                        $this->send_trade_offer($purchase_id);
+                        $this->trading($purchase_id);
 
                         $query = 'SELECT email FROM users
                         INNER JOIN purchase ON users.id = purchase.user_id
