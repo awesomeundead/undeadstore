@@ -20,7 +20,7 @@ $this->layout('layout', [
     <div class="box header">
         <div>Carrinho de compras</div>
     </div>
-    <form action="/checkout/end">
+    <form>
         <div class="flex column">
             <div class="box flex column">
                 <div class="alert warning">
@@ -53,3 +53,32 @@ $this->layout('layout', [
         </div>
     </form>
 </div>
+<script>
+
+document.querySelector('form').addEventListener('submit', async e =>
+{
+    e.preventDefault();
+
+    const submit = document.querySelector('form button[type="submit"]');
+    submit.disabled = true;
+
+    try
+    {
+        const response = await request('/checkout/end');
+
+        if (response.hasOwnProperty('redirect'))
+        {
+            window.location.replace(response.redirect);
+        }
+        else
+        {
+            submit.disable = false;
+        }
+    }
+    catch (error)
+    {
+        console.log(error);
+    }
+});
+
+</script>

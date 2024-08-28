@@ -84,10 +84,10 @@ $this->layout('layout', [
     <div>Probabilidade: Nossa caixa</div>
 
     <div class="probability _back">
-        <div class="rarity rare_weapon" title="Nível Militar">70%</div>
-        <div class="rarity mythical_weapon" title="Restrito">20%</div>
-        <div class="rarity legendary_weapon" title="Secreto">8%</div>
-        <div class="rarity ancient_weapon" title="Oculto">2%</div>
+        <div class="rarity rare_weapon" title="Nível Militar">55%</div>
+        <div class="rarity mythical_weapon" title="Restrito">25%</div>
+        <div class="rarity legendary_weapon" title="Secreto">15%</div>
+        <div class="rarity ancient_weapon" title="Oculto">5%</div>
     </div>
 
     <div>Probabilidade: Caixas no CS 2</div>

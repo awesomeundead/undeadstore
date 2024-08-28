@@ -8,12 +8,9 @@ $this->layout('layout', [
 ]);
 
 ?>
-<style>
-figure img
-{
-    width: 100%;
-}
-</style>
+<nav>
+    <?php $this->insert('home/nav') ?>
+</nav>
 <div class="flex column gap-10">
     <div class="user">
         <header>Segurança</header>

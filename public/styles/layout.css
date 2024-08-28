@@ -35,32 +35,6 @@ summary
     user-select: none;
 }
 
-.background.container
-{
-    display: grid;
-    grid-template-columns: auto 1200px auto;
-    min-height: 100%;
-}
-/*
-.background.left
-{
-    background-position: top right;
-    background-repeat: repeat-y;
-}
-
-.background.right
-{
-    background-position: top right;
-    background-repeat: repeat-y;
-    transform: scaleX(-1);
-}
-*/
-
-.background.center
-{
-    min-height: 100%;
-}
-
 #grid
 {
     background-color: #222;
@@ -68,7 +42,14 @@ summary
     grid-template-rows: min-content auto 200px;
     height: 100vh;
     margin: 0 auto;
-    width: 1200px;
+}
+
+@media screen and (min-width: 1200px)
+{
+    #grid
+    {
+        width: 1200px;
+    }
 }
 
 #main_header .main.notification

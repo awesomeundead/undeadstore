@@ -11,6 +11,7 @@ $this->layout('layout', [
 <nav>
     <?php $this->insert('home/nav') ?>
 </nav>
+<h1 style="display: none;">Undead Store | Skins de Counter-Strike 2</h1>
 <?php $this->insert('home/banner') ?>
 <?php $this->insert('home/template') ?>
 <script src="<?= $this->asset('/scripts/library.js') ?>"></script>

@@ -433,7 +433,16 @@ nav.listings .submenu
 {
     display: grid;
     gap: 10px;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+@media screen and (min-width: 1200px)
+{
+    #container .coming,
+    #container .items
+    {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
 
 #container .coming
@@ -668,6 +677,7 @@ nav.listings .submenu
 .product .title
 {
     font-size: 22px;
+    margin: 0;
 }
 
 .product .attribute
@@ -1125,19 +1135,27 @@ dialog.confirm .container div
     gap: 10px;
 }
 
+.partners .icons a
+{
+    align-items: center;
+    background-color: #CCC;
+    border-radius: 5px;
+    display: flex;
+    height: 42px;
+    justify-content: center;
+    padding: 5px;
+    width: 42px;
+}
+
+.partners .icons a:hover
+{
+    background-color: #222;
+}
+
 .partners .icons img
 {
-    height: 32px;
-}
-
-.pay img
-{
-    width: 200px;
-}
-
-.pay .total
-{
-    font-size: 22px;
+    max-height: 32px;
+    max-width: 32px;
 }
 
 .order-history header
@@ -1291,4 +1309,9 @@ dialog.confirm .container div
     border: 2px solid #999;
     border-radius: 5px;
     width: 48px;
+}
+
+figure img
+{
+    width: 100%;
 }

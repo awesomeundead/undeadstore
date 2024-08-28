@@ -26,9 +26,6 @@
 </head>
 <body>
 
-<div class="background container">
-<div class="background left"></div>
-<div class="background center">
 <div id="grid">
     <header id="main_header">
         <?php if ($session['loggedin']): ?>
@@ -77,9 +74,11 @@
             </nav>
         </div>
     </header>
-    <section id="main_section">
-        <?= $this->section('content') ?>
-    </section>
+    <main>
+        <section id="main_section">
+            <?= $this->section('content') ?>
+        </section>
+    </main>
     <footer id="main_footer">
         <div class="flex_space_between">
             <div class="flex column">
@@ -118,16 +117,6 @@
                 </div>
                 -->
             </div>
-            <!--
-            <div class="flex column">
-                <div>Certificados</div>
-                <div class="flex icons">
-                    <a href="https://transparencyreport.google.com/safe-browsing/search?url=https:%2F%2Fundeadstore.com.br&hl=pt_BR" target="_blank">
-                        <img alt="Logo do Google Safe Browsing" src="/styles/safe_browsing_icon.png" />
-                    </a>
-                </div>
-            </div>
-            -->
             <div class="flex column">
                 <div>Redes sociais</div>
                 <div class="social">
@@ -148,9 +137,6 @@
             <div>Não somos afiliados a Valve.</div>
         </div>
     </footer>
-</div>
-</div>
-<div class="background right"></div>
 </div>
 
 </body>

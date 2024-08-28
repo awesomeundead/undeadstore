@@ -22,5 +22,14 @@ function redirect($path = '/')
     exit;
 }
 
+function json_response($content)
+{
+    header('Content-type: application/json; charset=utf-8');
+
+    echo json_encode($content, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+    exit;
+}
+
 require __DIR__ . '/../vendor/autoload.php';
 require __DIR__ . '/../index.php';

@@ -46,7 +46,7 @@ class Checkout extends Controller
 
         if (!$logged_in || !$cart['items'])
         {
-            redirect('/auth?redirect=pay');
+            json_response(['redirect' => '/cart']);
         }
 
         $coupon = $cart['coupon'] ?? false;
@@ -62,7 +62,7 @@ class Checkout extends Controller
                 $session->set('cart', $cart);
                 $session->flash('coupon', ['message' => 'Cupom expirado.', 'type' => 'failure']);
 
-                redirect('/cart');
+                json_response(['redirect' => '/cart']);
             }
         }
 
@@ -77,7 +77,8 @@ class Checkout extends Controller
         {
             // Mensagem de url de troca vazia
             $session->flash('settings', ['message' => 'Não deixe o campo URL de troca vazio.', 'type' => 'failure']);
-            redirect('/settings?redirect=checkout');
+            
+            json_response(['redirect' => '/settings?redirect=checkout']);
         }
 
         $coupon = $coupon['name'] ?? '';
@@ -102,7 +103,8 @@ class Checkout extends Controller
         if (!$result)
         {
             $session->flash('settings', ['message' => 'Ocorreu um erro.', 'type' => 'failure']);
-            redirect('/checkout');
+
+            json_response(['redirect' => '/checkout']);
         }
 
         $purchase_id = $pdo->lastInsertId();
@@ -142,6 +144,6 @@ class Checkout extends Controller
         
         send_mail($params);
 
-        redirect("/payment?id={$purchase_id}");
+        json_response(['redirect' => "/payment?id={$purchase_id}"]);
     }
 }

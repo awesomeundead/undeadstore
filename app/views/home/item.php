@@ -53,13 +53,13 @@ $this->layout('layout', [
         <?php endif ?>
     </div>
     <div class="description">
-        <div class="title">
+        <h1 class="title">
             <span><?= $item['name_br'] ?></span>
             <?php if ($item['category'] && $item['category'] != 'normal'): ?>
             <span class="category <?= $item['category'] ?>"><?= $categories[$item['category']]['br'] ?></span>
             <?php endif ?>
             <span><?= $item['family_br'] ?></span>
-        </div>
+        </h1>
         <?php if ($item['pattern_float'] && ($item['availability'] == 1 || $item['availability'] == 3)): ?>
             <div class="attribute pattern">
                 <div class="flex space-between">

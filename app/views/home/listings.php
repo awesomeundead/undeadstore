@@ -9,6 +9,7 @@ $this->layout('layout', [
 
 ?>
 <?php $this->insert('home/nav') ?>
+<h1 style="display: none;">Undead Store | Skins de Counter-Strike 2</h1>
 <nav>
     <div id="nav_order">
         <a class="order" data-order="asc" href="">Menor preço</a>

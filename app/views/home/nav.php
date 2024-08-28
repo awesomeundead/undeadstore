@@ -80,7 +80,12 @@
         </div>
     </div>
     <div class="menu">
-        <a href="/cases">UNDEADCASE</a>
+        <button>Links</button>
+        <div class="submenu">
+            <a href="/partners">Parceiros</a>
+            <a href="/security">Segurança</a>
+            <a href="/support">Suporte</a>
+        </div>
     </div>
 </nav>
 

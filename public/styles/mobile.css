@@ -4,11 +4,6 @@ body
     padding: 5px;
 }
 
-.background.container
-{
-    grid-template-columns: 0 100% 0;
-}
-
 #grid
 {
     grid-template-rows: min-content auto min-content;
@@ -70,12 +65,6 @@ body
 .product .image img
 {
     width: 100%;
-}
-
-#container .coming,
-#container .items
-{
-    grid-template-columns: 1fr 1fr;
 }
 
 .cart .price

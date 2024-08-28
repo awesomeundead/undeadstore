@@ -206,8 +206,6 @@ class Payment extends Controller
     {
         error_reporting(0);
 
-        header('Content-Type: application/json; charset=utf-8');
-
         $session = Session::create();
 
         // Verifica se o usuário está logado
@@ -257,7 +255,7 @@ class Payment extends Controller
             $options->setCustomHeaders(["X-Idempotency-Key: {$idempotency_key}"]);
             $payment = $client->create($request, $options);
 
-            echo json_encode($payment);
+            json_response($payment);
         }
         catch (MPApiException $e)
         {
@@ -265,7 +263,7 @@ class Payment extends Controller
 
             file_put_contents(ROOT . '/log/mercadopago.json', json_encode($response->getContent()), FILE_APPEND);
 
-            echo json_encode($response->getContent());
+            json_response($response->getContent());
         }
     }
 
@@ -349,6 +347,15 @@ class Payment extends Controller
                     {
                         $amount = $payment->transaction_amount;
                         $quantity = $amount / 5;
+
+                        if ($quantity >= 4)
+                        {
+                            $quantity++;
+                        }
+                        elseif ($quantity == 8)
+                        {
+                            $quantity = 10;
+                        }
 
                         for ($i = 0; $i < $quantity; $i++)
                         {

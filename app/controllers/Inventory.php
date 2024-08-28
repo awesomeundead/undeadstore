@@ -5,8 +5,6 @@ namespace App\Controllers;
 use Awesomeundead\Undeadstore\Controller;
 use Awesomeundead\Undeadstore\Database;
 use Awesomeundead\Undeadstore\Session;
-use Awesomeundead\Undeadstore\TradeOffer;
-use Awesomeundead\Undeadstore\TradeOfferException;
 
 class Inventory extends Controller
 {
@@ -328,10 +326,8 @@ class Inventory extends Controller
         // Verifica se o usuário está logado
         if (!$session->get('logged_in'))
         {
-            redirect('/auth');
+            exit;
         }
-
-        header('Content-type: application/json; charset=utf-8');
 
         $id = $_GET['id'] ?? 0;
         $user_id = $session->get('user_id');
@@ -351,7 +347,7 @@ class Inventory extends Controller
 
         if (!$item)
         {
-            redirect('/inventory');
+            exit;
         }
 
         $query = 'SELECT * FROM weaponcase
@@ -373,16 +369,14 @@ class Inventory extends Controller
 
         if (count($items_rarity) < 4)
         {
-            echo json_encode(['error' => '']);
-
-            exit;
+            json_response(['error' => true]);
         }
 
         $rarities = [
-            'rare_weapon'      => 70,
-            'mythical_weapon'  => 20,
-            'legendary_weapon' => 8,
-            'ancient_weapon'   => 2
+            'rare_weapon'      => 55,
+            'mythical_weapon'  => 25,
+            'legendary_weapon' => 15,
+            'ancient_weapon'   => 5
         ];
         
         foreach ($rarities as $rarity => $value)
@@ -485,8 +479,6 @@ class Inventory extends Controller
         $stmt = $pdo->prepare($query);
         $stmt->execute($params);
 
-        $data = ['name' => $item['item_name'], 'image' => $item['image']];
-
-        echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        json_response(['name' => $item['item_name'], 'image' => $item['image']]);
     }
 }

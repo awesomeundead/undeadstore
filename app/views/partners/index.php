@@ -6,6 +6,9 @@ $this->layout('layout', [
 ]);
 
 ?>
+<nav>
+    <?php $this->insert('home/nav') ?>
+</nav>
 <div class="user">
     <header>Parceiros</header>
 </div>

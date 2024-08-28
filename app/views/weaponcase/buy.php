@@ -23,6 +23,10 @@ $this->layout('layout', [
             <div>Qualquer dúvida, deixe sua mensagem em <a href="/support">Suporte</a> ou entre no nosso <a href="https://discord.gg/xAe6QYfsCJ" target="_blank">Discord</a>.</div>
         </div>
     </div>
+    <div class="box">
+        <div>Comprando 4 caixas ou mais, ganhe mais 1 caixa.</div>
+        <div>Comprando 8 caixas, ganhe mais 2 caixas.</div>
+    </div>
     <div class="box flex align-center" id="quantity_container">
         <label for="quantity">Quantidade</label>
         <select id="quantity">

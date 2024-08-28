@@ -19,11 +19,6 @@ $this->layout('layout', [
     <?php if ($balance): ?>
         <div class="coins">Saldo da Carteira: <span><?= $balance ?> Moedas</span></div>
     <?php endif ?>
-    <?php if ($balance >= 5): ?>
-        <div class="flex center">
-            <a class="button" href="/cases/buy/coins">Comprar Caixas com Moedas da Loja</a>
-        </div>
-    <?php endif ?>
 </div>
 <div class="inventory">
     <?php foreach ($listing as $item): ?>

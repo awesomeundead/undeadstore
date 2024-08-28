@@ -107,8 +107,6 @@ class Weaponcase extends Controller
     {
         error_reporting(0);
 
-        header('Content-Type: application/json; charset=utf-8');
-
         $session = Session::create();
 
         // Verifica se o usuário está logado
@@ -146,7 +144,7 @@ class Weaponcase extends Controller
             $options->setCustomHeaders(["X-Idempotency-Key: {$idempotency_key}"]);
             $payment = $client->create($request, $options);
 
-            echo json_encode($payment);
+            json_response($payment);
         }
         catch (MPApiException $e)
         {
@@ -154,7 +152,7 @@ class Weaponcase extends Controller
 
             file_put_contents(ROOT . '/log/mercadopago.json', json_encode($response->getContent()), FILE_APPEND);
 
-            echo json_encode($response->getContent());
+            json_response($response->getContent());
         }
     }
 
@@ -201,10 +199,8 @@ class Weaponcase extends Controller
         // Verifica se o usuário está logado
         if (!$session->get('logged_in'))
         {
-            redirect('/auth?redirect=cases');
+            json_response(['redirect' => '/cases']);
         }
-
-        header('Content-type: application/json; charset=utf-8');
 
         $quantity = filter_var($_POST['quantity'] ?? 1, FILTER_VALIDATE_INT);
 
@@ -272,12 +268,10 @@ class Weaponcase extends Controller
                     $stmt->execute($params);
                 }
 
-                $json = ['redirect' => '/inventory'];
+                json_response(['redirect' => '/inventory']);
             }            
         }
 
-
-
-        echo json_encode($json ?? ['error' => true]);
+        json_response(['error' => true]);
     }
 }

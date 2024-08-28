@@ -20,6 +20,7 @@ return function (App $app)
         $group->get('/login', [Auth::class, 'login']);
     });
 
+    /*
     $app->get('/cases', [Weaponcase::class, 'index']);
     $app->get('/cases/buy', [Weaponcase::class, 'buy']);
     $app->post('/cases/process', [Weaponcase::class, 'process']);
