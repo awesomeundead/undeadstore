@@ -52,10 +52,11 @@ return function (App $app)
     $app->get('/inventory', [Inventory::class, 'index']);
     $app->get('/inventory/item/withdraw', [Inventory::class, 'item_withdraw']);
     $app->get('/inventory/item/sell', [Inventory::class, 'item_sell']);
-    $app->get('/inventory/weaponcase', [Inventory::class, 'weaponcase']);
-    $app->get('/inventory/weaponcase/open', [Inventory::class, 'weaponcase_open']);
+    //$app->get('/inventory/weaponcase', [Inventory::class, 'weaponcase']);
+    //$app->get('/inventory/weaponcase/open', [Inventory::class, 'weaponcase_open']);
    
     $app->get('/list/available', [Listings::class, 'available']);
+    $app->get('/list/under', [Listings::class, 'under']);
     $app->get('/list/coming', [Listings::class, 'coming']);
     $app->get('/list/item', [Listings::class, 'item']);
 

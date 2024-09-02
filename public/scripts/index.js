@@ -1,21 +1,19 @@
 async function main()
 {
     const fragment = document.querySelector('template');
+    const query = new URLSearchParams(window.location.search);
 
-    /*
-    data = await request('/list/coming');
-
-    if (data.length > 3)
+    if (query.has('under'))
     {
-        create(data, fragment, document.querySelector('#container .coming'));
+        url = `/list/under?price=${query.get('under')}`;
     }
     else
     {
-        document.querySelector('#container .coming').remove();
+        url = '/list/available';
     }
-    */
 
-    data = await request('/list/available');
+    const data = await request(url);
+    
     create(data, fragment, document.querySelector('#container .items')); 
 }
 

@@ -60,6 +60,9 @@ $this->layout('layout', [
             <?php endif ?>
             <span><?= $item['family_br'] ?></span>
         </h1>
+        <?php if ($item['offer_price']): ?>
+            <div class="offer"><?= (float) $item['offer_percentage'] ?>% OFF</div>
+        <?php endif ?>
         <?php if ($item['pattern_float'] && ($item['availability'] == 1 || $item['availability'] == 3)): ?>
             <div class="attribute pattern">
                 <div class="flex space-between">
@@ -111,7 +114,6 @@ $this->layout('layout', [
         <?php if ($item['offer_price']): ?>
             <div class="old_price"><?= html_money($item['price']) ?></div>
             <div class="price"><?= html_money($item['offer_price']) ?></div>
-            <div class="offer"><?= (float) $item['offer_percentage'] ?>% OFF</div>
         <?php elseif ($item['price']): ?>
             <div class="price"><?= html_money($item['price']) ?></div>
         <?php endif ?>

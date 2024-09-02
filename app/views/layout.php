@@ -74,11 +74,9 @@
             </nav>
         </div>
     </header>
-    <main>
-        <section id="main_section">
-            <?= $this->section('content') ?>
-        </section>
-    </main>
+    <section id="main_section">
+        <?= $this->section('content') ?>
+    </section>
     <footer id="main_footer">
         <div class="flex_space_between">
             <div class="flex column">

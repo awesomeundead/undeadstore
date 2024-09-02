@@ -18,6 +18,22 @@ class Listings
         echo json_encode($list);
     }
 
+    public function under()
+    {
+        $query = 'SELECT cs_item_variant.*, cs_item.*, p.id, p.availability, p.price, p.offer_percentage,
+        IF (ISNULL(offer_percentage), NULL, price - (price / 100 * offer_percentage)) AS offer_price,
+        IF (ISNULL(offer_percentage), price, price - (price / 100 * offer_percentage)) AS new_price
+        FROM products AS p
+        LEFT JOIN cs_item_variant ON p.cs_item_variant_id = cs_item_variant.id
+        LEFT JOIN cs_item ON cs_item_variant.cs_item_id = cs_item.id
+        WHERE availability = 1 AND (price <= :price OR (offer_percentage IS NOT NULL AND price - (price / 100 * offer_percentage) <= :price))
+        ORDER BY new_price DESC';
+
+        $params = ['price' => $_GET['price']];
+
+        $this->_get($query, $params);
+    }
+
     public function available()
     {
         $query = 'SELECT cs_item_variant.*, cs_item.*, p.id, p.availability, p.price, p.offer_percentage,
@@ -25,8 +41,8 @@ class Listings
         FROM products AS p
         LEFT JOIN cs_item_variant ON p.cs_item_variant_id = cs_item_variant.id
         LEFT JOIN cs_item ON cs_item_variant.cs_item_id = cs_item.id
-        WHERE availability = 1
-        ORDER BY RAND()';
+        WHERE availability = 1 OR (offer_percentage IS NOT NULL)
+        ORDER BY RAND() LIMIT 28';
 
         $this->_get($query);
     }

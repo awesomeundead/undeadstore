@@ -31,9 +31,11 @@ class Cart extends Controller
             
             if ($cart['coupon'] ?? false)
             {
-                $coupon_name = $cart['coupon']['name'];
-                $cart['discount'] = $cart['subtotal'] / 100 * $cart['coupon']['percent'];
-                $cart['percent'] = $cart['coupon']['percent'];
+                if ($cart['subtotal'] >= $cart['coupon']['min_value'])
+                {
+                    $cart['discount'] = $cart['subtotal'] / 100 * $cart['coupon']['percent'];
+                    $cart['percent'] = $cart['coupon']['percent'];
+                }
             }
 
             $cart['total'] = $cart['subtotal'] - $cart['discount'];

@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS products (
     steam_asset BIGINT UNSIGNED,
     pattern_float DOUBLE,
     availability TINYINT NOT NULL,
-    base_price DECIMAL(8,2),
+    base_price_percentage DECIMAL(5,2),
     price DECIMAL(8,2),
     offer_percentage DECIMAL(5,2),
     updated_date DATE
@@ -94,8 +94,22 @@ CREATE TABLE IF NOT EXISTS coupon (
     name VARCHAR(255) NOT NULL,
     percent TINYINT(2) NOT NULL,
     user_id INT UNSIGNED,
+    min_value DECIMAL(8,2),
     expiration_date DATETIME NOT NULL
 );
+
+/*
+CREATE TABLE IF NOT EXISTS coupon (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    code VARCHAR(255) NOT NULL,
+    type ENUM('percentage', 'money') NOT NULL,
+    value DECIMAL(2,2),
+    user_id INT UNSIGNED,
+    limited INT UNSIGNED,
+    count INT UNSIGNED NOT NULL,
+    expiration_date DATETIME NOT NULL
+);
+*/
 
 CREATE TABLE IF NOT EXISTS mercadopago (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -118,19 +132,6 @@ CREATE TABLE IF NOT EXISTS ticket_items (
     message TEXT NOT NULL,
     created_date DATETIME NOT NULL
 );
-
-/*
-CREATE TABLE IF NOT EXISTS coupon (
-    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    code VARCHAR(255) NOT NULL,
-    type ENUM('percentage', 'money') NOT NULL,
-    value DECIMAL(2,2),
-    user_id INT UNSIGNED,
-    limited INT UNSIGNED,
-    count INT UNSIGNED NOT NULL,
-    expiration_date DATETIME NOT NULL
-);
-*/
 
 CREATE TABLE IF NOT EXISTS wallet (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,

@@ -428,6 +428,27 @@ nav.listings .submenu
     width: 100%;
 }
 
+nav.under
+{
+    display: flex;
+    gap: 5px;
+    justify-content: end;
+}
+
+nav.under a
+{
+    background: #136;
+    border-radius: 5px;
+    color: #FFF;
+    padding: 10px;
+    text-decoration: none;
+}
+
+nav.under a:hover
+{
+    background: #247;
+}
+
 #container .coming,
 #container .items
 {
