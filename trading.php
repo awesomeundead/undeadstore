@@ -8,14 +8,6 @@ define('ROOT', __DIR__);
 
 require ROOT . '/vendor/autoload.php';
 
-$content = file_get_contents('https://undeadstore.com.br/status.php');
-$content = json_decode($content, true);
-
-if ($content['status'] == false)
-{
-    exit;
-}
-
 $pdo = Database::connect();
 
 $query = 'SELECT * FROM trading WHERE status = :status';
@@ -33,6 +25,14 @@ foreach ($list as $item)
 }
 
 if (empty($new_list))
+{
+    exit;
+}
+
+$content = file_get_contents('https://undeadstore.com.br/status.php');
+$content = json_decode($content, true);
+
+if ($content['status'] == false)
 {
     exit;
 }

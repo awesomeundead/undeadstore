@@ -17,6 +17,20 @@
                 <img alt="" src="/styles/loading.svg" />
             </a>
         </div>
+        <div class="attribute pattern">
+            <div class="float">
+            </div>
+            <div class="range">
+                <div class="fn" title="Nova de Fábrica"></div>
+                <div class="mw" title="Pouco Usada"></div>
+                <div class="ft" title="Testada em Campo"></div>
+                <div class="ww" title="Bem Desgastada"></div>
+                <div class="bs" title="Veterana de Guerra"></div>
+            </div>
+            <div class="position">
+                <div class="indicator"></div>
+            </div>
+        </div>
         <div class="attribute-1"></div>
         <div class="attribute-2 rarity"></div>
         <div class="market">

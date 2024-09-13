@@ -95,17 +95,19 @@
                         <img alt="Logo Mercado Pago" src="/styles/logo_mercadopago.png" />
                     </div>
                 </div>
-                <!--
                 <div class="flex icons">
                     <div>
-                        <img alt="Logo Visa" src="/styles/visa_icon.png" />
+                        <img alt="Logo Visa" src="/styles/logo_visa.png" />
                     </div>
                     <div>
-                        <img alt="Logo Mastercard" src="/styles/mastercard_icon.png" />
+                        <img alt="Logo Mastercard" src="/styles/logo_mastercard.png" />
                     </div>
                     <div>
-                        <img alt="Logo Elo" src="/styles/elo_icon.png" />
+                        <img alt="Logo Elo" src="/styles/logo_elo.png" />
                     </div>
+                </div>
+                <!--
+                <div class="flex icons">
                     <div>
                         <img alt="Logo Hipercard" src="/styles/hipercard_icon.png" />
                     </div>
@@ -132,6 +134,7 @@
         </div>
         <div>
             <div>Undead Store 2024</div>
+            <div>Os preços das skins podem ser alterados de acordo com o Mercado da Comunidade Steam.</div>
             <div>Não somos afiliados a Valve.</div>
         </div>
     </footer>

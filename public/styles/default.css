@@ -483,6 +483,30 @@ nav.under a:hover
     text-align: center;
 }
 
+.products .item.rare_character:hover,
+.products .item.rare_weapon:hover
+{
+    background: linear-gradient(to bottom, #222, #4b69ff88);
+}
+
+.products .item.mythical_character:hover,
+.products .item.mythical_weapon:hover
+{
+    background: linear-gradient(to bottom, #222, #8847ff88);
+}
+
+.products .item.legendary_character:hover,
+.products .item.legendary_weapon:hover
+{
+    background: linear-gradient(to bottom, #222, #d32ce688);
+}
+
+.products .item.ancient_character:hover,
+.products .item.ancient_weapon:hover
+{
+    background: linear-gradient(to bottom, #222, #eb4b4b88);
+}
+
 .products .item .title
 {
     font-size: 18px;

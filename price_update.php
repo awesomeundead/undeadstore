@@ -80,7 +80,8 @@ foreach ($list as $item)
 
         $average = round(array_sum($prices) / 6, 2);
 
-        $percentage = (float) $item['base_price_percentage'] ?? 10;
+        $percentage = $item['base_price_percentage'] ?? 10;
+        $percentage = floatval($percentage);
         $new_price = round($average - ($average / 100 * $percentage));
 
         $query = 'UPDATE products SET price = :price, updated_date = :updated_date WHERE id = :id';

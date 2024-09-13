@@ -97,7 +97,8 @@ function template(item, fragment, container)
     {
         clone.querySelector('.attribute-1').remove();
     }
-    
+
+    clone.querySelector('.item').classList.add(item.rarity);
     clone.querySelector('.attribute-2').innerHTML = `${type[language]} (${rarity[item.rarity][language]})`;
     clone.querySelector('.attribute-2').classList.add(item.rarity);
     clone.querySelector('.market a').href = 'https://steamcommunity.com/market/listings/730/' + item.market_hash_name;   
@@ -114,12 +115,17 @@ function template(item, fragment, container)
     if (item.type == 'Agent')
     {
         new_image.src = `/images/${item.image}.png`;
+
+        clone.querySelector('.pattern').remove();
     }
     else
     {
         image_exterior = {'fn': 'fn_mw', 'mw': 'fn_mw', 'ft': 'ft_ww', 'ww': 'ft_ww', 'bs': 'bs'};
 
         new_image.src = `/images/${item.image}_${image_exterior[item.exterior]}.png`;
+
+        clone.querySelector('.float').innerHTML = item.pattern_float;
+        clone.querySelector('.pattern .indicator').style.left = `calc(100% * ${item.pattern_float} - 8px)`;
     }
     
     container.appendChild(clone);
