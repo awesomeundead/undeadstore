@@ -3,7 +3,7 @@
 use Awesomeundead\Undeadstore\App;
 use App\Controllers\
 {
-    Auth, Cart, Checkout, Home, Inventory, Listings, OrderHistory, Partners, Payment, Security, Settings, Support, Weaponcase
+    Auth, Cart, Checkout, Home, Listings, OrderHistory, Partners, Payment, Reference, Security, Settings, Support
 };
 
 return function (App $app)
@@ -49,9 +49,9 @@ return function (App $app)
 
     $app->get('/data', [Home::class, 'data']);
 
-    $app->get('/inventory', [Inventory::class, 'index']);
-    $app->get('/inventory/item/withdraw', [Inventory::class, 'item_withdraw']);
-    $app->get('/inventory/item/sell', [Inventory::class, 'item_sell']);
+    //$app->get('/inventory', [Inventory::class, 'index']);
+    //$app->get('/inventory/item/withdraw', [Inventory::class, 'item_withdraw']);
+    //$app->get('/inventory/item/sell', [Inventory::class, 'item_sell']);
     //$app->get('/inventory/weaponcase', [Inventory::class, 'weaponcase']);
     //$app->get('/inventory/weaponcase/open', [Inventory::class, 'weaponcase_open']);
    
@@ -83,6 +83,7 @@ return function (App $app)
     $app->post('/payment/process', [Payment::class, 'process']);
     $app->post('/payment/notification', [Payment::class, 'notification']);
     $app->get('/payment/update', [Payment::class, 'update']);
+    $app->get('/payment/wallet', [Payment::class, 'wallet']);
 
     $app->get('/security', [Security::class, 'index']);
 
@@ -94,4 +95,7 @@ return function (App $app)
     $app->post('/support', [Support::class, 'create']);
     $app->get('/support/ticket', [Support::class, 'ticket']);
     $app->post('/support/ticket', [Support::class, 'add']);
+
+    $app->get('/reference', [Reference::class, 'index']);
+    $app->get('/reference/{type:[\w-]+}[/{name:[\w-]+}]', [Reference::class, 'listing']);
 };

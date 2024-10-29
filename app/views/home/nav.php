@@ -3,6 +3,9 @@
         <a href="/listings?type=agent">Agentes</a>
     </div>
     <div class="menu">
+        <a href="/listings?type=equipment">Equipamento</a>
+    </div>
+    <div class="menu">
         <button>Escopeta</button>
         <div class="submenu">
             <a href="/listings/shotgun">Todos</a>
@@ -83,6 +86,7 @@
         <button>Links</button>
         <div class="submenu">
             <a href="/partners">Parceiros</a>
+            <a href="/reference">Referência</a>
             <a href="/security">Segurança</a>
             <a href="/support">Suporte</a>
         </div>

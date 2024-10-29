@@ -41,7 +41,8 @@ class OrderHistory extends Controller
             'visa' => 'Cartão de Crédito',
             'hypercard' => 'Cartão de Crédito',
             'elo' => 'Cartão de Crédito',
-            'amex' => 'Cartão de Crédito'
+            'amex' => 'Cartão de Crédito',
+            'wallet' => 'Carteira'
         ];
 
         echo $this->templates->render('order-history/index', [

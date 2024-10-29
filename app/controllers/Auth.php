@@ -157,7 +157,18 @@ class Auth
 
                 if ($result)
                 {
-                    $session->set('user_id', $pdo->lastInsertId());
+                    $user_id = $pdo->lastInsertId();
+
+                    $session->set('user_id', $user_id);
+
+                    $query = 'INSERT INTO wallet (id, balance, pending) VALUES (:id, :balance, :pending)';
+                    $stmt = $pdo->prepare($query);
+                    $params = [
+                        'id' => $user_id,
+                        'balance' => 0,
+                        'pending' => 0
+                    ];
+                    $result = $stmt->execute($params);
 
                     require ROOT . '/include/mail.php';
 

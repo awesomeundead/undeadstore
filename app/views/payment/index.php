@@ -9,6 +9,14 @@ $this->layout('layout', [
 
 ?>
 
+<div>Valor da compra: <span><?= html_money($purchase_total) ?></span></div>
+<div id="wallet_container">
+    <?php if ($wallet_balance > 0): ?>
+        <div>Saldo da carteira: <span><?= html_money($wallet_balance) ?></span></div>
+        <div>Valor restante: <span><?= html_money($remaining) ?></span></div>
+    <?php endif ?>
+</div>
+
 <div class="flex column">
     <div class="box white" hidden="hidden" id="mercadopago_alert">Erro interno, tente novamente mais tarde.</div>
     <div id="statusScreenBrick_container"></div>

@@ -66,8 +66,22 @@ function template(item, fragment, container)
         }
         else if (item.availability == AVAILABILITY.COMING_SOON)
         {
-            clone.querySelector('.button_buy').remove();
+            unlock = new Date(item.unlock_date);
+            now = new Date(new Date().toISOString().split("T")[0]);
+            date = new Date(unlock - now);
+            days = date.getDate();
+
+            clone.querySelector('.availability').innerHTML = `Disponível em ${days} dia(s)`;
             clone.querySelector('.availability').classList.add('soon');
+
+            if (item.price != null)
+            {
+                clone.querySelector('.button_buy').href = '/cart/add?item_id=' + item.id;
+            }
+            else
+            {
+                clone.querySelector('.button_buy').remove();
+            }
         }
     }
 
@@ -124,8 +138,16 @@ function template(item, fragment, container)
 
         new_image.src = `/images/${item.image}_${image_exterior[item.exterior]}.png`;
 
-        clone.querySelector('.float').innerHTML = item.pattern_float;
-        clone.querySelector('.pattern .indicator').style.left = `calc(100% * ${item.pattern_float} - 8px)`;
+        if (item.pattern_float)
+        {
+            clone.querySelector('.float').innerHTML = item.pattern_float;
+            clone.querySelector('.pattern .indicator').style.left = `calc(100% * ${item.pattern_float} - 8px)`;
+        }
+
+        if (item.availability == AVAILABILITY.ORDER)
+        {
+            clone.querySelector('.pattern').remove();
+        }
     }
     
     container.appendChild(clone);
@@ -139,7 +161,7 @@ const AVAILABILITY =
     status:
     {
         1: 'Disponível',
-        2: 'Sob encomenda',
+        2: 'Indisponível',
         3: 'Disponível em breve'
     }
 };

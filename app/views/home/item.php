@@ -117,7 +117,7 @@ $this->layout('layout', [
         <?php elseif ($item['price']): ?>
             <div class="price"><?= html_money($item['price']) ?></div>
         <?php endif ?>
-        <?php if ($item['availability'] == '1'): ?>
+        <?php if ($item['availability'] == '1' || $item['availability'] == '3'): ?>
             <div>
                 <a class="button_buy" href="/cart/add?item_id=<?= $item['id'] ?>">Comprar</a>
             </div>

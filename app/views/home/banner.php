@@ -1,5 +1,21 @@
 <div class="banner">
-    <a href="/listings?name=AK-47">
+    <a href="/listings?type=equipment">
+        <picture>
+            <source media="(min-width: 769px)" srcset="/detach/banner_zeus.webp" type="image/webp" />
+            <source media="(min-width: 769px)" srcset="/detach/banner_zeus.png" type="image/png" />
+            <img alt="AK-47" src="/detach/banner_zeus.png" />
+        </picture>
+    </a>
+    <!--
+    <a hidden="true" href="/partners">
+        <picture>
+            <source media="(min-width: 769px)" srcset="/detach/banner_fenixpistola.webp" type="image/webp" />
+            <source media="(min-width: 769px)" srcset="/detach/banner_fenixpistola.png" type="image/png" />
+            <img alt="AK-47" src="/detach/banner_fenixpistola.png" />
+        </picture>
+    </a>
+    -->
+    <a hidden="true" href="/listings?name=AK-47">
         <picture>
             <source media="(min-width: 769px)" srcset="/detach/banner_ak_47.webp" type="image/webp" />
             <source media="(min-width: 769px)" srcset="/detach/banner_ak_47.png" type="image/png" />

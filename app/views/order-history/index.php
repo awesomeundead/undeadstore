@@ -36,7 +36,9 @@ $this->layout('layout', [
                 <div class="flex column">
                     <div class="label">Pagamento</div>
                     <div>
-                        <?php if ($item['payment_method']): ?>
+                        <?php if ($item['payment_method'] == 'wallet'): ?>
+                            <span><?= $payment_methods[$item['payment_method']] ?></span>
+                        <?php elseif ($item['payment_method']): ?>
                             <a href="/payment?id=<?= $item['id'] ?>"><?= $payment_methods[$item['payment_method']] ?></a>
                         <?php else: ?>
                             <a class="button" href="/payment?id=<?= $item['id'] ?>">Tentar Novamente</a>

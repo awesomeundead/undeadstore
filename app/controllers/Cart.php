@@ -31,10 +31,19 @@ class Cart extends Controller
             
             if ($cart['coupon'] ?? false)
             {
+                $min_value = $cart['coupon']['min_value'];
+
                 if ($cart['subtotal'] >= $cart['coupon']['min_value'])
                 {
                     $cart['discount'] = $cart['subtotal'] / 100 * $cart['coupon']['percent'];
                     $cart['percent'] = $cart['coupon']['percent'];
+                }
+                else
+                {
+                    $cart['coupon'] = null;
+                    $session->set('cart', $cart);
+                    $session->flash('coupon', ['message' => "Cupom com valor mínimo de compra de {$min_value}.", 'type' => 'failure']);
+                    redirect('/cart');
                 }
             }
 
@@ -64,7 +73,7 @@ class Cart extends Controller
             FROM products
             LEFT JOIN cs_item_variant ON products.cs_item_variant_id = cs_item_variant.id
             LEFT JOIN cs_item ON cs_item_variant.cs_item_id = cs_item.id
-            WHERE products.id = :id AND availability = 1';
+            WHERE products.id = :id AND (availability = 1 || availability = 3)';
             
             $stmt = $pdo->prepare($query);
             $stmt->execute(['id' => $item_id]);

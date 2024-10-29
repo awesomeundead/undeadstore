@@ -65,13 +65,15 @@
                 <?php if ($session['loggedin']): ?>
                     <nav>
                         <a href="/settings">Configurações</a>
-                        <a href="/inventory">Inventário</a>
                         <a href="/order-history">Pedidos</a>
                         <a href="/support">Suporte</a>
                         <a href="/logout">Sair</a>
                     </nav>
                 <?php endif ?>
             </nav>
+            <?php if ($session['loggedin'] && $wallet_balance > 0): ?>
+                <div class="coins">Saldo: <span><?= html_money($wallet_balance) ?></span></div>
+            <?php endif ?>
         </div>
     </header>
     <section id="main_section">

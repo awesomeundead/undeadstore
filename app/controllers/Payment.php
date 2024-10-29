@@ -157,6 +157,33 @@ class Payment extends Controller
             redirect();
         }
 
+        if ($purchase['payment_method'] == 'wallet' && $purchase['status'] == 'approved')
+        {
+            redirect('/order-history');
+        }
+
+        $wallet_balance = $session->get('wallet_balance');
+
+        if ($wallet_balance > 0)
+        {
+            if ($wallet_balance >= $purchase['total'])
+            {
+                echo $this->templates->render('payment/wallet', [
+                    'purchase_id' => $purchase_id
+                ]);
+
+                exit;
+            }
+            else
+            {
+                $amount = round($purchase['total'] - $wallet_balance, 2);
+            }
+        }
+        else
+        {
+            $amount = $purchase['total'];
+        }
+
         $config = (require ROOT . '/config.php')['mercadopago'];
 
         $pdo = Database::connect();
@@ -187,7 +214,7 @@ class Payment extends Controller
         ];
 
         $mercadopago['public_key'] = $config['public_key'];
-        $mercadopago['amount'] = (float) $purchase['total'];
+        $mercadopago['amount'] = (float) $amount;
         $mercadopago['payer'] = json_encode($payer);
         $mercadopago['payment_methods'] = json_encode($payment_methods);
         $mercadopago['payment_id'] = $purchase['payment_id'] ?? 'null';
@@ -195,7 +222,9 @@ class Payment extends Controller
         
         echo $this->templates->render('payment/index', [
             'mercadopago' => $mercadopago,
-            'purchase_id' => $purchase_id
+            'purchase_id' => $purchase_id,
+            'purchase_total' => $purchase['total'],
+            'remaining' => $amount
         ]);
     }
 
@@ -229,12 +258,23 @@ class Payment extends Controller
             exit;
         }
 
+        $wallet_balance = $session->get('wallet_balance');
+
+        if ($wallet_balance > 0)
+        {
+            $amount = round($purchase['total'] - $wallet_balance, 2);
+        }
+        else
+        {
+            $amount = $purchase['total'];
+        }
+
         $content = trim(file_get_contents('php://input'));
         $request = json_decode($content, true);
 
         file_put_contents(ROOT . '/log/request.json', $content);
 
-        if ($request['transaction_amount'] != $purchase['total'])
+        if ($request['transaction_amount'] != $amount)
         {
             exit;
         }
@@ -254,6 +294,39 @@ class Payment extends Controller
             $options = new RequestOptions();
             $options->setCustomHeaders(["X-Idempotency-Key: {$idempotency_key}"]);
             $payment = $client->create($request, $options);
+
+            if ($wallet_balance > 0)
+            {
+                $pdo = Database::connect();
+
+                $query = 'UPDATE purchase SET payment_wallet = :payment_wallet WHERE id = :id AND user_id = :user_id';
+                $stmt = $pdo->prepare($query);
+                $params = [
+                    'id' => $purchase_id,
+                    'user_id' => $user_id,
+                    'payment_wallet' => 1
+                ];
+                $stmt->execute($params);
+
+                $query = 'UPDATE wallet SET balance = :balance, pending = :pending WHERE id = :id';
+                $stmt = $pdo->prepare($query);
+                $params = [
+                    'id' => $user_id,
+                    'balance' => 0,
+                    'pending' => $wallet_balance
+                ];
+                $stmt->execute($params);
+
+                $query = 'INSERT INTO wallet_historic (user_id, value, status, created_date) VALUES (:user_id, :value, :status, :created_date)';
+                $stmt = $pdo->prepare($query);
+                $params = [
+                    'user_id' => $user_id,
+                    'value' => $wallet_balance,
+                    'status' => 'debit',
+                    'created_date' => date('Y-m-d H:i:s')
+                ];
+                $stmt->execute($params);
+            }
 
             json_response($payment);
         }
@@ -338,57 +411,6 @@ class Payment extends Controller
                         }
                     }
                 }
-                elseif (preg_match('/^UCASE_UID(\d{5})$/', $payment->external_reference, $matches))
-                {
-                    $user_id = $matches[1];
-                    $date = date('Y-m-d H:i:s');
-
-                    if ($status == 'approved')
-                    {
-                        $amount = $payment->transaction_amount;
-                        $quantity = $amount / 5;
-
-                        if ($quantity >= 4)
-                        {
-                            $quantity++;
-                        }
-                        elseif ($quantity == 8)
-                        {
-                            $quantity = 10;
-                        }
-
-                        for ($i = 0; $i < $quantity; $i++)
-                        {
-                            $query = 'INSERT INTO inventory (user_id, item_name, tradable, marketable, created_date)
-                                    VALUES (:user_id, :item_name, :tradable, :marketable, :created_date)';
-                            $params = [
-                                'user_id' => $user_id,
-                                'item_name' => 'undeadcase',
-                                'tradable' => 0,
-                                'marketable' => 0,
-                                'created_date' => $date
-                            ];
-                            $stmt = $pdo->prepare($query);
-                            $stmt->execute($params);
-
-                            $historic_id = $pdo->lastInsertId();
-
-                            // histórico
-                            $query = 'INSERT INTO inventory_historic (historic_id, user_id, item_name, status, date)
-                                    VALUES (:historic_id, :user_id, :item_name, :status, :date)';
-                            $params = [
-                                'historic_id' => $historic_id,
-                                'user_id' => $user_id,
-                                'item_name' => 'undeadcase',
-                                'status' => 'purchased',
-                                'date' => $date
-                            ];
-
-                            $stmt = $pdo->prepare($query);
-                            $stmt->execute($params);
-                        }
-                    }
-                }
             }
         }
     }
@@ -445,5 +467,96 @@ class Payment extends Controller
         }
 
         redirect('/payment?id=' . $purchase_id);
+    }
+
+    public function wallet()
+    {
+        $session = Session::create();
+
+        // Verifica se o usuário está logado
+        if (!$session->get('logged_in'))
+        {
+            exit;
+        }
+
+        $purchase_id = $_GET['id'] ?? null;
+        $user_id = $session->get('user_id');
+
+        if (!is_numeric($purchase_id))
+        {
+            exit;
+        }
+        
+        $purchase = $this->check_purchase($purchase_id, $user_id);
+        
+        if (empty($purchase))
+        {
+            exit;
+        }
+
+        $wallet_balance = $session->get('wallet_balance');
+
+        if ($wallet_balance < $purchase['total'])
+        {
+            exit;
+        }
+
+        $pdo = Database::connect();
+
+        $query = 'UPDATE purchase
+                SET status = :status, payment_method = :payment_method, payment_id = :payment_id, payment_wallet = :payment_wallet
+                WHERE id = :id AND user_id = :user_id';
+        $stmt = $pdo->prepare($query);
+        $params = [
+            'id' => $purchase_id,
+            'user_id' => $user_id,
+            'payment_method' => 'wallet',
+            'payment_id' => null,
+            'payment_wallet' => 1,
+            'status' => 'approved'
+        ];
+        $result = $stmt->execute($params);
+
+        if ($result)
+        {
+            $balance = $wallet_balance - $purchase['total'];
+
+            $query = 'UPDATE wallet SET balance = :balance WHERE id = :id';
+            $stmt = $pdo->prepare($query);
+            $params = [
+                'id' => $user_id,
+                'balance' => $balance
+            ];
+            $stmt->execute($params);
+
+            $query = 'INSERT INTO wallet_historic (user_id, value, status, created_date) VALUES (:user_id, :value, :status, :created_date)';
+            $stmt = $pdo->prepare($query);
+            $params = [
+                'user_id' => $user_id,
+                'value' => $purchase['total'],
+                'status' => 'debit',
+                'created_date' => date('Y-m-d H:i:s')
+            ];
+            $stmt->execute($params);
+
+            $this->trading($purchase_id);
+
+            $query = 'SELECT email FROM users
+            INNER JOIN purchase ON users.id = purchase.user_id
+            WHERE purchase.id = :id';
+            $stmt = $pdo->prepare($query);
+            $params = [
+                'id' => $purchase_id
+            ];
+            $stmt->execute($params);
+            $email = $stmt->fetchColumn();
+            
+            if (filter_var($email, FILTER_VALIDATE_EMAIL))
+            {
+                $this->_send_email($email);
+            }
+        }
+
+        json_response(['redirect' => '/order-history']);
     }
 }

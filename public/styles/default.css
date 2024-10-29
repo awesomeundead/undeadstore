@@ -419,6 +419,17 @@ nav.listings .submenu
     text-decoration: none;
 }
 
+nav.listings.reference
+{
+    background-color: #394;
+}
+
+nav.listings.reference .menu > a,
+nav.listings.reference button
+{
+    background-color: #394;
+}
+
 /**
   * Products
   */
