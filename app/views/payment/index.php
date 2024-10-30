@@ -9,12 +9,23 @@ $this->layout('layout', [
 
 ?>
 
-<div>Valor da compra: <span><?= html_money($purchase_total) ?></span></div>
-<div id="wallet_container">
-    <?php if ($wallet_balance > 0): ?>
-        <div>Saldo da carteira: <span><?= html_money($wallet_balance) ?></span></div>
-        <div>Valor restante: <span><?= html_money($remaining) ?></span></div>
-    <?php endif ?>
+<div class="box">
+    <div class="flex space-between">
+        <div>Valor da compra:</div>
+        <div><?= html_money($purchase_total) ?></div>
+    </div>
+    <div id="wallet_container">
+        <?php if ($wallet_balance > 0): ?>
+            <div class="flex space-between">
+                <div>Saldo da carteira:</div>
+                <div><?= html_money($wallet_balance) ?></div>
+            </div>
+            <div class="flex space-between">
+                <div>Valor restante:</div>
+                <div><?= html_money($remaining) ?></div>
+            </div>
+        <?php endif ?>
+    </div>
 </div>
 
 <div class="flex column">

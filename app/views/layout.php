@@ -41,27 +41,34 @@
                     <img alt="Logotipo" src="/styles/undeadstore_h.png" />
                 </a>
             </div>
-            <nav class="right">
-                <div class="cart_button">
-                    <a class="image" href="/cart">
-                        <img alt="Imagem de um carrinho" src="/styles/cart_icon.png" />
-                    </a>
-                </div>
-                <?php if ($session['loggedin']): ?>
-                    <div id="loggedin">
-                        <div class="steam image">
-                            <img alt="Avatar" src="<?= $session['steam_avatar'] ?>" />
-                            <span><?= $session['steam_name']?></span>
+            <div class="right">
+                <div class="flex column">
+                    <?php if ($session['loggedin'] && $wallet_balance > 0): ?>
+                        <div class="wallet">Saldo <?= html_money($wallet_balance) ?></div>
+                    <?php endif ?>
+                    <div class="flex">
+                        <div class="cart_button">
+                            <a class="image" href="/cart">
+                                <img alt="Imagem de um carrinho" src="/styles/cart_icon.png" />
+                            </a>
                         </div>
+                        <?php if ($session['loggedin']): ?>
+                            <div id="loggedin">
+                                <div class="steam image">
+                                    <img alt="Avatar" src="<?= $session['steam_avatar'] ?>" />
+                                    <span><?= $session['steam_name']?></span>
+                                </div>
+                            </div>
+                        <?php else: ?>
+                            <div id="login">
+                                <a class="image" href="/auth">
+                                    <span>Entrar</span>
+                                    <img alt="Steam logo" src="/styles/logo_steam.svg" />
+                                </a>
+                            </div>
+                        <?php endif ?>
                     </div>
-                <?php else: ?>
-                    <div id="login">
-                        <a class="image" href="/auth">
-                            <span>Entrar</span>
-                            <img alt="Steam logo" src="/styles/logo_steam.svg" />
-                        </a>
-                    </div>
-                <?php endif ?>
+                </div>
                 <?php if ($session['loggedin']): ?>
                     <nav>
                         <a href="/settings">Configurações</a>
@@ -70,10 +77,7 @@
                         <a href="/logout">Sair</a>
                     </nav>
                 <?php endif ?>
-            </nav>
-            <?php if ($session['loggedin'] && $wallet_balance > 0): ?>
-                <div class="coins">Saldo: <span><?= html_money($wallet_balance) ?></span></div>
-            <?php endif ?>
+            </div>
         </div>
     </header>
     <section id="main_section">

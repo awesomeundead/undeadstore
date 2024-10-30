@@ -26,16 +26,6 @@ class Reference extends Controller
 
     public function listing($type = null, $name = null)
     {
-        /*
-        $session = Session::create();
-
-        // Verifica se o usuário está logado
-        if (!$session->get('logged_in'))
-        {
-            redirect('/');
-        }
-        */
-
         $pdo = Database::connect();
         
         if (isset($name))

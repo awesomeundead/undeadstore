@@ -116,6 +116,13 @@ summary
     background-color: #3A5;
 }
 
+
+#main_header .wallet
+{
+    color: #FB0;
+    font-size: 14px;
+}
+
 #loggedin .steam
 {
     align-items: center;

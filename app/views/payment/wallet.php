@@ -9,13 +9,23 @@ $this->layout('layout', [
 
 ?>
 
-<form>
-    <label>Selecione uma forma de pagamento</label>
-    <select name="payment_method">
-        <option value="wallet">Saldo da carteira</option>
-    </select>
-    <button class="submit" type="submit">Finalizar</button>
-</form>
+<div class="box">
+    <form>
+        <div class="flex column gap-20">
+            <div>
+                <label for="payment_method">Selecione uma forma de pagamento</label>
+                <div>
+                    <select id="payment_method" name="payment_method">
+                        <option value="wallet">Saldo da carteira</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button class="submit" type="submit">Finalizar</button>
+            </div>
+        </div>
+    </form>
+</div>
 
 <script>
 

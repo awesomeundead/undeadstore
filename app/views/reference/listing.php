@@ -20,7 +20,7 @@ $this->layout('layout', [
             </div>
             <div class="image">
                 <a href="">
-                    <img alt="" src="/images/<?= $item['image'] ?>_fn_mw.png" />
+                    <img alt="" data-image="<?= $item['image'] ?>" src="/images/<?= $item['image'] ?>_fn_mw.png" />
                 </a>
             </div>
             <div class="attribute-1"><?= $item['type_br'] ?></div>
@@ -35,3 +35,37 @@ $this->layout('layout', [
     <?php endforeach ?>
     </div>
 </div>
+<div hidden="hidden" id="expanded">
+    <a class="image" href="">
+        <img alt="" src="/styles/loading.svg" />
+    </a>
+</div>
+<script>
+
+const expanded = document.querySelector('#expanded');
+
+expanded.addEventListener('click', (e) =>
+{
+    e.preventDefault();
+    document.body.style.overflow = 'visible';
+    expanded.hidden = true;
+});
+
+const image = document.querySelector('#expanded img');
+
+
+list = document.querySelectorAll('.image a');
+
+for (let item of list)
+{
+    item.addEventListener('click', (e) => 
+    {
+        e.preventDefault();
+        document.body.style.overflow = 'hidden';
+        expanded.hidden = false;
+        new_image = item.querySelector('img').dataset.image;
+        image.src = `/images/${new_image}.png`;
+    });
+}
+
+</script>
