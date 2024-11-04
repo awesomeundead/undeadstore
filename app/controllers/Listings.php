@@ -42,7 +42,7 @@ class Listings
         LEFT JOIN cs_item_variant ON p.cs_item_variant_id = cs_item_variant.id
         LEFT JOIN cs_item ON cs_item_variant.cs_item_id = cs_item.id
         WHERE (availability = 1 OR availability = 3) AND price > 30
-        ORDER BY RAND() LIMIT 28';
+        ORDER BY RAND()';
 
         $this->_get($query);
     }
