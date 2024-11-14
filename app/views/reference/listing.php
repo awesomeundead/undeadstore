@@ -16,7 +16,9 @@ $this->layout('layout', [
             <div class="title">
                 <span class="name"><?= $item['name_br'] ?></span>
                 <span class="family"><?= $item['family_br'] ?></span>
-                <span class="family">(<?= $item['family'] ?>)</span>
+                <span class="family">
+                    <a href="/reference/family?name=<?= $item['family'] ?>"><?= $item['family'] ?></a>
+                </span>
             </div>
             <div class="image">
                 <a href="">

@@ -73,6 +73,7 @@
                     <nav>
                         <a href="/settings">Configurações</a>
                         <a href="/order-history">Pedidos</a>
+                        <a href="/inventory">Inventário Steam</a>
                         <a href="/support">Suporte</a>
                         <a href="/logout">Sair</a>
                     </nav>

@@ -8,477 +8,188 @@ use Awesomeundead\Undeadstore\Session;
 
 class Inventory extends Controller
 {
+    private function request($url)
+    {
+        $context = stream_context_create([
+            'http' => ['ignore_errors' => true]
+        ]);
+
+        $response['body'] = file_get_contents($url, false, $context);
+
+        foreach ($http_response_header as $item)
+        {
+            //HTTP/1.1 200 OK
+            if (preg_match('#HTTP/\d\.\d\s(\d+)\s([\w\s]+)#', $item, $matches))
+            {
+                $response['status'] = $matches[1];
+                $response['status_text'] = $matches[2];
+            }
+        }
+
+        if ($response['body'])
+        {
+            $response['body'] = json_decode($response['body'], true);
+        }
+
+        return $response;
+    }
+
     public function index()
     {
         $session = Session::create();
 
-        // Verifica se o usuário está logado
-        if (!$session->get('logged_in'))
+        $logged_in = $session->get('logged_in');
+
+        if (!$logged_in)
         {
-            redirect('/auth');
+            redirect('/auth?redirect=inventory');
         }
 
-        $user_id = $session->get('user_id');
+        $steamid = $session->get('steamid');
 
-        $pdo = Database::connect();
-        $query = 'SELECT balance FROM wallet WHERE user_id = :user_id';
-        $params = ['user_id' => $user_id];
-        $stmt = $pdo->prepare($query);
-        $stmt->execute($params);
-        $balance = $stmt->fetchColumn();
+        $response = $this->request("https://steamcommunity.com/inventory/{$steamid}/730/2/?l=brazilian");
 
-        $query = 'SELECT *, inventory.id FROM inventory
-                  LEFT JOIN cs_item_variant ON inventory.cs_item_variant_id = cs_item_variant.id
-                  LEFT JOIN cs_item ON cs_item_variant.cs_item_id = cs_item.id
-                  WHERE user_id = :user_id ORDER BY inventory.id DESC';
-        $params = ['user_id' => $user_id];
-        $stmt = $pdo->prepare($query);
-        $stmt->execute($params);
-        $listing = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $list = [];
 
-        $image_exterior = ['fn'=> 'fn_mw', 'mw'=> 'fn_mw', 'ft'=> 'ft_ww', 'ww'=> 'ft_ww', 'bs'=> 'bs'];
-
-        $exterior = Data::exterior();
-        $categories = Data::categories();
-        $rarities = Data::rarities();
-
-        echo $this->templates->render('inventory/index', [
-            'notification' => $session->flash('trade'),
-            'balance' => $balance,
-            'listing' => $listing,
-            'image_exterior' => $image_exterior,
-            'exterior' => $exterior,
-            'categories' => $categories,
-            'rarities' => $rarities
-        ]);
-    }
-
-    public function item_sell()
-    {
-        $session = Session::create();
-
-        // Verifica se o usuário está logado
-        if (!$session->get('logged_in'))
+        if ($response['status'] == 200)
         {
-            redirect('/auth');
-        }
+            $content = $response['body'];
 
-        $id = $_GET['id'] ?? 0;
-        $user_id = $session->get('user_id');
-        $date = date('Y-m-d H:i:s');
+            foreach ($content['descriptions'] as $item)
+            {
+                $descriptions[$item['classid']] = $item;
+            }
+    
+            foreach ($content['assets'] as $item)
+            {
+                $description = $descriptions[$item['classid']];
 
-        $query = 'SELECT * FROM inventory WHERE id = :id AND user_id = :user_id AND marketable = 1';
-        $params = [
-            'id' => $id,
-            'user_id' => $user_id
-        ];
+                if ($description['marketable'])
+                {
+                    preg_match('/([\w\s]+)\s\((.+)\)/u', $description['type'], $matches);
 
-        $pdo = Database::connect();
-        $stmt = $pdo->prepare($query);
-        $stmt->execute($params);
-        $item = $stmt->fetch(\PDO::FETCH_ASSOC);
+                    if (isset($_GET['type']) && $_GET['type'] != $matches[1])
+                    {
+                        continue;
+                    }
 
-        if (!$item)
-        {
-            redirect('/inventory');
-        }
-
-        $query = 'SELECT * FROM wallet WHERE user_id = :user_id';
-        $params = [
-            'user_id' => $user_id
-        ];
-        $stmt = $pdo->prepare($query);
-        $stmt->execute($params);
-        $wallet = $stmt->fetch(\PDO::FETCH_ASSOC);
-
-        if ($wallet)
-        {
-            $query = 'UPDATE wallet SET balance = :balance WHERE user_id = :user_id';
-            $params = [
-                'user_id' => $user_id,
-                'balance' => (float) $wallet['balance'] + (float) $item['price']
-            ];
-            $stmt = $pdo->prepare($query);
-            $stmt->execute($params);
+                    $list[] = [
+                        'assetid' => $item['assetid'],
+                        'name' => $description['name'],
+                        'name_color' => $description['name_color'],
+                        'market_name' => $description['market_name'],
+                        'market_hash_name' => $description['market_hash_name'],
+                        'image' => "https://community.fastly.steamstatic.com/economy/image/{$description['icon_url']}/96fx96f"
+                    ];
+                }
+            }
         }
         else
         {
-            $query = 'INSERT INTO wallet (user_id, balance) VALUES (:user_id, :balance)';
-            $params = [
-                'user_id' => $user_id,
-                'balance' => $item['price']
-            ];
-            $stmt = $pdo->prepare($query);
-            $stmt->execute($params);
+            $error = 'Verifique se a privacidade do seu inventário está definida como pública.';
         }
 
-        if ($stmt->rowCount())
-        {
-            $query = 'DELETE FROM inventory WHERE id = :id AND user_id = :user_id';
-            $params = [
-                'id' => $id,
-                'user_id' => $user_id
-            ];
-
-            $stmt = $pdo->prepare($query);
-            $stmt->execute($params);
-
-            if ($stmt->rowCount())
-            {
-                $query = 'UPDATE weaponcase SET quantity = quantity + 1
-                          WHERE item_name = :item_name';
-                $params = [
-                    'item_name' => $item['item_name']
-                ];
-                $stmt = $pdo->prepare($query);
-                $stmt->execute($params);
-
-                // histórico
-                $query = 'INSERT INTO inventory_historic (historic_id, user_id, item_name, cs_item_variant_id, status, date)
-                          VALUES (:historic_id, :user_id, :item_name, :cs_item_variant_id, :status, :date)';
-                $params = [
-                    'historic_id' => $item['historic_id'],
-                    'user_id' => $user_id,
-                    'item_name' => $item['item_name'],
-                    'cs_item_variant_id' => $item['cs_item_variant_id'],
-                    'status' => 'sold',
-                    'date' => $date
-                ];
-
-                $stmt = $pdo->prepare($query);
-                $stmt->execute($params);
-            }
-        }
-
-        redirect('/inventory');
-    }
-
-    public function item_withdraw()
-    {
-        $session = Session::create();
-
-        // Verifica se o usuário está logado
-        if (!$session->get('logged_in'))
-        {
-            redirect('/auth');
-        }
-
-        $id = $_GET['id'] ?? 0;
-        $user_id = $session->get('user_id');
-        $date = date('Y-m-d H:i:s');
-
-        // Verifica se o item é do usuário e se é trocável
-        $query = 'SELECT * FROM inventory WHERE id = :id AND user_id = :user_id AND tradable = 1';
-        $params = [
-            'id' => $id,
-            'user_id' => $user_id
-        ];
-
-        $pdo = Database::connect();
-        $stmt = $pdo->prepare($query);
-        $stmt->execute($params);
-        $item = $stmt->fetch(\PDO::FETCH_ASSOC);
-
-        if (!$item)
-        {
-            redirect('/inventory');
-        }
-
-        // Procura o item no estoque
-        $query = 'SELECT * FROM weaponcase_stock WHERE cs_item_variant_id = :cs_item_variant_id AND status = :status LIMIT 1';
-        $params = [
-            'cs_item_variant_id' => $item['cs_item_variant_id'],
-            'status' => 'available'
-        ];
-
-        $stmt = $pdo->prepare($query);
-        $stmt->execute($params);
-        $stock = $stmt->fetch(\PDO::FETCH_ASSOC);
-
-        // Adiciona o item na lista de trading
-        $query = 'INSERT INTO trading (user_id, item_name, steam_asset, status, created_date)
-                  VALUES (:user_id, :item_name, :steam_asset, :status, :created_date)';
-        $params = [
-            'user_id' => $user_id,
-            'item_name' => $item['item_name'],
-            'steam_asset' => $stock['steam_asset'],
-            'status' => 'pending',
-            'created_date' => $date
-        ];
-
-        $stmt = $pdo->prepare($query);
-        $stmt->execute($params);
-
-        $trading_id = $pdo->lastInsertId();
-
-        // Atualiza o estoque
-        $query = 'UPDATE weaponcase_stock SET status = :status WHERE id = :id';
-        $params = [
-            'id' => $stock['id'],
-            'status' => 'trading'
-        ];
-        $stmt = $pdo->prepare($query);
-        $stmt->execute($params);
-
-        // Apaga o item do inventário
-        $query = 'DELETE FROM inventory WHERE id = :id AND user_id = :user_id';
-        $params = [
-            'id' => $id,
-            'user_id' => $user_id
-        ];
-
-        $stmt = $pdo->prepare($query);
-        $stmt->execute($params);
-
-        // histórico
-        $query = 'INSERT INTO inventory_historic (historic_id, user_id, item_name, cs_item_variant_id, steam_asset, trading_id, status, date)
-                    VALUES (:historic_id, :user_id, :item_name, :cs_item_variant_id, :steam_asset, :trading_id, :status, :date)';
-        $params = [
-            'historic_id' => $item['historic_id'],
-            'user_id' => $user_id,
-            'item_name' => $item['item_name'],
-            'cs_item_variant_id' => $item['cs_item_variant_id'],
-            'steam_asset' => $stock['steam_asset'],
-            'trading_id' => $trading_id,
-            'status' => 'trading',
-            'date' => $date
-        ];
-
-        $stmt = $pdo->prepare($query);
-        $stmt->execute($params);
-
-        $session->flash('trade', ['message' => 'Em breve uma proposta de troca será enviada.', 'type' => 'success']);
-
-        redirect('/inventory');
-    }
-
-    public function weaponcase()
-    {
-        $session = Session::create();
-
-        // Verifica se o usuário está logado
-        if (!$session->get('logged_in'))
-        {
-            redirect('/auth');
-        }
-
-        $id = $_GET['id'] ?? 0;
-        $user_id = $session->get('user_id');
-
-        $query = 'SELECT * FROM inventory WHERE id = :id AND user_id = :user_id AND item_name = :item_name';
-        $params = [
-            'id' => $id,
-            'user_id' => $user_id,
-            'item_name' => 'undeadcase'
-        ];
-
-        $pdo = Database::connect();
-        $stmt = $pdo->prepare($query);
-        $stmt->execute($params);
-        $item = $stmt->fetch(\PDO::FETCH_ASSOC);
-
-        if (!$item)
-        {
-            redirect('/inventory');
-        }
-
-        $items_rarity = [
-            'rare_weapon'=> [
-                'ump_45_briefing_fn_mw',
-                'mp5_sd_liquidation_fn_mw',
-                'five_seven_flame_test_fn_mw'
-            ],
-            'mythical_weapon'=> [
-                'pp_bizon_space_cat_fn_mw',
-                'p250_cyber_shell_fn_mw',
-                'galil_ar_connexion_fn_mw'
-            ],
-            'legendary_weapon'=> [
-                'usp_s_cortex_ft_ww',
-                'xm1014_xoxo_ft_ww',
-                'aug_syd_mead_ft_ww'
-            ],
-            'ancient_weapon'=> [
-                'glock_18_bullet_queen_ft_ww',
-                'm4a4_neo_noir_ft_ww',
-                'awp_chromatic_aberration_ft_ww'
-            ]
-        ];
-
-        $rarities = [
-            'rare_weapon'      => 4,
-            'mythical_weapon'  => 3,
-            'legendary_weapon' => 2,
-            'ancient_weapon'   => 1
-        ];
-
-        echo $this->templates->render('inventory/weaponcase', [
-            'item' => $item,
-            'items_rarity' => json_encode($items_rarity, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
-            'rarities' => json_encode($rarities)
+        echo $this->templates->render('inventory/index', [
+            'list' => $list,
+            'error' => $error ?? null
         ]);
     }
 
-    public function weaponcase_open()
+    public function calc()
     {
         $session = Session::create();
 
-        // Verifica se o usuário está logado
-        if (!$session->get('logged_in'))
+        $logged_in = $session->get('logged_in');
+
+        if (!$logged_in)
         {
-            exit;
+            redirect('/auth?redirect=inventory');
         }
 
-        $id = $_GET['id'] ?? 0;
-        $user_id = $session->get('user_id');
-        $date = date('Y-m-d H:i:s');
+        $list = $_POST['item'];
 
-        $query = 'SELECT COUNT(id) FROM inventory
-                  WHERE id = :id AND user_id = :user_id AND item_name="undeadcase"';
-        $params = [
-            'id' => $id,
-            'user_id' => $user_id
-        ];
-
-        $pdo = Database::connect();
-        $stmt = $pdo->prepare($query);
-        $stmt->execute($params);
-        $item = $stmt->fetchColumn();
-
-        if (!$item)
+        if (empty($list))
         {
-            exit;
+            redirect('/inventory');
         }
 
-        $query = 'SELECT * FROM weaponcase
-                  WHERE case_name = :case_name AND quantity > 0';
-        $params = [
-            'case_name' => 'undeadcase'
-        ];
-
-        $stmt = $pdo->prepare($query);
-        $stmt->execute($params);
-
-        $list = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-
-        foreach ($list as $value)
+        foreach ($list as $key => $item)
         {
-            $items[$value['item_code']] = $value;
-            $items_rarity[$value['rarity']][$value['item_code']] = $value['chance'];
-        }
+            [$market_hash_name, $name, $image] = explode(';', $item);
+            
+            //$response = $this->request('https://steamcommunity.com/market/listings/730/' . rawurlencode($market_hash_name) . '/render?start=0&count=6&currency=7&format=json');
+            $response = $this->request('https://steamcommunity.com/market/priceoverview/?appid=730&market_hash_name=' . rawurlencode($market_hash_name) . '&currency=7');
 
-        if (count($items_rarity) < 4)
-        {
-            json_response(['error' => true]);
-        }
-
-        $rarities = [
-            'rare_weapon'      => 55,
-            'mythical_weapon'  => 25,
-            'legendary_weapon' => 15,
-            'ancient_weapon'   => 5
-        ];
-        
-        foreach ($rarities as $rarity => $value)
-        {
-            for ($i = 0; $i < $value; $i++)
+            if ($response['status'] != 200)
             {
-                $array[] = $rarity;
-            }
-        }
-        
-        shuffle($array); // embaralha o array
-        
-        $length = count($array); // conta quantos elementos no array, 200
-        $random = rand(0, $length - 1); // gera um número aleatório, 0 - 199
-        $rarity = $array[$random]; // obtém a raridade do item
-        
-        $array = [];
+                continue;
+            }            
 
-        foreach ($items_rarity[$rarity] as $weapon => $value)
-        {
-            for ($i = 0; $i < $value; $i++)
+            $lowest_price = $response['body']['lowest_price'] ?? null;
+
+            if (isset($lowest_price))
             {
-                $array[] = $weapon;
+                $lowest_price = str_replace(['R$', '.'], '', $lowest_price);
+                $lowest_price = str_replace(',', '.', $lowest_price);
+                $lowest_price = floatval($lowest_price);
+                $new_price = round($lowest_price - ($lowest_price / 100 * 15), 1, PHP_ROUND_HALF_DOWN);
+
+                $rows[$key]['market_hash_name'] = $market_hash_name;
+                $rows[$key]['name'] = $name;
+                $rows[$key]['image'] = $image;
+                $rows[$key]['amount'] = $new_price;
+
+                $amount[] = $new_price;
             }
+
+            /*
+            if (isset($response['body']['listinginfo']))
+            {
+                $array = $response['body']['assets']['730']['2'] ?? null;
+                $first = array_shift($array);
+
+                if ($first['commodity'] == 1)
+                {
+                    //$amount[] = $rows[$key]['amount'] = $new_price;
+                }
+                else
+                {
+                    $prices = [];
+
+                    foreach ($response['body']['listinginfo'] as $asset)
+                    {
+                        if (isset($asset['converted_price']) && isset($asset['converted_fee']))
+                        {
+                            $value = $asset['converted_price'] + $asset['converted_fee'];
+                            $value = round($value * 0.01, 2);
+                            $prices[] = $value;
+                        }
+                    }
+
+                    if (count($prices) < 6)
+                    {
+                        continue;
+                    }
+
+                    $average = round(array_sum($prices) / 6, 2);
+                    $new_price = round($average - ($average / 100 * 15));
+
+                    $amount[] = $rows[$key]['amount'] = $new_price;
+                }
+            }
+            */
         }
 
-        shuffle($array);
+        if (empty($rows))
+        {
+            redirect('/inventory');
+        }
 
-        $length = count($array);
-        $random = rand(0, $length - 1);
-        $item = $items[$array[$random]]; // obtém o item
-
-        /*
-         * start
-         */
-
-        $query = 'UPDATE weaponcase SET quantity = :quantity WHERE id = :id';
-        $params = [
-            'id' => $item['id'],
-            'quantity' => (int) $item['quantity'] - 1
-        ];
-        $stmt = $pdo->prepare($query);
-        $stmt->execute($params);
-
-        /*
-         * end
-         */
-
-        $query = 'DELETE FROM inventory WHERE id = :id AND user_id = :user_id AND item_name="undeadcase"';
-        $params = [
-            'id' => $id,
-            'user_id' => $user_id
-        ];
-
-        $stmt = $pdo->prepare($query);
-        $stmt->execute($params);
-
-        $query = 'INSERT INTO inventory (historic_id, user_id, item_name, cs_item_variant_id, tradable, marketable, price, created_date)
-                  VALUES (:historic_id, :user_id, :item_name, :cs_item_variant_id, :tradable, :marketable, :price, :created_date)';
-        $params = [
-            'historic_id' => $id,
-            'user_id' => $user_id,
-            'item_name' => $item['item_name'],
-            'cs_item_variant_id' => $item['cs_item_variant_id'],
-            'tradable' => $item['tradable'],
-            'marketable' => $item['marketable'],
-            'price' => $item['price'],
-            'created_date' => $date
-        ];
-
-        $stmt = $pdo->prepare($query);
-        $stmt->execute($params);
-
-        // histórico
-        $query = 'INSERT INTO inventory_historic (historic_id, user_id, item_name, status, date)
-                  VALUES (:historic_id, :user_id, :item_name, :status, :date)';
-        $params = [
-            'historic_id' => $id,
-            'user_id' => $user_id,
-            'item_name' => 'undeadcase',
-            'status' => 'open',
-            'date' => $date
-        ];
-
-        $stmt = $pdo->prepare($query);
-        $stmt->execute($params);
-
-        // histórico
-        $query = 'INSERT INTO inventory_historic (historic_id, user_id, item_name, cs_item_variant_id, status, date)
-                  VALUES (:historic_id, :user_id, :item_name, :cs_item_variant_id, :status, :date)';
-        $params = [
-            'historic_id' => $id,
-            'user_id' => $user_id,
-            'item_name' => $item['item_name'],
-            'cs_item_variant_id' => $item['cs_item_variant_id'],
-            'status' => 'drop',
-            'date' => $date
-        ];
-
-        $stmt = $pdo->prepare($query);
-        $stmt->execute($params);
-
-        json_response(['name' => $item['item_name'], 'image' => $item['image']]);
+        $total = array_sum($amount);
+        
+        echo $this->templates->render('inventory/calc', [
+            'rows' => $rows,
+            'total' => $total
+        ]);
     }
 }

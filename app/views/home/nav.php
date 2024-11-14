@@ -25,6 +25,7 @@
             <a href="/listings/pistol">Todos</a>
             <a href="/listings/pistol/cz75-auto">CZ75-Auto</a>
             <a href="/listings/pistol/desert-eagle">Desert Eagle</a>
+            <a href="/listings/pistol/dual-berettas">Berettas Duplas</a>
             <a href="/listings/pistol/five-seven">Five-SeveN</a>
             <a href="/listings/pistol/glock-18">Glock-18</a>
             <a href="/listings/pistol/p250">P250</a>

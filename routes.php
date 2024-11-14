@@ -3,7 +3,7 @@
 use Awesomeundead\Undeadstore\App;
 use App\Controllers\
 {
-    Auth, Cart, Checkout, Home, Listings, OrderHistory, Partners, Payment, Reference, Security, Settings, Support
+    Auth, Cart, Checkout, Home, Inventory, Listings, OrderHistory, Partners, Payment, Reference, Security, Settings, Support
 };
 
 return function (App $app)
@@ -20,22 +20,6 @@ return function (App $app)
         $group->get('/login', [Auth::class, 'login']);
     });
 
-    /*
-    $app->get('/cases', [Weaponcase::class, 'index']);
-    $app->get('/cases/buy', [Weaponcase::class, 'buy']);
-    $app->post('/cases/process', [Weaponcase::class, 'process']);
-    
-    $app->get('/cases/buy/coins', [Weaponcase::class, 'buy_with_coins']);
-    $app->post('/cases/buy/coins', [Weaponcase::class, 'buy_with_coins_process']);
-    /*
-
-    $app->get('/cart', [Cart::class, 'index']);
-    $app->get('/cart/add', [Cart::class, 'add']);
-    $app->get('/cart/delete', [Cart::class, 'delete']);
-    $app->post('/cart/coupon', [Cart::class, 'coupon']);
-
-    */
-
     $app->group('/cart', function ($group)
     {
         $group->get('', [Cart::class, 'index']);
@@ -49,11 +33,8 @@ return function (App $app)
 
     $app->get('/data', [Home::class, 'data']);
 
-    //$app->get('/inventory', [Inventory::class, 'index']);
-    //$app->get('/inventory/item/withdraw', [Inventory::class, 'item_withdraw']);
-    //$app->get('/inventory/item/sell', [Inventory::class, 'item_sell']);
-    //$app->get('/inventory/weaponcase', [Inventory::class, 'weaponcase']);
-    //$app->get('/inventory/weaponcase/open', [Inventory::class, 'weaponcase_open']);
+    $app->get('/inventory', [Inventory::class, 'index']);
+    $app->post('/inventory/calc', [Inventory::class, 'calc']);
    
     $app->get('/list/available', [Listings::class, 'available']);
     $app->get('/list/under', [Listings::class, 'under']);

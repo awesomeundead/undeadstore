@@ -28,7 +28,28 @@ class Reference extends Controller
     {
         $pdo = Database::connect();
         
-        if (isset($name))
+        if ($type == 'collection')
+        {
+            $query = 'SELECT cs_item.*, cs_collections.id AS collection_id, cs_collections.name AS collection, cs_collections.name_br AS collection_br
+                      FROM cs_item
+                      INNER JOIN cs_collections ON cs_collections.id = cs_item.collection_id
+                      WHERE cs_collections.id = :id
+                      ORDER BY cs_item.family_br';
+        
+            $params = ['id' => $_GET['id']];
+        }
+        elseif ($type == 'family')
+        {
+            $query = 'SELECT cs_item.*, cs_collections.id AS collection_id, cs_collections.name AS collection, cs_collections.name_br AS collection_br
+                      FROM cs_item
+                      INNER JOIN cs_collections ON cs_collections.id = cs_item.collection_id
+                      WHERE cs_item.family LIKE :family
+                      ORDER BY cs_item.family_br';
+        
+            $family_name = $_GET['name'];
+            $params = ['family' => $family_name];
+        }
+        elseif (isset($name))
         {
             $query = 'SELECT cs_item.*, cs_collections.id AS collection_id, cs_collections.name AS collection, cs_collections.name_br AS collection_br
                       FROM cs_item
@@ -38,16 +59,6 @@ class Reference extends Controller
             
             $item_name = str_replace('-', '_', $name);
             $params = ['name' => $item_name];
-        }
-        elseif ($type == 'collection')
-        {
-            $query = 'SELECT cs_item.*, cs_collections.id AS collection_id, cs_collections.name AS collection, cs_collections.name_br AS collection_br
-                      FROM cs_item
-                      INNER JOIN cs_collections ON cs_collections.id = cs_item.collection_id
-                      WHERE cs_collections.id = :id
-                      ORDER BY cs_item.family_br';
-        
-            $params = ['id' => $_GET['id']];
         }
 
         $stmt = $pdo->prepare($query);

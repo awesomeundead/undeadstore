@@ -533,6 +533,16 @@ nav.under a:hover
     display: block;
 }
 
+.products .item .title .family a
+{
+    color: #FD0;
+}
+
+.products .item .title .family a:hover
+{
+    color: #FF0;
+}
+
 .products .item .image
 {
     position: relative;
@@ -974,4 +984,71 @@ label.icon img
 figure img
 {
     width: 100%;
+}
+
+.inventory
+{
+    display: grid;
+    gap: 5px;
+    grid-template-columns: repeat(8, 1fr);
+    margin-bottom: 10px;
+}
+
+.inventory .item
+{
+    background-color: #333;
+    border: 1px solid #CCC;
+    flex-direction: column;
+    font-size: 14px;
+    gap: 5px;
+    padding: 5px;
+}
+
+.inventory .item:hover
+{
+    background-color: #444;
+}
+
+.inventory .item.D2D2D2
+{
+    border: 1px solid #D2D2D2;
+}
+
+.inventory .item.CF6A32
+{
+    border: 1px solid #CF6A32;
+}
+
+.inventory .item .image
+{
+    display: flex;
+    justify-content: center;
+}
+
+.inventory .item .image label
+{
+    display: flex;
+}
+
+.inventory .item .name
+{
+    padding: 5px 0;
+    text-align: center;
+}
+
+.inventory .button a
+{
+    display: flex;
+}
+
+.inventory .button a img
+{
+    height: 22px;
+}
+
+.inventory .item .value
+{
+    color: #FB0;
+    padding: 5px 0;
+    text-align: right;
 }
