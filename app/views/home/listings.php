@@ -14,6 +14,7 @@ $this->layout('layout', [
     <div id="nav_order">
         <a class="order" data-order="asc" href="">Menor preço</a>
         <a class="order" data-order="desc" href="">Maior preço</a>
+        <a class="order" data-order="float" href="">Float</a>
     </div>
 </nav>
 <?php $this->insert('home/template') ?>

@@ -52,11 +52,9 @@ async function main()
     create(data, fragment, container);
 }
 
-function reorder()
+const reorder =
 {
-    console.log(order);
-
-    if (order == 'asc')
+    asc: () =>
     {
         data.sort((a, b) =>
         {
@@ -72,17 +70,32 @@ function reorder()
             
             return a.price - b.price;
         });
-    }
-    else if (order == 'desc')
+    },
+    desc: () =>
     {
         data.sort((a, b) =>
         {
             return b.price - a.price;
         });
-    }
+    },
+    float: () =>
+    {
+        data.sort((a, b) =>
+        {
+            if (a.pattern_float == null || a.availability == 2)
+            {
+                return 1;
+            }
 
-    create(data, fragment, container);
-}
+            if (b.pattern_float == null || b.availability == 2)
+            {
+                return -1;
+            }
+
+            return a.pattern_float - b.pattern_float;
+        });
+    }
+};
 
 window.addEventListener('popstate', async () =>
 {
@@ -123,7 +136,12 @@ document.addEventListener('DOMContentLoaded', () =>
         {
             e.preventDefault();
             order = e.target.dataset.order;
-            reorder();
+            
+            if (reorder.hasOwnProperty(order))
+            {
+                reorder[order]();
+                create(data, fragment, container);
+            }
         });
     }
 
@@ -137,5 +155,4 @@ const fragment = document.querySelector('template');
 const container = document.querySelector('#container .items');
 
 var language = 'br';
-var order;
 var data;

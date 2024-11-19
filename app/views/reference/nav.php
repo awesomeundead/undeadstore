@@ -12,6 +12,7 @@
         <div class="submenu">
             <a href="/reference/pistol/cz75-auto">CZ75-Auto</a>
             <a href="/reference/pistol/desert-eagle">Desert Eagle</a>
+            <a href="/reference/pistol/dual-berettas">Berettas Duplas</a>
             <a href="/reference/pistol/five-seven">Five-SeveN</a>
             <a href="/reference/pistol/glock-18">Glock-18</a>
             <a href="/reference/pistol/p250">P250</a>

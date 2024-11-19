@@ -93,7 +93,7 @@ class Listings
         LEFT JOIN cs_item_variant ON p.cs_item_variant_id = cs_item_variant.id
         LEFT JOIN cs_item ON cs_item_variant.cs_item_id = cs_item.id
         WHERE {$index} LIKE :value
-        ORDER BY availability = 1 DESC, availability = 3 DESC";
+        ORDER BY availability = 1 DESC, availability = 3 DESC, cs_item.family_br ASC";
         
         $this->_get($query, $params);
     }
